@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Belief Explorer</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      /* Light blue background */
+      background: #E6F7FF; 
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      color: #333;
+    }
+
+    header {
+      background: #B3E6FF;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    header h1 {
+      margin-bottom: 0.5rem;
+      font-size: 2rem;
+    }
+    header p {
+      max-width: 700px;
+      margin: 0.5rem auto;
+      font-size: 1.1rem;
+      line-height: 1.5;
+    }
+
+    main {
+      max-width: 800px;
+      margin: 1rem auto;
+      padding: 1rem;
+    }
+
+    section.intro {
+      background: #FFFFFF;
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    section.intro h2 {
+      margin-bottom: 1rem;
+    }
+
+    .chat-container {
+      background: #FFFFFF;
+      border-radius: 8px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .chat-container label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    .chat-container textarea {
+      width: 100%;
+      min-height: 80px;
+      padding: 0.5rem;
+      font-size: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .chat-container button {
+      display: inline-block;
+      background: #0099FF;
+      color: #fff;
+      border: none;
+      padding: 0.7rem 1rem;
+      font-size: 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .chat-container button:hover {
+      background: #007acc;
+    }
+
+    #result {
+      margin-top: 1rem;
+      background: #F0FAFF;
+      border-radius: 4px;
+      padding: 1rem;
+      min-height: 50px;
+      border: 1px solid #cce7ff;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Belief Explorer</h1>
+    <p>
+      Welcome! Our aim is to <strong>explore human beliefs</strong> and construct <strong>solid, fact-based, strong ones</strong>—not by telling you what to think, 
+      but by guiding you <em>from within</em>. We use a gentle, <strong>Socratic method</strong> so any change in perspective 
+      feels natural and self-driven, rather than imposed.
+    </p>
+  </header>
+
+  <main>
+    <!-- Introduction block -->
+    <section class="intro">
+      <h2>Why We’re Here</h2>
+      <p>
+        Sometimes, we hold beliefs without fully realizing the assumptions behind them. 
+        When we question those assumptions in a friendly, guided way, 
+        we can arrive at conclusions that resonate more deeply. This platform 
+        <strong>doesn't judge or force</strong>—it simply <em>listens</em> and 
+        gently shows the underlying premises that would <strong>need</strong> to be true 
+        for a given claim. In exploring those premises, <strong>you</strong> get 
+        to decide if they align with your sense of truth.
+      </p>
+      <p>
+        Ask a question or state a belief—like “Is the Earth flat?”—and we’ll help you 
+        examine the chain of assumptions. The goal is to provoke your own internal 
+        reasoning. Think of it as a friend helping you see your path more clearly, 
+        <strong>not</strong> an authority telling you what to do. 
+      </p>
+    </section>
+
+    <!-- Chat Container -->
+    <section class="chat-container">
+      <label for="statementInput">Ask a question or make a claim:</label>
+      <textarea id="statementInput" placeholder="e.g. Is the Earth flat?"></textarea>
+      <button id="submitBtn">Explore My Belief</button>
+
+      <div id="result" style="display:none;"></div>
+    </section>
+  </main>
+
+  <script>
+    // Replace this with your actual n8n webhook URL
+    const WEBHOOK_URL = "https://gpu.haielab.org/webhook/deepseek-socratic-demo";
+
+    const statementEl = document.getElementById("statementInput");
+    const submitBtn = document.getElementById("submitBtn");
+    const resultEl = document.getElementById("result");
+
+    submitBtn.addEventListener('click', async () => {
+      const statement = statementEl.value.trim();
+      if (!statement) {
+        alert("Please enter a question or statement!");
+        return;
+      }
+
+      // Reset display
+      resultEl.style.display = "block";
+      resultEl.textContent = "Thinking...";
+
+      try {
+        // Make a POST request to your n8n webhook
+        const response = await fetch(WEBHOOK_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ statement })
+        });
+
+        if (!response.ok) {
+          throw new Error("HTTP Error " + response.status);
+        }
+
+        // The workflow should return a JSON like { answer: "..." }
+        const data = await response.json();
+        
+        // Present the Socratic chain-of-thought style answer
+        // data.answer is the LLM's chain-of-thought-based explanation
+        resultEl.textContent = data.answer || "No answer received.";
+      } catch (error) {
+        resultEl.textContent = "Error: " + error.message;
+      }
+    });
+  </script>
+</body>
+</html>
