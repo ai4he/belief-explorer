@@ -3,54 +3,78 @@
 <head>
   <meta charset="UTF-8">
   <title>DeepSeek Belief Explorer</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 0 20px;
+    }
+    textarea {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    #result {
+      margin-top: 20px;
+      padding: 15px;
+      background: #f8f8f8;
+      border-radius: 4px;
+      min-height: 50px;
+    }
+  </style>
 </head>
 <body>
   <h1>DeepSeek Belief Explorer</h1>
-
   <p>Type a question or statement to explore underlying assumptions:</p>
-
-  <!-- Textarea for user input -->
-  <textarea id="statementInput" rows="4" cols="50"
+  
+  <textarea id="statementInput" rows="4" 
     placeholder="e.g. Is the Earth flat?"></textarea>
-
-  <br><br>
-
-  <!-- Button to trigger the POST request -->
+  <br>
+  
   <button id="submitBtn">Explore My Belief</button>
-
   <hr>
-
-  <!-- Area to display the AI's response -->
-  <div id="result" style="padding:0.5em; background:#f8f8f8; min-height:50px;"></div>
+  
+  <div id="result"></div>
 
   <script>
-    // Replace this with your n8n production webhook URL
-    const WEBHOOK_URL = "https://gpu.haielab.org/webhook/falcon-demo";
-
-    // Get references to HTML elements
+    // Update to use the new endpoint
+    const WEBHOOK_URL = "https://gpu.haielab.org/webhook/deepseek-llama-demo";
+    
     const statementEl = document.getElementById("statementInput");
     const submitBtn = document.getElementById("submitBtn");
     const resultEl = document.getElementById("result");
-
-    // Log a message to confirm script is running
+    
     console.log("Script loaded. Ready to handle clicks.");
-
-    // Add a click event listener to the button
+    
     submitBtn.addEventListener('click', async () => {
       console.log("Button clicked!");
       const statement = statementEl.value.trim();
+      
       if (!statement) {
         alert("Please enter a question or statement!");
         console.log("No statement provided.");
         return;
       }
-
-      // Show a loading message
+      
       resultEl.textContent = "Thinking...";
-
+      
       try {
-        // Make a POST request to your n8n webhook
         console.log("Sending POST request to:", WEBHOOK_URL, "with statement:", statement);
+        
         const response = await fetch(WEBHOOK_URL, {
           method: "POST",
           headers: {
@@ -58,22 +82,18 @@
           },
           body: JSON.stringify({ statement })
         });
-
+        
         console.log("HTTP status code:", response.status);
-
-        // If not a 2xx status, throw an error
+        
         if (!response.ok) {
           throw new Error("HTTP error " + response.status);
         }
-
-        // Expecting JSON like: { "answer": "some text" }
+        
         const data = await response.json();
         console.log("Response JSON:", data);
-
-        // Display the answer (if any)
+        
         resultEl.textContent = data.answer || "No answer received.";
       } catch (err) {
-        // If there's a network or runtime error, show it
         console.error("Fetch error:", err);
         resultEl.textContent = "Error: " + err.message;
       }
