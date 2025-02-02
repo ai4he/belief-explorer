@@ -2,59 +2,95 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>DeepSeek Belief Explorer</title>
+  <title>RationalMedia - Belief Explorer</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       max-width: 800px;
       margin: 20px auto;
       padding: 0 20px;
+      background-color: #f0f8ff;
+      color: #333;
+    }
+    .header {
+      text-align: center;
+      padding: 20px 0;
+      border-bottom: 2px solid #1e90ff;
+    }
+    .description {
+      font-style: italic;
+      color: #666;
+      text-align: center;
+      margin: 20px 0;
     }
     textarea {
       width: 100%;
-      padding: 10px;
+      padding: 15px;
       margin: 10px 0;
-      border: 1px solid #ccc;
-      border-radius: 4px;
+      border: 1px solid #1e90ff;
+      border-radius: 8px;
+      font-size: 16px;
+      background-color: white;
     }
     button {
-      background-color: #4CAF50;
+      background-color: #1e90ff;
       color: white;
-      padding: 10px 20px;
+      padding: 12px 24px;
       border: none;
-      border-radius: 4px;
+      border-radius: 8px;
       cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #187bcd;
     }
     button:disabled {
-      background-color: #cccccc;
+      background-color: #ccc;
     }
     #result {
       margin-top: 20px;
-      padding: 15px;
-      background: #f8f8f8;
-      border-radius: 4px;
-      min-height: 50px;
+      padding: 20px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      line-height: 1.6;
       white-space: pre-wrap;
-      line-height: 1.5;
+    }
+    .section {
+      margin-bottom: 15px;
+      padding: 10px;
+      border-radius: 4px;
+    }
+    .thinking {
+      color: #1e90ff;
+      font-style: italic;
     }
     #log {
-      margin-top: 20px;
-      font-family: monospace;
-      font-size: 12px;
-      color: #666;
+      display: none;
     }
-    .error { color: red; }
+    .error { 
+      color: #d32f2f;
+      background: #ffebee;
+      padding: 10px;
+      border-radius: 4px;
+      margin-top: 10px;
+    }
   </style>
 </head>
 <body>
-  <h1>AI Belief Explorer</h1>
-  <p>Type a question or statement to explore underlying assumptions:</p>
-  
+  <div class="header">
+    <h1>RationalMedia</h1>
+    <div class="description">
+      Exploring beliefs through reason and evidence
+    </div>
+  </div>
+
   <textarea id="statementInput" rows="4" 
-    placeholder="e.g. Is the Earth flat?"></textarea>
+    placeholder="Share a belief, claim, or question you'd like to explore..."></textarea>
   <br>
   
-  <button id="submitBtn">Explore My Belief</button>
+  <button id="submitBtn">Explore This Belief</button>
   <hr>
   
   <div id="result"></div>
@@ -67,27 +103,27 @@
     const resultEl = document.getElementById("result");
     const logEl = document.getElementById("log");
 
-    function log(msg, isError = false) {
-      console.log(msg);
-      const div = document.createElement('div');
-      div.textContent = `${new Date().toLocaleTimeString()}: ${typeof msg === 'string' ? msg : JSON.stringify(msg)}`;
-      if (isError) div.className = 'error';
-      logEl.insertBefore(div, logEl.firstChild);
+    function formatResponse(text) {
+      // Split into sections and format
+      return text
+        .split('\n')
+        .map(line => line.trim())
+        .filter(line => line)
+        .join('\n');
     }
 
     async function handleSubmit() {
       const statement = statementEl.value.trim();
       if (!statement) {
-        alert("Please enter a question or statement!");
+        alert("Please enter a belief or question to explore.");
         return;
       }
 
       submitBtn.disabled = true;
-      resultEl.textContent = "Thinking...";
-      logEl.innerHTML = '';
+      resultEl.textContent = "Analyzing your question...";
+      resultEl.className = "thinking";
 
       try {
-        log(`Sending request to ${API_URL}`);
         const response = await fetch(API_URL, {
           method: 'POST',
           headers: {
@@ -96,31 +132,22 @@
           body: JSON.stringify({ statement })
         });
 
-        log(`Response status: ${response.status}`);
-        const text = await response.text();
-        log(`Raw response: ${text}`);
-
-        let data;
-        try {
-          data = text ? JSON.parse(text) : {};
-          log('Parsed response:', data);
-        } catch (e) {
-          log('JSON parse error:', e.message, true);
-          throw new Error('Invalid response format');
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
         }
 
+        const data = await response.json();
+        
         if (data.error) {
           throw new Error(data.error);
         }
 
-        // Format the answer for display
-        const answer = data.answer || 'No answer received';
-        resultEl.textContent = answer;
+        resultEl.className = "";
+        resultEl.textContent = formatResponse(data.answer || 'No response received.');
 
       } catch (err) {
-        log(`Error: ${err.message}`, true);
         resultEl.textContent = `Error: ${err.message}`;
-        resultEl.className = 'error';
+        resultEl.className = "error";
       } finally {
         submitBtn.disabled = false;
       }
@@ -128,15 +155,12 @@
 
     submitBtn.addEventListener('click', handleSubmit);
     
-    // Handle Enter key
     statementEl.addEventListener('keypress', (e) => {
       if (e.key === 'Enter' && !e.shiftKey && !submitBtn.disabled) {
         e.preventDefault();
         handleSubmit();
       }
     });
-
-    log('Page loaded and ready.');
   </script>
 </body>
 </html>
