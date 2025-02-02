@@ -28,12 +28,21 @@
     button:hover {
       background-color: #45a049;
     }
+    button:disabled {
+      background-color: #cccccc;
+      cursor: not-allowed;
+    }
     #result {
       margin-top: 20px;
       padding: 15px;
       background: #f8f8f8;
       border-radius: 4px;
       min-height: 50px;
+      white-space: pre-wrap;
+    }
+    .error {
+      color: #d32f2f;
+      background: #ffebee;
     }
   </style>
 </head>
@@ -51,7 +60,6 @@
   <div id="result"></div>
 
   <script>
-    // Update to use the new endpoint
     const WEBHOOK_URL = "https://gpu.haielab.org/webhook/deepseek-llama-demo";
     
     const statementEl = document.getElementById("statementInput");
@@ -61,41 +69,49 @@
     console.log("Script loaded. Ready to handle clicks.");
     
     submitBtn.addEventListener('click', async () => {
-      console.log("Button clicked!");
       const statement = statementEl.value.trim();
       
       if (!statement) {
         alert("Please enter a question or statement!");
-        console.log("No statement provided.");
         return;
       }
       
+      // Disable button and show loading state
+      submitBtn.disabled = true;
       resultEl.textContent = "Thinking...";
+      resultEl.className = "";
       
       try {
-        console.log("Sending POST request to:", WEBHOOK_URL, "with statement:", statement);
-        
         const response = await fetch(WEBHOOK_URL, {
           method: "POST",
           headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Accept": "application/json"
           },
           body: JSON.stringify({ statement })
         });
         
-        console.log("HTTP status code:", response.status);
+        console.log("Response status:", response.status);
         
         if (!response.ok) {
-          throw new Error("HTTP error " + response.status);
+          throw new Error(`Server returned ${response.status}`);
         }
         
         const data = await response.json();
-        console.log("Response JSON:", data);
+        console.log("Response data:", data);
         
-        resultEl.textContent = data.answer || "No answer received.";
+        if (data.error) {
+          throw new Error(data.error);
+        }
+        
+        resultEl.textContent = data.answer || "No answer received";
       } catch (err) {
-        console.error("Fetch error:", err);
-        resultEl.textContent = "Error: " + err.message;
+        console.error("Error:", err);
+        resultEl.textContent = `Error: ${err.message}`;
+        resultEl.className = "error";
+      } finally {
+        // Re-enable button
+        submitBtn.disabled = false;
       }
     });
   </script>
