@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>RationalMedia - Belief Explorer</title>
+  <title>RationalMedia - Interactive Belief Explorer</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -26,17 +26,46 @@
       margin: 20px 0;
       font-size: 1.1em;
     }
+    .chat-container {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin: 20px 0;
+      padding: 20px;
+      max-height: 500px;
+      overflow-y: auto;
+    }
+    .message {
+      margin: 15px 0;
+      padding: 10px 15px;
+      border-radius: 8px;
+      max-width: 80%;
+    }
+    .user-message {
+      background: #e3f2fd;
+      margin-left: auto;
+      border-bottom-right-radius: 2px;
+    }
+    .ai-message {
+      background: #f5f5f5;
+      margin-right: auto;
+      border-bottom-left-radius: 2px;
+    }
+    .input-container {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
     textarea {
-      width: 100%;
+      flex-grow: 1;
       padding: 15px;
-      margin: 10px 0;
       border: 1px solid #1e90ff;
       border-radius: 8px;
       font-size: 16px;
-      background-color: white;
-      resize: vertical;
+      resize: none;
+      height: 60px;
     }
-    button {
+    .send-button {
       background-color: #1e90ff;
       color: white;
       padding: 12px 24px;
@@ -45,44 +74,32 @@
       cursor: pointer;
       font-size: 16px;
       transition: background-color 0.3s;
-      display: block;
-      margin: 20px auto;
-      min-width: 200px;
+      align-self: flex-end;
     }
-    button:hover {
+    .send-button:hover {
       background-color: #187bcd;
     }
-    button:disabled {
+    .send-button:disabled {
       background-color: #ccc;
     }
-    #result {
-      margin: 20px 0;
-      padding: 25px;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      font-size: 16px;
-      line-height: 1.8;
-      white-space: pre-wrap;
+    .assumption {
+      background: #fff3e0;
+      padding: 10px;
+      margin: 10px 0;
+      border-left: 3px solid #ff9800;
+      border-radius: 4px;
     }
     .thinking {
       color: #1e90ff;
       font-style: italic;
+      padding: 10px;
       text-align: center;
     }
-    .error { 
-      color: #d32f2f;
-      background: #ffebee;
-      padding: 15px;
-      border-radius: 8px;
-      margin-top: 15px;
-      text-align: center;
-    }
-    hr {
-      border: none;
-      border-top: 1px solid #1e90ff;
-      margin: 30px 0;
-      opacity: 0.3;
+    .continue-prompt {
+      color: #1e90ff;
+      font-style: italic;
+      margin-top: 5px;
+      font-size: 0.9em;
     }
   </style>
 </head>
@@ -90,57 +107,74 @@
   <div class="header">
     <h1>RationalMedia</h1>
     <div class="description">
-      Exploring beliefs through reason and evidence
+      Let's explore beliefs together through thoughtful dialogue
     </div>
   </div>
 
-  <textarea id="statementInput" rows="4" 
-    placeholder="Share a belief, claim, or question you'd like to explore..."></textarea>
-  
-  <button id="submitBtn">Explore This Belief</button>
-  <hr>
-  
-  <div id="result"></div>
+  <div class="chat-container" id="chatContainer">
+    <!-- Messages will be inserted here -->
+  </div>
+
+  <div class="input-container">
+    <textarea 
+      id="userInput" 
+      placeholder="Share your thoughts or ask a question..."
+    ></textarea>
+    <button class="send-button" id="sendBtn">Send</button>
+  </div>
 
   <script>
     const API_URL = 'https://gpu.haielab.org/webhook/deepseek-llama-demo';
-    const statementEl = document.getElementById("statementInput");
-    const submitBtn = document.getElementById("submitBtn");
-    const resultEl = document.getElementById("result");
+    const chatContainer = document.getElementById('chatContainer');
+    const userInput = document.getElementById('userInput');
+    const sendBtn = document.getElementById('sendBtn');
+    let conversationHistory = [];
 
-    function formatResponse(text) {
-      // Remove any remaining template variables
-      text = text.replace(/{{.*?}}/g, '');
-      
-      // Clean up any markdown-style formatting
-      text = text.replace(/\*\*/g, '');
-      
-      // Remove any system prompts that might have leaked through
-      if (text.includes('You are RationalMedia')) {
-        text = text.split('You are RationalMedia')[1];
-      }
-      
-      return text.trim();
+    function addMessage(text, isUser) {
+      const messageDiv = document.createElement('div');
+      messageDiv.className = `message ${isUser ? 'user-message' : 'ai-message'}`;
+      messageDiv.textContent = text;
+      chatContainer.appendChild(messageDiv);
+      chatContainer.scrollTop = chatContainer.scrollHeight;
     }
 
-    async function handleSubmit() {
-      const statement = statementEl.value.trim();
-      if (!statement) {
-        alert("Please enter a belief or question to explore.");
-        return;
-      }
+    function addThinking() {
+      const thinkingDiv = document.createElement('div');
+      thinkingDiv.className = 'thinking';
+      thinkingDiv.textContent = 'Thinking...';
+      chatContainer.appendChild(thinkingDiv);
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+      return thinkingDiv;
+    }
 
-      submitBtn.disabled = true;
-      resultEl.textContent = "Analyzing your question...";
-      resultEl.className = "thinking";
+    async function handleUserInput() {
+      const text = userInput.value.trim();
+      if (!text) return;
+
+      // Disable input while processing
+      userInput.disabled = true;
+      sendBtn.disabled = true;
+
+      // Add user message to chat
+      addMessage(text, true);
+      userInput.value = '';
+
+      // Add thinking indicator
+      const thinkingDiv = addThinking();
 
       try {
+        // Add message to history and send to API
+        conversationHistory.push({ role: 'user', content: text });
+        
         const response = await fetch(API_URL, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ statement })
+          body: JSON.stringify({
+            statement: text,
+            history: conversationHistory
+          })
         });
 
         if (!response.ok) {
@@ -149,29 +183,42 @@
 
         const data = await response.json();
         
+        // Remove thinking indicator
+        thinkingDiv.remove();
+
         if (data.error) {
           throw new Error(data.error);
         }
 
-        resultEl.className = "";
-        resultEl.textContent = formatResponse(data.answer || 'No response received.');
+        // Add AI response
+        const aiResponse = data.answer.trim();
+        addMessage(aiResponse, false);
+        
+        // Add to conversation history
+        conversationHistory.push({ role: 'assistant', content: aiResponse });
 
       } catch (err) {
-        resultEl.textContent = `Error: ${err.message}`;
-        resultEl.className = "error";
+        thinkingDiv.className = 'message error';
+        thinkingDiv.textContent = `Error: ${err.message}`;
       } finally {
-        submitBtn.disabled = false;
+        // Re-enable input
+        userInput.disabled = false;
+        sendBtn.disabled = false;
+        userInput.focus();
       }
     }
 
-    submitBtn.addEventListener('click', handleSubmit);
+    sendBtn.addEventListener('click', handleUserInput);
     
-    statementEl.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter' && !e.shiftKey && !submitBtn.disabled) {
+    userInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey && !userInput.disabled) {
         e.preventDefault();
-        handleSubmit();
+        handleUserInput();
       }
     });
+
+    // Initial greeting
+    addMessage("Hello! I'm here to explore beliefs and ideas with you through thoughtful dialogue. What would you like to discuss?", false);
   </script>
 </body>
 </html>
