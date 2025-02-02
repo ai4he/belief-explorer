@@ -11,7 +11,6 @@
       padding: 0 20px;
       background-color: #f0f8ff;
       color: #333;
-      line-height: 1.6;
     }
     .header {
       text-align: center;
@@ -26,7 +25,7 @@
       margin: 20px 0;
       font-size: 1.1em;
     }
-    .chat-container {
+    .dialogue-container {
       background: white;
       border-radius: 12px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
@@ -37,51 +36,41 @@
     }
     .message {
       margin: 15px 0;
-      padding: 10px 15px;
+      padding: 15px;
       border-radius: 8px;
-      max-width: 80%;
       position: relative;
-    }
-    .message::before {
-      content: '';
-      position: absolute;
-      bottom: -5px;
-      width: 10px;
-      height: 10px;
-      transform: rotate(45deg);
+      line-height: 1.5;
+      max-width: 85%;
     }
     .user-message {
       background: #e3f2fd;
       margin-left: auto;
-      border-bottom-right-radius: 2px;
       color: #1565c0;
     }
     .ai-message {
       background: #f5f5f5;
       margin-right: auto;
-      border-bottom-left-radius: 2px;
       color: #333;
     }
-    .input-container {
-      display: flex;
-      gap: 10px;
-      margin-top: 20px;
+    .input-area {
       background: white;
-      padding: 15px;
-      border-radius: 8px;
+      border-radius: 12px;
+      padding: 20px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin-top: 20px;
     }
     textarea {
-      flex-grow: 1;
+      width: 100%;
       padding: 15px;
       border: 1px solid #1e90ff;
       border-radius: 8px;
       font-size: 16px;
       resize: none;
-      height: 60px;
+      margin-bottom: 10px;
       font-family: inherit;
+      box-sizing: border-box;
     }
-    .send-button {
+    button {
       background-color: #1e90ff;
       color: white;
       padding: 12px 24px;
@@ -90,20 +79,20 @@
       cursor: pointer;
       font-size: 16px;
       transition: background-color 0.3s;
-      align-self: flex-end;
-      min-width: 100px;
+      width: 100%;
     }
-    .send-button:hover {
+    button:hover:not(:disabled) {
       background-color: #187bcd;
     }
-    .send-button:disabled {
+    button:disabled {
       background-color: #ccc;
+      cursor: not-allowed;
     }
     .thinking {
       color: #1e90ff;
       font-style: italic;
-      padding: 10px;
       text-align: center;
+      padding: 10px;
     }
   </style>
 </head>
@@ -111,67 +100,64 @@
   <div class="header">
     <h1>RationalMedia</h1>
     <div class="description">
-      Let's explore beliefs together through thoughtful dialogue
+      Exploring beliefs through meaningful dialogue
     </div>
   </div>
 
-  <div class="chat-container" id="chatContainer">
+  <div class="dialogue-container" id="dialogueContainer">
     <div class="message ai-message">
-      I'm here to explore beliefs and ideas with you through thoughtful dialogue. What would you like to discuss?
+      What belief or idea would you like to explore together?
     </div>
   </div>
 
-  <div class="input-container">
+  <div class="input-area">
     <textarea 
       id="userInput" 
-      placeholder="Share your thoughts or ask a question..."
+      rows="3"
+      placeholder="Share your thoughts..."
     ></textarea>
-    <button class="send-button" id="sendBtn">Send</button>
+    <button id="sendBtn">Continue Dialogue</button>
   </div>
 
   <script>
     const API_URL = 'https://gpu.haielab.org/webhook/deepseek-llama-demo';
-    const chatContainer = document.getElementById('chatContainer');
+    const dialogueContainer = document.getElementById('dialogueContainer');
     const userInput = document.getElementById('userInput');
     const sendBtn = document.getElementById('sendBtn');
     let conversationHistory = [{
       role: 'assistant',
-      content: "I'm here to explore beliefs and ideas with you through thoughtful dialogue. What would you like to discuss?"
+      content: 'What belief or idea would you like to explore together?'
     }];
+
+    function cleanResponse(text) {
+      // Remove any "user:" or "Question:" parts
+      return text.split(/user:|question:/i)[0].trim();
+    }
 
     function addMessage(text, isUser) {
       const messageDiv = document.createElement('div');
       messageDiv.className = `message ${isUser ? 'user-message' : 'ai-message'}`;
       messageDiv.textContent = text;
-      chatContainer.appendChild(messageDiv);
-      chatContainer.scrollTop = chatContainer.scrollHeight;
-    }
-
-    function addThinking() {
-      const thinkingDiv = document.createElement('div');
-      thinkingDiv.className = 'thinking';
-      thinkingDiv.textContent = 'Thinking...';
-      chatContainer.appendChild(thinkingDiv);
-      chatContainer.scrollTop = chatContainer.scrollHeight;
-      return thinkingDiv;
+      dialogueContainer.appendChild(messageDiv);
+      dialogueContainer.scrollTop = dialogueContainer.scrollHeight;
     }
 
     async function handleSubmit() {
       const text = userInput.value.trim();
       if (!text) return;
 
-      // Disable input while processing
-      userInput.disabled = true;
       sendBtn.disabled = true;
-
+      userInput.disabled = true;
+      
       try {
-        // Add user message to chat and history
         addMessage(text, true);
         conversationHistory.push({ role: 'user', content: text });
         userInput.value = '';
 
-        // Show thinking indicator
-        const thinkingDiv = addThinking();
+        const thinkingDiv = document.createElement('div');
+        thinkingDiv.className = 'thinking';
+        thinkingDiv.textContent = 'Thinking...';
+        dialogueContainer.appendChild(thinkingDiv);
 
         const response = await fetch(API_URL, {
           method: 'POST',
@@ -184,29 +170,23 @@
           })
         });
 
+        thinkingDiv.remove();
+
         if (!response.ok) {
           throw new Error(`Server error: ${response.status}`);
         }
 
-        // Remove thinking indicator
-        thinkingDiv.remove();
-
         const data = await response.json();
+        const cleanedResponse = cleanResponse(data.answer);
         
-        if (data.error) {
-          throw new Error(data.error);
-        }
-
-        // Add AI response and update history
-        const aiResponse = data.answer.trim();
-        addMessage(aiResponse, false);
-        conversationHistory.push({ role: 'assistant', content: aiResponse });
+        addMessage(cleanedResponse, false);
+        conversationHistory.push({ role: 'assistant', content: cleanedResponse });
 
       } catch (err) {
-        addMessage(`Error: ${err.message}`, false);
+        addMessage(`An error occurred. Please try again.`, false);
       } finally {
-        userInput.disabled = false;
         sendBtn.disabled = false;
+        userInput.disabled = false;
         userInput.focus();
       }
     }
