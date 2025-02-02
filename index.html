@@ -11,17 +11,20 @@
       padding: 0 20px;
       background-color: #f0f8ff;
       color: #333;
+      line-height: 1.6;
     }
     .header {
       text-align: center;
       padding: 20px 0;
       border-bottom: 2px solid #1e90ff;
+      margin-bottom: 30px;
     }
     .description {
       font-style: italic;
       color: #666;
       text-align: center;
       margin: 20px 0;
+      font-size: 1.1em;
     }
     textarea {
       width: 100%;
@@ -31,6 +34,7 @@
       border-radius: 8px;
       font-size: 16px;
       background-color: white;
+      resize: vertical;
     }
     button {
       background-color: #1e90ff;
@@ -41,6 +45,9 @@
       cursor: pointer;
       font-size: 16px;
       transition: background-color 0.3s;
+      display: block;
+      margin: 20px auto;
+      min-width: 200px;
     }
     button:hover {
       background-color: #187bcd;
@@ -49,32 +56,33 @@
       background-color: #ccc;
     }
     #result {
-      margin-top: 20px;
-      padding: 20px;
+      margin: 20px 0;
+      padding: 25px;
       background: white;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      line-height: 1.6;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      font-size: 16px;
+      line-height: 1.8;
       white-space: pre-wrap;
-    }
-    .section {
-      margin-bottom: 15px;
-      padding: 10px;
-      border-radius: 4px;
     }
     .thinking {
       color: #1e90ff;
       font-style: italic;
-    }
-    #log {
-      display: none;
+      text-align: center;
     }
     .error { 
       color: #d32f2f;
       background: #ffebee;
-      padding: 10px;
-      border-radius: 4px;
-      margin-top: 10px;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 15px;
+      text-align: center;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1e90ff;
+      margin: 30px 0;
+      opacity: 0.3;
     }
   </style>
 </head>
@@ -88,28 +96,31 @@
 
   <textarea id="statementInput" rows="4" 
     placeholder="Share a belief, claim, or question you'd like to explore..."></textarea>
-  <br>
   
   <button id="submitBtn">Explore This Belief</button>
   <hr>
   
   <div id="result"></div>
-  <div id="log"></div>
 
   <script>
     const API_URL = 'https://gpu.haielab.org/webhook/deepseek-llama-demo';
     const statementEl = document.getElementById("statementInput");
     const submitBtn = document.getElementById("submitBtn");
     const resultEl = document.getElementById("result");
-    const logEl = document.getElementById("log");
 
     function formatResponse(text) {
-      // Split into sections and format
-      return text
-        .split('\n')
-        .map(line => line.trim())
-        .filter(line => line)
-        .join('\n');
+      // Remove any remaining template variables
+      text = text.replace(/{{.*?}}/g, '');
+      
+      // Clean up any markdown-style formatting
+      text = text.replace(/\*\*/g, '');
+      
+      // Remove any system prompts that might have leaked through
+      if (text.includes('You are RationalMedia')) {
+        text = text.split('You are RationalMedia')[1];
+      }
+      
+      return text.trim();
     }
 
     async function handleSubmit() {
@@ -133,7 +144,7 @@
         });
 
         if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+          throw new Error(`Server error: ${response.status}`);
         }
 
         const data = await response.json();
