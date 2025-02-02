@@ -40,21 +40,36 @@
       padding: 10px 15px;
       border-radius: 8px;
       max-width: 80%;
+      position: relative;
+    }
+    .message::before {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      width: 10px;
+      height: 10px;
+      transform: rotate(45deg);
     }
     .user-message {
       background: #e3f2fd;
       margin-left: auto;
       border-bottom-right-radius: 2px;
+      color: #1565c0;
     }
     .ai-message {
       background: #f5f5f5;
       margin-right: auto;
       border-bottom-left-radius: 2px;
+      color: #333;
     }
     .input-container {
       display: flex;
       gap: 10px;
       margin-top: 20px;
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
     textarea {
       flex-grow: 1;
@@ -64,6 +79,7 @@
       font-size: 16px;
       resize: none;
       height: 60px;
+      font-family: inherit;
     }
     .send-button {
       background-color: #1e90ff;
@@ -75,6 +91,7 @@
       font-size: 16px;
       transition: background-color 0.3s;
       align-self: flex-end;
+      min-width: 100px;
     }
     .send-button:hover {
       background-color: #187bcd;
@@ -82,24 +99,11 @@
     .send-button:disabled {
       background-color: #ccc;
     }
-    .assumption {
-      background: #fff3e0;
-      padding: 10px;
-      margin: 10px 0;
-      border-left: 3px solid #ff9800;
-      border-radius: 4px;
-    }
     .thinking {
       color: #1e90ff;
       font-style: italic;
       padding: 10px;
       text-align: center;
-    }
-    .continue-prompt {
-      color: #1e90ff;
-      font-style: italic;
-      margin-top: 5px;
-      font-size: 0.9em;
     }
   </style>
 </head>
@@ -112,7 +116,9 @@
   </div>
 
   <div class="chat-container" id="chatContainer">
-    <!-- Messages will be inserted here -->
+    <div class="message ai-message">
+      I'm here to explore beliefs and ideas with you through thoughtful dialogue. What would you like to discuss?
+    </div>
   </div>
 
   <div class="input-container">
@@ -128,7 +134,10 @@
     const chatContainer = document.getElementById('chatContainer');
     const userInput = document.getElementById('userInput');
     const sendBtn = document.getElementById('sendBtn');
-    let conversationHistory = [];
+    let conversationHistory = [{
+      role: 'assistant',
+      content: "I'm here to explore beliefs and ideas with you through thoughtful dialogue. What would you like to discuss?"
+    }];
 
     function addMessage(text, isUser) {
       const messageDiv = document.createElement('div');
@@ -147,7 +156,7 @@
       return thinkingDiv;
     }
 
-    async function handleUserInput() {
+    async function handleSubmit() {
       const text = userInput.value.trim();
       if (!text) return;
 
@@ -155,17 +164,15 @@
       userInput.disabled = true;
       sendBtn.disabled = true;
 
-      // Add user message to chat
-      addMessage(text, true);
-      userInput.value = '';
-
-      // Add thinking indicator
-      const thinkingDiv = addThinking();
-
       try {
-        // Add message to history and send to API
+        // Add user message to chat and history
+        addMessage(text, true);
         conversationHistory.push({ role: 'user', content: text });
-        
+        userInput.value = '';
+
+        // Show thinking indicator
+        const thinkingDiv = addThinking();
+
         const response = await fetch(API_URL, {
           method: 'POST',
           headers: {
@@ -181,44 +188,37 @@
           throw new Error(`Server error: ${response.status}`);
         }
 
-        const data = await response.json();
-        
         // Remove thinking indicator
         thinkingDiv.remove();
 
+        const data = await response.json();
+        
         if (data.error) {
           throw new Error(data.error);
         }
 
-        // Add AI response
+        // Add AI response and update history
         const aiResponse = data.answer.trim();
         addMessage(aiResponse, false);
-        
-        // Add to conversation history
         conversationHistory.push({ role: 'assistant', content: aiResponse });
 
       } catch (err) {
-        thinkingDiv.className = 'message error';
-        thinkingDiv.textContent = `Error: ${err.message}`;
+        addMessage(`Error: ${err.message}`, false);
       } finally {
-        // Re-enable input
         userInput.disabled = false;
         sendBtn.disabled = false;
         userInput.focus();
       }
     }
 
-    sendBtn.addEventListener('click', handleUserInput);
+    sendBtn.addEventListener('click', handleSubmit);
     
     userInput.addEventListener('keypress', (e) => {
       if (e.key === 'Enter' && !e.shiftKey && !userInput.disabled) {
         e.preventDefault();
-        handleUserInput();
+        handleSubmit();
       }
     });
-
-    // Initial greeting
-    addMessage("Hello! I'm here to explore beliefs and ideas with you through thoughtful dialogue. What would you like to discuss?", false);
   </script>
 </body>
 </html>
