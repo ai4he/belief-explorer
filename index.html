@@ -44,6 +44,10 @@
       color: #d32f2f;
       background: #ffebee;
     }
+    .thinking {
+      color: #1976d2;
+      background: #e3f2fd;
+    }
   </style>
 </head>
 <body>
@@ -66,9 +70,12 @@
     const submitBtn = document.getElementById("submitBtn");
     const resultEl = document.getElementById("result");
     
-    console.log("Script loaded. Ready to handle clicks.");
+    function updateResult(text, isError = false) {
+      resultEl.textContent = text;
+      resultEl.className = isError ? 'error' : '';
+    }
     
-    submitBtn.addEventListener('click', async () => {
+    async function handleSubmit() {
       const statement = statementEl.value.trim();
       
       if (!statement) {
@@ -76,10 +83,9 @@
         return;
       }
       
-      // Disable button and show loading state
       submitBtn.disabled = true;
       resultEl.textContent = "Thinking...";
-      resultEl.className = "";
+      resultEl.className = "thinking";
       
       try {
         const response = await fetch(WEBHOOK_URL, {
@@ -91,29 +97,38 @@
           body: JSON.stringify({ statement })
         });
         
-        console.log("Response status:", response.status);
-        
-        if (!response.ok) {
-          throw new Error(`Server returned ${response.status}`);
-        }
-        
         const data = await response.json();
-        console.log("Response data:", data);
+        console.log("Response:", data);
         
         if (data.error) {
-          throw new Error(data.error);
+          updateResult(data.error, true);
+          return;
         }
         
-        resultEl.textContent = data.answer || "No answer received";
+        if (data.answer) {
+          updateResult(data.answer);
+        } else {
+          updateResult("Unexpected response format", true);
+        }
       } catch (err) {
         console.error("Error:", err);
-        resultEl.textContent = `Error: ${err.message}`;
-        resultEl.className = "error";
+        updateResult(`Error: ${err.message}`, true);
       } finally {
-        // Re-enable button
         submitBtn.disabled = false;
       }
+    }
+    
+    submitBtn.addEventListener('click', handleSubmit);
+    
+    // Also handle Enter key in textarea
+    statementEl.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        handleSubmit();
+      }
     });
+    
+    console.log("Script loaded. Ready to handle clicks.");
   </script>
 </body>
 </html>
