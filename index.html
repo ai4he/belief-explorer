@@ -135,48 +135,49 @@
       <div id="result" style="display:none;"></div>
     </section>
   </main>
+  
+<script>
+  // Replace this with your production n8n webhook URL
+  const WEBHOOK_URL = "https://gpu.haielab.org/webhook/deepseek-socratic-demo";
 
-  <script>
-    // Replace this with your actual n8n webhook URL
-    const WEBHOOK_URL = "https://gpu.haielab.org/webhook/deepseek-socratic-demo";
+  const statementEl = document.getElementById("statementInput");
+  const submitBtn = document.getElementById("submitBtn");
+  const resultEl = document.getElementById("result");
 
-    const statementEl = document.getElementById("statementInput");
-    const submitBtn = document.getElementById("submitBtn");
-    const resultEl = document.getElementById("result");
+  submitBtn.addEventListener('click', async () => {
+    const statement = statementEl.value.trim();
+    if (!statement) {
+      alert("Please enter a question or statement!");
+      return;
+    }
 
-    submitBtn.addEventListener('click', async () => {
-      const statement = statementEl.value.trim();
-      if (!statement) {
-        alert("Please enter a question or statement!");
-        return;
+    // Show a loading message
+    resultEl.textContent = "Thinking...";
+
+    try {
+      // Make a POST request to your n8n webhook
+      const response = await fetch(WEBHOOK_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ statement })
+      });
+
+      // If not 2xx status, throw an error
+      if (!response.ok) {
+        throw new Error("HTTP error " + response.status);
       }
 
-      // Reset display
-      resultEl.style.display = "block";
-      resultEl.textContent = "Thinking...";
+      // The n8n flow should return a JSON object like:
+      // { "answer": "chain of thought response from DeepSeek" }
+      const data = await response.json();
+      // If there's an "answer" field, display it, otherwise show an alternate
+      resultEl.textContent = data.answer || "No answer received.";
+    } catch (err) {
+      // If there's a network or runtime error, show it
+      resultEl.textContent = "Error: " + err.message;
+    }
+  });
+</script>
 
-      try {
-        // Make a POST request to your n8n webhook
-        const response = await fetch(WEBHOOK_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ statement })
-        });
-
-        if (!response.ok) {
-          throw new Error("HTTP Error " + response.status);
-        }
-
-        // The workflow should return a JSON like { answer: "..." }
-        const data = await response.json();
-        
-        // Present the Socratic chain-of-thought style answer
-        // data.answer is the LLM's chain-of-thought-based explanation
-        resultEl.textContent = data.answer || "No answer received.";
-      } catch (error) {
-        resultEl.textContent = "Error: " + error.message;
-      }
-    });
-  </script>
 </body>
 </html>
