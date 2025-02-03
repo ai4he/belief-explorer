@@ -120,19 +120,22 @@
   </div>
 
   <script>
+    // Change this if your n8n is at a different domain/path
     const API_URL = 'https://gpu.haielab.org/webhook/deepseek-llama-demo';
+
     const dialogueContainer = document.getElementById('dialogueContainer');
     const userInput = document.getElementById('userInput');
     const sendBtn = document.getElementById('sendBtn');
-    let conversationHistory = [{
-      role: 'assistant',
-      content: 'What belief or idea would you like to explore together?'
-    }];
-
-    function cleanResponse(text) {
-      // Remove any "user:" or "Question:" parts
-      return text.split(/user:|question:/i)[0].trim();
-    }
+    
+    // We'll keep a local "conversationHistory" array
+    // The "role" is either 'assistant' or 'user', 
+    // and "content" is the text that was said
+    let conversationHistory = [
+      {
+        role: 'assistant',
+        content: 'What belief or idea would you like to explore together?'
+      }
+    ];
 
     function addMessage(text, isUser) {
       const messageDiv = document.createElement('div');
@@ -146,53 +149,60 @@
       const text = userInput.value.trim();
       if (!text) return;
 
-      sendBtn.disabled = true;
+      // Show user message
+      addMessage(text, true);
+      conversationHistory.push({ role: 'user', content: text });
+      userInput.value = '';
       userInput.disabled = true;
-      
+      sendBtn.disabled = true;
+
+      // Show "Thinking..." text
+      const thinkingDiv = document.createElement('div');
+      thinkingDiv.className = 'thinking';
+      thinkingDiv.textContent = 'Thinking...';
+      dialogueContainer.appendChild(thinkingDiv);
+      dialogueContainer.scrollTop = dialogueContainer.scrollHeight;
+
       try {
-        addMessage(text, true);
-        conversationHistory.push({ role: 'user', content: text });
-        userInput.value = '';
-
-        const thinkingDiv = document.createElement('div');
-        thinkingDiv.className = 'thinking';
-        thinkingDiv.textContent = 'Thinking...';
-        dialogueContainer.appendChild(thinkingDiv);
-
+        // Make POST request to n8n
         const response = await fetch(API_URL, {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            statement: text,
+            statement: text,          // <-- the key
             history: conversationHistory
           })
         });
 
+        // Remove the "Thinking..." line
         thinkingDiv.remove();
 
         if (!response.ok) {
           throw new Error(`Server error: ${response.status}`);
         }
 
+        // Parse response { "answer": "some question?" }
         const data = await response.json();
-        const cleanedResponse = cleanResponse(data.answer);
-        
-        addMessage(cleanedResponse, false);
-        conversationHistory.push({ role: 'assistant', content: cleanedResponse });
+        const aiText = data.answer || "No answer returned.";
+
+        // Display answer
+        addMessage(aiText, false);
+        conversationHistory.push({ role: 'assistant', content: aiText });
 
       } catch (err) {
+        // Show an error
+        thinkingDiv.remove();
         addMessage(`An error occurred. Please try again.`, false);
       } finally {
-        sendBtn.disabled = false;
         userInput.disabled = false;
+        sendBtn.disabled = false;
         userInput.focus();
       }
     }
 
+    // Attach events
     sendBtn.addEventListener('click', handleSubmit);
-    
+
     userInput.addEventListener('keypress', (e) => {
       if (e.key === 'Enter' && !e.shiftKey && !userInput.disabled) {
         e.preventDefault();
