@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>RationalMedia - Interactive Belief Explorer</title>
+  <title>Belief Explorer</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      max-width: 800px;
+      max-width: 700px;
       margin: 20px auto;
       padding: 0 20px;
       background-color: #f0f8ff;
@@ -15,69 +15,69 @@
     .header {
       text-align: center;
       padding: 20px 0;
-      border-bottom: 2px solid #1e90ff;
-      margin-bottom: 30px;
+      margin-bottom: 20px;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 1.8em;
     }
     .description {
       font-style: italic;
       color: #666;
-      text-align: center;
-      margin: 20px 0;
-      font-size: 1.1em;
+      margin-top: 5px;
     }
-    .dialogue-container {
-      background: white;
+    .chat-container {
+      background: #fff;
       border-radius: 12px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      margin: 20px 0;
-      padding: 20px;
-      max-height: 500px;
+      margin-bottom: 20px;
+      padding: 15px;
+      max-height: 400px;
       overflow-y: auto;
     }
     .message {
-      margin: 15px 0;
-      padding: 15px;
+      margin: 10px 0;
+      padding: 12px;
       border-radius: 8px;
-      position: relative;
-      line-height: 1.5;
-      max-width: 85%;
+      line-height: 1.4;
+    }
+    .assistant-message {
+      background: #e3f2fd;
+      color: #1565c0;
+      margin-right: auto;
+      margin-left: 0;
     }
     .user-message {
-      background: #e3f2fd;
-      margin-left: auto;
-      color: #1565c0;
-    }
-    .ai-message {
       background: #f5f5f5;
-      margin-right: auto;
       color: #333;
+      margin-left: auto;
+      margin-right: 0;
     }
     .input-area {
-      background: white;
+      background: #fff;
       border-radius: 12px;
-      padding: 20px;
+      padding: 15px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      margin-top: 20px;
     }
     textarea {
       width: 100%;
-      padding: 15px;
+      padding: 12px;
       border: 1px solid #1e90ff;
-      border-radius: 8px;
-      font-size: 16px;
+      border-radius: 6px;
+      font-size: 14px;
       resize: none;
-      margin-bottom: 10px;
       font-family: inherit;
       box-sizing: border-box;
+      margin-bottom: 10px;
     }
     button {
       background-color: #1e90ff;
       color: white;
-      padding: 12px 24px;
+      font-size: 16px;
       border: none;
+      padding: 12px 20px;
       border-radius: 8px;
       cursor: pointer;
-      font-size: 16px;
       transition: background-color 0.3s;
       width: 100%;
     }
@@ -88,48 +88,31 @@
       background-color: #ccc;
       cursor: not-allowed;
     }
-    .thinking {
-      color: #1e90ff;
-      font-style: italic;
-      text-align: center;
-      padding: 10px;
-    }
   </style>
 </head>
 <body>
+
   <div class="header">
-    <h1>RationalMedia</h1>
+    <h1>Belief Explorer</h1>
     <div class="description">
-      Exploring beliefs through meaningful dialogue
+      Investigate your beliefs through meaningful AI dialogue
     </div>
   </div>
 
-  <div class="dialogue-container" id="dialogueContainer">
-    <div class="message ai-message">
-      What belief or idea would you like to explore together?
-    </div>
+  <div class="chat-container" id="chatContainer">
+    <!-- The messages will be dynamically rendered here -->
   </div>
 
   <div class="input-area">
-    <textarea 
-      id="userInput" 
-      rows="3"
-      placeholder="Share your thoughts..."
-    ></textarea>
-    <button id="sendBtn">Continue Dialogue</button>
+    <textarea id="userInput" rows="3" placeholder="Share your thoughts..."></textarea>
+    <button id="sendButton">Continue Dialogue</button>
   </div>
 
   <script>
-    // Change this if your n8n is at a different domain/path
+    // Edit the URL below to match your n8n webhook endpoint
     const API_URL = 'https://gpu.haielab.org/webhook/deepseek-llama-demo';
 
-    const dialogueContainer = document.getElementById('dialogueContainer');
-    const userInput = document.getElementById('userInput');
-    const sendBtn = document.getElementById('sendBtn');
-    
-    // We'll keep a local "conversationHistory" array
-    // The "role" is either 'assistant' or 'user', 
-    // and "content" is the text that was said
+    // We'll keep an array of { role: "assistant" | "user", content: "..." }
     let conversationHistory = [
       {
         role: 'assistant',
@@ -137,76 +120,89 @@
       }
     ];
 
-    function addMessage(text, isUser) {
-      const messageDiv = document.createElement('div');
-      messageDiv.className = `message ${isUser ? 'user-message' : 'ai-message'}`;
-      messageDiv.textContent = text;
-      dialogueContainer.appendChild(messageDiv);
-      dialogueContainer.scrollTop = dialogueContainer.scrollHeight;
+    // Grab references to HTML elements
+    const chatContainer = document.getElementById('chatContainer');
+    const userInput = document.getElementById('userInput');
+    const sendButton = document.getElementById('sendButton');
+
+    // Function to render the conversation in the chat container
+    function renderConversation() {
+      chatContainer.innerHTML = ''; // Clear existing messages
+
+      conversationHistory.forEach(turn => {
+        const msgDiv = document.createElement('div');
+        msgDiv.classList.add('message');
+        msgDiv.classList.add(turn.role === 'assistant' ? 'assistant-message' : 'user-message');
+        msgDiv.textContent = turn.content;
+        chatContainer.appendChild(msgDiv);
+      });
+
+      // Scroll to bottom each time we render
+      chatContainer.scrollTop = chatContainer.scrollHeight;
     }
 
-    async function handleSubmit() {
-      const text = userInput.value.trim();
-      if (!text) return;
+    // Initial render
+    renderConversation();
 
-      // Show user message
-      addMessage(text, true);
+    // Function to handle sending user input
+    async function handleSend() {
+      const text = userInput.value.trim();
+      if (!text) return; // ignore empty
+
+      // Add user message to conversation
       conversationHistory.push({ role: 'user', content: text });
       userInput.value = '';
       userInput.disabled = true;
-      sendBtn.disabled = true;
+      sendButton.disabled = true;
 
-      // Show "Thinking..." text
-      const thinkingDiv = document.createElement('div');
-      thinkingDiv.className = 'thinking';
-      thinkingDiv.textContent = 'Thinking...';
-      dialogueContainer.appendChild(thinkingDiv);
-      dialogueContainer.scrollTop = dialogueContainer.scrollHeight;
+      // Re-render to show the user's message
+      renderConversation();
 
       try {
-        // Make POST request to n8n
+        // Send statement + conversation to n8n
         const response = await fetch(API_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            statement: text,          // <-- the key
+            statement: text,
             history: conversationHistory
           })
         });
-
-        // Remove the "Thinking..." line
-        thinkingDiv.remove();
 
         if (!response.ok) {
           throw new Error(`Server error: ${response.status}`);
         }
 
-        // Parse response { "answer": "some question?" }
         const data = await response.json();
-        const aiText = data.answer || "No answer returned.";
+        // data.answer should be the AI's new message
+        if (data.answer) {
+          // Add the assistant's reply to the conversation
+          conversationHistory.push({ role: 'assistant', content: data.answer });
+        } else {
+          conversationHistory.push({ role: 'assistant', content: '(No answer returned.)' });
+        }
 
-        // Display answer
-        addMessage(aiText, false);
-        conversationHistory.push({ role: 'assistant', content: aiText });
-
+        renderConversation();
       } catch (err) {
-        // Show an error
-        thinkingDiv.remove();
-        addMessage(`An error occurred. Please try again.`, false);
+        console.error(err);
+        conversationHistory.push({
+          role: 'assistant',
+          content: 'An error occurred. Please try again.'
+        });
+        renderConversation();
       } finally {
         userInput.disabled = false;
-        sendBtn.disabled = false;
+        sendButton.disabled = false;
         userInput.focus();
       }
     }
 
-    // Attach events
-    sendBtn.addEventListener('click', handleSubmit);
-
+    // Attach event listeners
+    sendButton.addEventListener('click', handleSend);
     userInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter' && !e.shiftKey && !userInput.disabled) {
+      if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
-        handleSubmit();
+        handleSend();
       }
     });
   </script>
