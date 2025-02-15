@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>Belief Explorer</title>
   <style>
-    /* Global styling */
+    /* Global styles */
     body {
       font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       margin: 0;
@@ -36,31 +36,39 @@
     .header {
       text-align: center;
       margin-bottom: 20px;
+      padding: 20px 0;
     }
     .header h1 {
       margin: 0;
-      font-size: 2.4em;
+      font-size: 2.8em;
+      letter-spacing: 0.5px;
     }
-    .header .subtitle {
-      margin-top: 10px;
+    .header .subtitles {
+      margin-top: 15px;
       font-size: 1.1em;
       color: #555;
       line-height: 1.4;
     }
-    /* Chat container styling - minimal, no borders */
+    .header .subtitles p {
+      margin: 10px 0;
+    }
+    /* Chat container: no borders, increased height */
     .chat-container {
       background: transparent;
       padding: 15px;
       height: 400px;
       overflow-y: auto;
       margin-bottom: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
     }
     .message {
       padding: 10px 14px;
       border-radius: 12px;
       max-width: 70%;
       word-wrap: break-word;
-      margin-bottom: 10px;
+      margin: 0;
     }
     .assistant-message {
       background: #e0e0e0;
@@ -72,7 +80,7 @@
       color: #000;
       align-self: flex-end;
     }
-    /* Input area styling - minimal */
+    /* Input area: no border lines */
     .input-area {
       display: flex;
       flex-direction: column;
@@ -85,8 +93,7 @@
       resize: none;
       box-sizing: border-box;
       background: transparent;
-      border: 1px solid #ccc;
-      border-radius: 6px;
+      /* Removed border for a minimalist look */
     }
     button {
       background-color: #000;
@@ -105,7 +112,7 @@
       background-color: #888;
       cursor: not-allowed;
     }
-    /* Spinner for "thinking" */
+    /* Spinner for processing */
     .spinner {
       border: 4px solid rgba(0,0,0,0.1);
       width: 24px;
@@ -118,10 +125,9 @@
     @keyframes spin {
       to { transform: rotate(360deg); }
     }
-    /* Full-width footer */
+    /* Footer: full-width, consistent margins */
     .footer {
       width: 100%;
-      background: transparent;
       padding: 20px;
       margin-top: 30px;
       font-size: 0.95em;
@@ -139,10 +145,14 @@
   <div class="container">
     <div class="header">
       <h1>Belief Explorer</h1>
-      <div class="subtitle">
-        <strong>Why We’re Here</strong><br>
-        Sometimes, we hold beliefs without fully realizing the assumptions behind them. When we question those assumptions, sometimes a guide helps us arrive at conclusions that resonate more deeply with our inner core. This platform was designed to do just that. It doesn't judge or force; it simply listens and gently shows the underlying premises that would need to be true for a given claim. In exploring those premises, you get to decide if they align with your sense of truth.<br><br>
-        Ask a question or state a belief—like “Is the Earth hollow?”—and we’ll help you examine the chain of assumptions. The goal is to provoke your own internal reasoning. Think of it as a friend helping you see your path more clearly, not an authority telling you what to do.
+      <div class="subtitles">
+        <p><strong>Investigate your beliefs through meaningful AI dialogue.</strong></p>
+        <p>
+          Sometimes, we hold beliefs without fully realizing the assumptions behind them. When we question those assumptions, a guide can help us arrive at conclusions that resonate more deeply with our inner core. This platform was designed to do just that. It doesn't judge or force; it simply listens and gently reveals the underlying premises that would need to be true for a given claim. In exploring those premises, you decide if they align with your sense of truth.
+        </p>
+        <p>
+          Ask a question or state a belief—like “Is the Earth hollow?”—and we’ll help you examine the chain of assumptions. The goal is to provoke your own internal reasoning. Think of it as a friend helping you see your path more clearly, not an authority telling you what to do.
+        </p>
       </div>
     </div>
 
@@ -161,14 +171,18 @@
 
   <div class="footer">
     <p><strong>About Belief Explorer:</strong></p>
-    <p>Human history is a story of beliefs – and the biases that cling to them. From political ideologies to personal convictions, we all see the world through subjective lenses shaped by upbringing, culture, and emotion. These biases influence what we accept as true, often overpowering facts and logical arguments. In the modern era, debates on social media or television often entrench opposing sides rather than resolve differences. As polarization grows, a provocative question arises: can artificial intelligence succeed where humans struggle?</p>
-    <p>Our platform is designed to build the first unbiased repository of human beliefs—one that validates ideas based on factual alignment and observation rather than emotional bias. By helping individuals reflect on and critically examine their beliefs, we empower users to defend their ideas through evidence and reason.</p>
+    <p>
+      Human history is a story of beliefs – and the biases that cling to them. From political ideologies to personal convictions, we all see the world through subjective lenses shaped by upbringing, culture, and emotion. These biases influence what we accept as true, often overpowering facts and logical arguments. In the modern era, debates on social media or television often entrench opposing sides rather than resolve differences. As polarization grows, a provocative question arises: can artificial intelligence succeed where humans struggle?
+    </p>
+    <p>
+      Our platform is designed to build the first unbiased repository of human beliefs—one that validates ideas based on factual alignment and observation rather than emotional bias. By helping individuals reflect on and critically examine their beliefs, we empower users to defend their ideas through evidence and reason.
+    </p>
     <p>Credits: A joint project by the Metacognition Institute and HAIELAB from Clemson University.</p>
     <p>Contact: <a href="mailto:info@metacognitioninstitute.com">info@metacognitioninstitute.com</a></p>
   </div>
 
   <script>
-    // Update API_URL to match your n8n webhook endpoint.
+    // Set your n8n webhook URL here
     const API_URL = 'https://gpu.haielab.org/webhook/deepseek-llama-demo';
     const chatContainer = document.getElementById('chatContainer');
     const userInput = document.getElementById('userInput');
@@ -197,11 +211,11 @@
       const text = userInput.value.trim();
       if (!text) return;
       
-      // Add the user message to conversation and re-render.
+      // Add the user message to conversation history and re-render
       conversationHistory.push({ role: 'user', content: text });
       renderConversation();
       
-      // Clear input, disable button, and show spinner.
+      // Clear input, disable button, show spinner
       userInput.value = '';
       userInput.disabled = true;
       sendButton.disabled = true;
