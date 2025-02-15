@@ -4,34 +4,24 @@
   <meta charset="UTF-8">
   <title>Belief Explorer</title>
   <style>
-    /* Base styling */
+    /* Global styles */
     body {
       font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-      max-width: 900px;
-      margin: 0 auto;
+      margin: 0;
       padding: 20px;
       background-color: #ffffff;
       color: #000000;
       line-height: 1.6;
     }
-    /* Dark mode support */
-    @media (prefers-color-scheme: dark) {
-      body {
-        background-color: #121212;
-        color: #ffffff;
-      }
-      .chat-container, .input-area, .footer {
-        background-color: #1e1e1e;
-      }
-      textarea {
-        background-color: #2c2c2c;
-        color: #ffffff;
-        border: 1px solid #444;
-      }
+    /* Container for main content, centered */
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
     }
+    /* Header styling */
     .header {
       text-align: center;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
     }
     .header h1 {
       margin: 0;
@@ -39,27 +29,28 @@
     }
     .header .description {
       font-style: italic;
-      margin-top: 8px;
+      margin-top: 5px;
       color: #555;
     }
-    /* Chat container */
+    /* Chat container styling */
     .chat-container {
-      background: inherit;
-      border: none;
+      background: #f9f9f9;
       border-radius: 8px;
-      padding: 15px;
-      height: 500px;
+      padding: 10px 15px;
+      height: 400px;
       overflow-y: auto;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 8px;
+      border: 1px solid #ccc;
     }
     .message {
-      padding: 12px 16px;
+      padding: 10px 14px;
       border-radius: 12px;
       max-width: 70%;
       word-wrap: break-word;
+      margin: 0;
     }
     .assistant-message {
       background: #e0e0e0;
@@ -71,22 +62,19 @@
       color: #000;
       align-self: flex-end;
     }
-    /* Input area */
+    /* Input area styling */
     .input-area {
-      background: inherit;
-      border: none;
-      border-radius: 8px;
-      padding: 15px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 8px;
+      margin-bottom: 20px;
     }
     textarea {
       width: 100%;
       padding: 12px;
+      font-size: 16px;
       border: 1px solid #ccc;
       border-radius: 6px;
-      font-size: 16px;
       resize: none;
       box-sizing: border-box;
     }
@@ -107,7 +95,7 @@
       background-color: #888;
       cursor: not-allowed;
     }
-    /* Spinner for "thinking" */
+    /* Spinner styling */
     .spinner {
       border: 4px solid rgba(0,0,0,0.1);
       width: 24px;
@@ -120,36 +108,72 @@
     @keyframes spin {
       to { transform: rotate(360deg); }
     }
-    /* Footer */
+    /* Full-width footer */
     .footer {
+      width: 100%;
+      background: #f0f0f0;
+      padding: 20px;
+      box-sizing: border-box;
       margin-top: 30px;
-      padding-top: 20px;
-      border-top: 1px solid #ccc;
       font-size: 0.95em;
       text-align: center;
       color: #777;
       line-height: 1.4;
     }
-    .footer p {
-      margin: 8px 0;
+    @media (prefers-color-scheme: dark) {
+      body {
+        background-color: #121212;
+        color: #ffffff;
+      }
+      .chat-container, .input-area, .footer {
+        background-color: #1e1e1e;
+      }
+      textarea {
+        background-color: #2c2c2c;
+        color: #ffffff;
+        border: 1px solid #444;
+      }
+      .assistant-message {
+        background: #333;
+        color: #fff;
+      }
+      .user-message {
+        background: #444;
+        color: #fff;
+      }
+      button {
+        background-color: #fff;
+        color: #000;
+      }
+      button:hover:not(:disabled) {
+        background-color: #ddd;
+      }
+      .spinner {
+        border-left-color: #fff;
+      }
+      .footer {
+        background: #1e1e1e;
+        color: #ccc;
+      }
     }
   </style>
 </head>
 <body>
+  <div class="container">
+    <div class="header">
+      <h1>Belief Explorer</h1>
+      <div class="description">Investigate your beliefs through meaningful AI dialogue.</div>
+    </div>
 
-  <div class="header">
-    <h1>Belief Explorer</h1>
-    <div class="description">Investigate your beliefs through meaningful AI dialogue.</div>
-  </div>
+    <div class="chat-container" id="chatContainer">
+      <div class="message assistant-message">What belief or idea would you like to explore together?</div>
+    </div>
 
-  <div class="chat-container" id="chatContainer">
-    <div class="message assistant-message">What belief or idea would you like to explore together?</div>
-  </div>
-
-  <div class="input-area">
-    <textarea id="userInput" rows="3" placeholder="Share your thoughts..."></textarea>
-    <button id="sendButton">Continue Dialogue</button>
-    <div id="spinner" class="spinner" style="display: none;"></div>
+    <div class="input-area">
+      <textarea id="userInput" rows="3" placeholder="Share your thoughts..."></textarea>
+      <button id="sendButton">Explore</button>
+      <div id="spinner" class="spinner" style="display: none;"></div>
+    </div>
   </div>
 
   <div class="footer">
@@ -168,6 +192,71 @@
     const sendButton = document.getElementById('sendButton');
     const spinner = document.getElementById('spinner');
 
-    // Conversation history: initialize with the assistant's opening message.
+    // Initialize conversation history with the assistant's opening message.
     let conversationHistory = [
-      { role: 'assistant', content: 'What belief or idea would you
+      { role: 'assistant', content: 'What belief or idea would you like to explore together?' }
+    ];
+
+    function renderConversation() {
+      chatContainer.innerHTML = '';
+      conversationHistory.forEach(turn => {
+        const div = document.createElement('div');
+        div.className = 'message ' + (turn.role === 'assistant' ? 'assistant-message' : 'user-message');
+        div.textContent = turn.content;
+        chatContainer.appendChild(div);
+      });
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+
+    renderConversation();
+
+    async function handleSend() {
+      const text = userInput.value.trim();
+      if (!text) return;
+      
+      // Add the user message to the conversation
+      conversationHistory.push({ role: 'user', content: text });
+      renderConversation();
+      
+      // Clear input, disable button, and show spinner
+      userInput.value = '';
+      userInput.disabled = true;
+      sendButton.disabled = true;
+      spinner.style.display = 'block';
+      
+      try {
+        const response = await fetch(API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            statement: text,
+            history: conversationHistory
+          })
+        });
+        if (!response.ok) throw new Error(`Server error: ${response.status}`);
+        const data = await response.json();
+        const aiText = data.answer || "No answer returned.";
+        conversationHistory.push({ role: 'assistant', content: aiText });
+        renderConversation();
+      } catch (err) {
+        console.error(err);
+        conversationHistory.push({ role: 'assistant', content: 'An error occurred. Please try again.' });
+        renderConversation();
+      } finally {
+        spinner.style.display = 'none';
+        userInput.disabled = false;
+        sendButton.disabled = false;
+        userInput.focus();
+      }
+    }
+
+    sendButton.addEventListener('click', handleSend);
+    userInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey && !userInput.disabled) {
+        e.preventDefault();
+        handleSend();
+      }
+    });
+  </script>
+</body>
+</html>
