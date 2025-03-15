@@ -38,6 +38,17 @@
       .score-bar .fill {
         background-color: #4f94cd;
       }
+      .tabs button {
+        color: #fff;
+        border-color: #333;
+      }
+      .tabs button.active {
+        background-color: #333;
+        border-bottom-color: #333;
+      }
+      .info-section {
+        color: #ccc;
+      }
     }
 
     /* Main container */
@@ -125,6 +136,31 @@
       height: 100%;
       background-color: #0d6efd;
       border-radius: 3px;
+    }
+
+    /* Tabs for analysis modes */
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid #dee2e6;
+      margin-bottom: 15px;
+    }
+
+    .tabs button {
+      background: none;
+      border: 1px solid transparent;
+      border-bottom: none;
+      border-radius: 8px 8px 0 0;
+      padding: 8px 12px;
+      color: #495057;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .tabs button.active {
+      background-color: #f8f9fa;
+      border-color: #dee2e6;
+      border-bottom-color: #f8f9fa;
+      color: #0d6efd;
     }
 
     /* Chat container */
@@ -229,11 +265,6 @@
     .info-section p {
       margin: 10px 0;
     }
-    @media (prefers-color-scheme: dark) {
-      .info-section {
-        color: #ccc;
-      }
-    }
 
     /* Responsive layout adjustments */
     @media (max-width: 768px) {
@@ -273,10 +304,26 @@
       <!-- Analysis panel - hidden by default -->
       <div class="analysis-column" id="analysisColumn">
         <div class="analysis-panel">
-          <h3>Critical Thinking Analysis</h3>
-          <div id="claimsAnalysis">
-            <!-- Claims analysis will be populated here -->
-            <div class="placeholder">No claims to analyze yet.</div>
+          <div class="tabs">
+            <button class="active" data-tab="criticalThinking">Critical Thinking</button>
+            <button data-tab="modelDiversity">Perspectives</button>
+          </div>
+
+          <div id="criticalThinkingTab" class="tab-content">
+            <h3>Critical Thinking Analysis</h3>
+            <div id="claimsAnalysis">
+              <!-- Claims analysis will be populated here -->
+              <div class="placeholder">No claims to analyze yet.</div>
+            </div>
+          </div>
+
+          <div id="modelDiversityTab" class="tab-content" style="display: none;">
+            <h3>Alternative Perspectives</h3>
+            <p>This panel visualizes how your belief might be viewed from different perspectives or models of thinking.</p>
+            <div id="perspectivesContent">
+              <!-- Perspectives content will be populated here -->
+              <div class="placeholder">Share a belief to see alternative perspectives.</div>
+            </div>
           </div>
         </div>
       </div>
@@ -306,6 +353,22 @@
         Contact: <a href="mailto:info@metacognitioninstitute.com">info@metacognitioninstitute.com</a>
       </p>
     </div>
+
+    <!-- Add information about the Critical Thinking Model -->
+    <div class="info-section">
+      <h2>Our Critical Thinking Framework</h2>
+      <p>
+        Belief Explorer utilizes a proprietary critical thinking formalization to help analyze beliefs and claims. This framework examines several key dimensions:
+      </p>
+      <ul>
+        <li><strong>Verifact Score</strong>: A measure of how empirically verifiable and logically consistent a claim is.</li>
+        <li><strong>Assumption Analysis</strong>: Identification of underlying assumptions within statements.</li>
+        <li><strong>Perspective Diversity</strong>: Consideration of alternative models or viewpoints.</li>
+      </ul>
+      <p>
+        The goal isn't to judge beliefs as "right" or "wrong," but to help users understand the foundations of their thinking and strengthen their reasoning processes.
+      </p>
+    </div>
   </div>
 
   <script>
@@ -318,6 +381,24 @@
     const toggleAnalysis = document.getElementById('toggleAnalysis');
     const analysisColumn = document.getElementById('analysisColumn');
     const claimsAnalysis = document.getElementById('claimsAnalysis');
+    const perspectivesContent = document.getElementById('perspectivesContent');
+    
+    // Tab handling
+    const tabs = document.querySelectorAll('.tabs button');
+    const tabContents = document.querySelectorAll('.tab-content');
+    
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        // Deactivate all tabs
+        tabs.forEach(t => t.classList.remove('active'));
+        tabContents.forEach(content => content.style.display = 'none');
+        
+        // Activate selected tab
+        tab.classList.add('active');
+        const tabId = tab.getAttribute('data-tab') + 'Tab';
+        document.getElementById(tabId).style.display = 'block';
+      });
+    });
 
     let conversationHistory = [
       { role: 'assistant', content: 'What belief or idea would you like to explore together?' }
@@ -398,6 +479,42 @@
         
         claimsAnalysis.appendChild(claimDiv);
       });
+      
+      // Generate simplified perspectives based on claims
+      renderPerspectives(analysisData);
+    }
+    
+    function renderPerspectives(analysisData) {
+      if (!analysisData || analysisData.length === 0) {
+        perspectivesContent.innerHTML = '<div class="placeholder">Share a belief to see alternative perspectives.</div>';
+        return;
+      }
+      
+      // Create simplified perspective analysis
+      perspectivesContent.innerHTML = '';
+      
+      // Example perspectives based on assumption analysis
+      const perspectives = [
+        { name: "Empirical", description: "Focuses on observable evidence and measurable data" },
+        { name: "Logical", description: "Focuses on coherence and internal consistency" },
+        { name: "Pragmatic", description: "Focuses on practical consequences and utility" }
+      ];
+      
+      perspectives.forEach(perspective => {
+        const perspDiv = document.createElement('div');
+        perspDiv.className = 'claim-item';
+        
+        const perspName = document.createElement('div');
+        perspName.className = 'claim-text';
+        perspName.textContent = perspective.name + " Perspective";
+        perspDiv.appendChild(perspName);
+        
+        const perspDesc = document.createElement('div');
+        perspDesc.textContent = perspective.description;
+        perspDiv.appendChild(perspDesc);
+        
+        perspectivesContent.appendChild(perspDiv);
+      });
     }
 
     toggleAnalysis.addEventListener('click', () => {
@@ -456,27 +573,34 @@
           throw new Error("Invalid JSON response");
         }
         
-        const aiText = data.answer || "No answer returned";
+        // *** FIXED: Use Response field from the n8n output format ***
+        const aiText = data.Response || "No answer returned";
         console.log("AI response text:", aiText);
         
         conversationHistory.push({ role: 'assistant', content: aiText });
         renderConversation();
         
-        // Check if we received analysis data and update UI
-        if (data.metadata && data.metadata.criticalThinkingAnalysis) {
-          console.log("Analysis data received:", data.metadata.criticalThinkingAnalysis);
-          lastAnalysisData = data.metadata.criticalThinkingAnalysis;
-          renderAnalysis(lastAnalysisData);
-          
-          // Show the toggle button and optionally show the panel
-          toggleAnalysis.style.display = 'block';
-          if (lastAnalysisData.length > 0) {
-            analysisColumn.style.display = 'block';
-            toggleAnalysis.textContent = 'Hide Analysis Panel';
+        // *** FIXED: Process analysis from the AnalysisJSON field ***
+        if (data.AnalysisJSON) {
+          try {
+            const analysisData = JSON.parse(data.AnalysisJSON);
+            console.log("Analysis data:", analysisData);
+            
+            if (analysisData && analysisData.length > 0) {
+              lastAnalysisData = analysisData;
+              renderAnalysis(lastAnalysisData);
+              
+              // Show the toggle button and panel
+              toggleAnalysis.style.display = 'block';
+              analysisColumn.style.display = 'block';
+              toggleAnalysis.textContent = 'Hide Analysis Panel';
+            }
+          } catch (e) {
+            console.error("Error parsing analysis JSON:", e);
           }
         }
       } catch (err) {
-        console.error("Error in API call:", err);
+        console.error("API Error:", err);
         conversationHistory.push({ role: 'assistant', content: 'An error occurred: ' + err.message });
         renderConversation();
       } finally {
