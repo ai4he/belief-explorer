@@ -488,8 +488,8 @@
   </div>
 
   <script>
-    // Update your n8n webhook URL if needed
-    const API_URL = 'https://gpu.haielab.org/webhook/deepseek-llama-demo';
+    // Update your n8n webhook URL here
+    const API_URL = 'https://gpu.haielab.org/webhook/6d437c73-8849-4dba-9d88-634c930fc2b3';
     const chatContainer = document.getElementById('chatContainer');
     const userInput = document.getElementById('userInput');
     const sendButton = document.getElementById('sendButton');
@@ -674,7 +674,7 @@
       const empiricalScore = parseFloat(item.verifactScore.components.empiricalVerifiability || 0.5);
       const logicalScore = parseFloat(item.verifactScore.components.logicalConsistency || 0.5);
       
-      // Create metric boxes
+      // Create metric boxes - FIXED: Added backticks around template string
       metricsOverview.innerHTML = `
         <div class="metric-box">
           <div class="metric-title">Verifact Score</div>
@@ -742,7 +742,7 @@
         }
       });
       
-      // Create metrics explanation
+      // Create metrics explanation - FIXED: Added backticks around template string
       metricsExplanation.innerHTML = `
         <h4>What These Metrics Mean</h4>
         <p><strong>Verifact Score:</strong> Overall measure of claim verifiability and logical consistency.</p>
