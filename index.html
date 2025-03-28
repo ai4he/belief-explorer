@@ -14,7 +14,7 @@
       color: #000;
       line-height: 1.6;
     }
-    
+
     @media (prefers-color-scheme: dark) {
       body {
         background-color: #121212;
@@ -23,43 +23,111 @@
       textarea {
         background-color: #2c2c2c;
         color: #fff;
+        border-color: #555; /* Dark mode border for textarea */
       }
+       button {
+         background-color: #eee; /* Lighter button background */
+         color: #111; /* Darker text */
+       }
+       button:hover:not(:disabled) {
+         background-color: #ddd;
+       }
+       button:disabled {
+         background-color: #555;
+         color: #999;
+       }
       .message.assistant-message {
         background: #2c2c2c;
         color: #fff;
       }
       .message.user-message {
-        background: #333333;
+        background: #3e3e3e; /* Slightly different dark user message */
         color: #fff;
       }
       .analysis-panel {
-        background-color: #1e1e1e !important;
+        background-color: #1e1e1e !important; /* Kept !important for specificity, review later if needed */
         border-color: #333 !important;
       }
+       .claim-box {
+        background-color: #2c2c2c;
+        border-color: #444;
+      }
+       .assumption-tag {
+         background: #444;
+         color: #eee;
+       }
+       .score-name {
+          /* Ensure score names are visible */
+          color: #ccc;
+       }
+       .score-bar {
+          background: #444; /* Darker bar background */
+       }
       .score-bar .fill {
-        background-color: #4f94cd;
+        background-color: #4f94cd; /* Keep fill color */
       }
       .tabs button {
-        color: #fff;
+        color: #ccc; /* Lighter tab text */
         border-color: #333;
       }
       .tabs button.active {
         background-color: #333;
         border-bottom-color: #333;
+        color: #fff; /* Active tab text */
       }
+       .tab-content h3 {
+         color: #eee; /* Lighter headings */
+       }
+       .tab-content .placeholder, .tab-content .tab-description {
+          color: #aaa; /* Lighter placeholder text */
+       }
       .info-section {
         color: #ccc;
       }
+       .info-section h2 {
+         color: #eee;
+       }
+       .info-section a {
+          color: #6bb8ff; /* Lighter link color */
+       }
       .perspective-panel {
         background-color: #2a2a2a;
         border-color: #444;
       }
+       .perspective-title {
+         color: #eee;
+       }
+       .perspective-score {
+         background-color: #4f94cd; /* Ensure score bg is visible */
+       }
+       .perspective-description {
+         color: #aaa;
+       }
+       .perspective-assessment {
+         color: #ccc;
+       }
+       .metrics-overview .metric-box {
+         background: #2c2c2c;
+         border-color: #444;
+       }
+       .metrics-overview .metric-title {
+         color: #aaa;
+       }
+       .metrics-overview .metric-value {
+         color: #eee;
+       }
       .radar-chart {
-        filter: invert(0.8);
+        /* Use filter for chart in dark mode or style chart options */
+        /* filter: invert(0.9) hue-rotate(180deg); /* Example filter */
       }
-      .claim-box {
-        background-color: #2c2c2c;
-        border-color: #444;
+      .toggle-analysis {
+        background-color: transparent;
+        border: 1px solid #555;
+        color: #aaa;
+      }
+      .spinner {
+        border: 4px solid rgba(255,255,255,0.2); /* Lighter spinner track */
+        border-left-color: #fff; /* White spinner head */
       }
     }
 
@@ -76,20 +144,24 @@
       margin: 0 auto 10px;
       max-width: 100%;
       height: auto;
+      max-height: 150px; /* Limit header image height */
     }
 
     /* Layout for main interaction area */
     .interaction-area {
       display: flex;
       gap: 20px;
+      flex-wrap: wrap; /* Allow wrapping on smaller screens */
     }
 
     .main-column {
-      flex: 1;
+      flex: 1 1 600px; /* Allow shrinking but prefer 600px */
+      min-width: 300px; /* Minimum width before wrapping */
     }
 
     .analysis-column {
-      width: 400px;
+      flex: 1 1 400px; /* Allow shrinking but prefer 400px */
+      min-width: 300px; /* Minimum width */
       display: none; /* Hidden by default, shown when analysis is available */
     }
 
@@ -100,6 +172,8 @@
       border-radius: 12px;
       padding: 15px;
       margin-bottom: 20px;
+      position: sticky; /* Make panel sticky */
+      top: 20px; /* Stick near the top */
     }
 
     .analysis-panel h3 {
@@ -136,6 +210,7 @@
       justify-content: space-between;
       font-size: 12px;
       margin-bottom: 2px;
+      color: #6c757d; /* Dimmer color for score names */
     }
 
     .score-bar {
@@ -150,6 +225,7 @@
       height: 100%;
       background-color: #0d6efd;
       border-radius: 3px;
+      transition: width 0.3s ease-in-out; /* Animate score bar fill */
     }
 
     /* Perspective panels */
@@ -162,7 +238,7 @@
 
     .perspective-panel {
       flex: 1;
-      min-width: calc(33% - 10px);
+      min-width: calc(33% - 10px); /* Adjust basis */
       background: #f0f0f0;
       border: 1px solid #ddd;
       border-radius: 8px;
@@ -175,6 +251,7 @@
       margin-bottom: 6px;
       display: flex;
       justify-content: space-between;
+      align-items: center; /* Align title and score */
     }
 
     .perspective-score {
@@ -183,6 +260,7 @@
       border-radius: 12px;
       padding: 1px 8px;
       font-size: 12px;
+      margin-left: 5px; /* Space between title and score */
     }
 
     .perspective-description {
@@ -198,8 +276,10 @@
     /* Radar chart */
     .radar-container {
       width: 100%;
-      height: 250px;
-      margin: 15px 0;
+      max-width: 350px; /* Limit chart width */
+      height: auto; /* Allow aspect ratio to control height */
+      aspect-ratio: 1 / 1; /* Maintain square aspect ratio */
+      margin: 15px auto; /* Center chart */
     }
 
     .metrics-overview {
@@ -211,7 +291,7 @@
 
     .metric-box {
       flex: 1;
-      min-width: calc(25% - 10px);
+      min-width: calc(50% - 10px); /* Two boxes per row */
       background: #f8f9fa;
       border: 1px solid #e9ecef;
       border-radius: 8px;
@@ -247,90 +327,124 @@
       color: #495057;
       cursor: pointer;
       font-size: 14px;
+      margin: 0 2px -1px 0; /* Overlap border slightly */
+      position: relative;
+      top: 1px; /* Align with bottom border */
     }
 
     .tabs button.active {
-      background-color: #f8f9fa;
+      background-color: #f8f9fa; /* Match panel bg */
       border-color: #dee2e6;
-      border-bottom-color: #f8f9fa;
+      border-bottom-color: #f8f9fa; /* Hide bottom border */
       color: #0d6efd;
+      font-weight: 500; /* Emphasize active tab */
     }
 
     /* Chat container */
     .chat-container {
-      background: transparent;
+      background: transparent; /* Use body background */
       padding: 15px;
-      height: 600px;
+      /* Let height be flexible within flex container */
+      /* height: 600px; */
+      max-height: 70vh; /* Limit max height */
       overflow-y: auto;
       margin-bottom: 20px;
       display: flex;
       flex-direction: column;
       gap: 10px;
+      border: 1px solid #eee; /* Add subtle border */
+      border-radius: 12px; /* Match panel radius */
     }
+     @media (prefers-color-scheme: dark) {
+        .chat-container {
+            border-color: #333;
+        }
+     }
+
     .message {
       padding: 10px 14px;
-      border-radius: 12px;
-      max-width: 70%;
+      border-radius: 18px; /* More rounded messages */
+      max-width: 80%; /* Allow slightly wider messages */
       word-wrap: break-word;
-      margin: 0;
+      line-height: 1.4; /* Improve readability */
     }
     .assistant-message {
-      background: #e0e0e0;
+      background: #e9ecef; /* Lighter assistant message */
       color: #000;
       align-self: flex-start;
+      border-bottom-left-radius: 4px; /* Squarish corner */
     }
     .user-message {
-      background: #f5f5f5;
-      color: #000;
+      background: #0d6efd; /* User primary color */
+      color: #fff;
       align-self: flex-end;
+      border-bottom-right-radius: 4px; /* Squarish corner */
     }
+    /* Dark mode overrides for messages defined in @media query */
 
     /* Input area */
     .input-area {
       display: flex;
-      flex-direction: column;
+      flex-direction: column; /* Stack vertically */
       gap: 10px;
       margin-bottom: 20px;
+      align-items: flex-end; /* Align button to the right */
     }
     textarea {
       width: 100%;
       padding: 12px;
       font-size: 16px;
-      resize: none;
+      resize: vertical; /* Allow vertical resize only */
+      min-height: 50px; /* Minimum height for one line + padding */
+      max-height: 200px; /* Limit growth */
       box-sizing: border-box;
-      background: transparent;
+      background: #fff; /* Explicit background */
       border: 1px solid #ccc;
       border-radius: 18px;
       outline: none;
+      line-height: 1.4;
     }
-    button {
-      background-color: #000;
+    /* Dark mode override for textarea defined in @media query */
+
+    button#sendButton { /* Be more specific */
+      background-color: #0d6efd; /* Primary button color */
       color: #fff;
       font-size: 16px;
+      font-weight: 500;
       border: none;
-      padding: 12px 16px;
+      padding: 10px 20px; /* Adjust padding */
       border-radius: 18px;
       cursor: pointer;
-      transition: background-color 0.3s;
+      transition: background-color 0.2s ease;
     }
-    button:hover:not(:disabled) {
-      background-color: #333;
+    button#sendButton:hover:not(:disabled) {
+      background-color: #0b5ed7; /* Darker hover */
     }
-    button:disabled {
-      background-color: #888;
+    button#sendButton:disabled {
+      background-color: #aaa;
       cursor: not-allowed;
     }
+    /* Dark mode overrides for button defined in @media query */
+
 
     /* Spinner */
+    .spinner-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 10px 0;
+    }
     .spinner {
       border: 4px solid rgba(0,0,0,0.1);
-      width: 29px;
-      height: 29px;
+      width: 24px; /* Slightly smaller spinner */
+      height: 24px;
       border-radius: 50%;
-      border-left-color: #000;
+      border-left-color: #0d6efd; /* Match primary color */
       animation: spin 1s linear infinite;
-      margin: 10px auto;
+      /* margin: 10px auto; /* Removed, handled by container */
     }
+     /* Dark mode override for spinner defined in @media query */
+
     @keyframes spin {
       to { transform: rotate(360deg); }
     }
@@ -343,77 +457,132 @@
       font-size: 14px;
       padding: 8px 12px;
       margin-bottom: 10px;
+      border-radius: 18px;
+      cursor: pointer;
       display: none; /* Hidden by default, shown when analysis exists */
     }
+    /* Dark mode override for toggle defined in @media query */
+
 
     /* Info sections at the bottom */
     .info-section {
-      margin-top: 20px;
-      line-height: 1.4;
+      margin-top: 30px; /* More space */
+      padding-top: 20px; /* Space above */
+      border-top: 1px solid #eee; /* Separator line */
+      line-height: 1.6; /* Consistent line height */
       color: #555;
     }
+     @media (prefers-color-scheme: dark) {
+        .info-section {
+            border-top-color: #333;
+        }
+     }
     .info-section h2 {
       margin-top: 0;
+      font-size: 1.5em;
+      color: #333; /* Darker heading */
     }
-    .info-section p {
+    /* Dark mode override for info h2 defined in @media query */
+
+    .info-section p, .info-section ul {
       margin: 10px 0;
     }
+    .info-section ul {
+        padding-left: 20px; /* Indent list */
+    }
+    .info-section a {
+        color: #0d6efd;
+        text-decoration: none;
+    }
+    .info-section a:hover {
+        text-decoration: underline;
+    }
+    /* Dark mode override for info link defined in @media query */
+
 
     /* Responsive layout adjustments */
-    @media (max-width: 768px) {
-      .interaction-area {
-        flex-direction: column;
-      }
-      .analysis-column {
-        width: 100%;
-      }
+    @media (max-width: 992px) { /* Adjust breakpoint for panel */
+       .interaction-area {
+          flex-direction: column;
+       }
+       .analysis-column {
+          width: 100%; /* Take full width when wrapped */
+          order: -1; /* Move analysis panel above chat on smaller screens */
+          position: static; /* Disable sticky positioning when wrapped */
+       }
+       .toggle-analysis {
+          display: block; /* Always show toggle on smaller screens if analysis exists */
+       }
+       .analysis-panel {
+          margin-bottom: 10px; /* Reduce margin when stacked */
+       }
+       .main-column {
+           order: 0; /* Ensure main column follows analysis */
+       }
     }
+     @media (max-width: 768px) {
+        .container {
+            padding: 0 10px; /* Reduce side padding */
+        }
+        .metric-box {
+           min-width: calc(50% - 5px); /* Adjust for smaller gap */
+        }
+        .perspective-panel {
+           min-width: calc(50% - 5px); /* Adjust for smaller gap */
+        }
+     }
+     @media (max-width: 480px) {
+        .message {
+            max-width: 90%; /* Allow slightly wider messages on small screens */
+        }
+        .metric-box, .perspective-panel {
+           min-width: 100%; /* Stack metrics/perspectives fully */
+           flex-basis: 100%;
+        }
+     }
+
+     /* Utility class for visually hidden elements (for accessibility) */
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      margin: -1px;
+      padding: 0;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      border: 0;
+    }
+
   </style>
   <!-- Include Chart.js for radar chart -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
   <div class="container">
-    <!-- Replace "belief-explorer.png" with your exact image filename if needed -->
+    <!-- Replace "BELIEFEXPLORER.png" with your exact image path/URL -->
     <img src="BELIEFEXPLORER.png" alt="Belief Explorer" class="header-image">
 
-    <button id="toggleAnalysis" class="toggle-analysis">Show Analysis Panel</button>
+    <button id="toggleAnalysis" class="toggle-analysis" aria-expanded="false" aria-controls="analysisColumn">Show Analysis Panel</button>
 
     <div class="interaction-area">
-      <div class="main-column">
-        <!-- Chat container -->
-        <div class="chat-container" id="chatContainer">
-          <div class="message assistant-message">
-            What belief or idea would you like to explore together?
-          </div>
-        </div>
-
-        <!-- Input area -->
-        <div class="input-area">
-          <textarea id="userInput" rows="2" placeholder="Share your thoughts..."></textarea>
-          <button id="sendButton">Explore</button>
-          <div id="spinner" class="spinner" style="display: none;"></div>
-        </div>
-      </div>
-
-      <!-- Analysis panel - hidden by default -->
-      <div class="analysis-column" id="analysisColumn">
+      <!-- Analysis panel - hidden by default, potentially moved above on small screens via CSS -->
+      <div class="analysis-column" id="analysisColumn" role="region" aria-live="polite">
         <div class="analysis-panel">
-          <div class="tabs">
-            <button class="active" data-tab="criticalThinking">Critical Thinking</button>
-            <button data-tab="perspectives">Perspectives</button>
-            <button data-tab="metrics">Advanced Metrics</button>
+          <div class="tabs" role="tablist" aria-label="Analysis Sections">
+            <button role="tab" id="tab-criticalThinking" aria-controls="criticalThinkingTab" aria-selected="true" class="active" data-tab="criticalThinking">Critical Thinking</button>
+            <button role="tab" id="tab-perspectives" aria-controls="perspectivesTab" aria-selected="false" data-tab="perspectives">Perspectives</button>
+            <button role="tab" id="tab-metrics" aria-controls="metricsTab" aria-selected="false" data-tab="metrics">Advanced Metrics</button>
           </div>
 
-          <div id="criticalThinkingTab" class="tab-content">
+          <div id="criticalThinkingTab" class="tab-content" role="tabpanel" aria-labelledby="tab-criticalThinking">
             <h3>Critical Thinking Analysis</h3>
             <div id="claimsAnalysis">
               <!-- Claims analysis will be populated here -->
-              <div class="placeholder">No claims to analyze yet.</div>
+              <div class="placeholder">Submit a statement to analyze its claims.</div>
             </div>
           </div>
 
-          <div id="perspectivesTab" class="tab-content" style="display: none;">
+          <div id="perspectivesTab" class="tab-content" role="tabpanel" aria-labelledby="tab-perspectives" style="display: none;">
             <h3>Multiple Perspectives</h3>
             <p class="tab-description">View how different reasoning approaches assess this claim:</p>
             <div id="perspectivesContent">
@@ -422,29 +591,50 @@
             </div>
           </div>
 
-          <div id="metricsTab" class="tab-content" style="display: none;">
+          <div id="metricsTab" class="tab-content" role="tabpanel" aria-labelledby="tab-metrics" style="display: none;">
             <h3>Advanced Metrics</h3>
             <p class="tab-description">Detailed critical thinking metrics based on our formalization:</p>
-            
+
             <!-- Metrics overview boxes -->
             <div class="metrics-overview" id="metricsOverview">
               <!-- Will be populated with metrics -->
+               <div class="placeholder">No metrics available yet.</div>
             </div>
-            
+
             <!-- Radar chart for visualizing metrics -->
             <div class="radar-container">
               <canvas id="radarChart"></canvas>
             </div>
-            
+
             <div id="metricsExplanation">
               <!-- Will be populated with metrics explanations -->
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- Info section 1: Why We're Here -->
+      <div class="main-column">
+        <!-- Chat container -->
+        <div class="chat-container" id="chatContainer" aria-live="polite">
+          <div class="message assistant-message">
+            What belief or idea would you like to explore together?
+          </div>
+        </div>
+
+        <!-- Input area (wrapped in form for semantics) -->
+        <form id="chatForm" class="input-area">
+           <label for="userInput" class="visually-hidden">Share your thoughts</label>
+           <textarea id="userInput" name="statement" rows="2" placeholder="Share your thoughts..." aria-label="Your message"></textarea>
+           <div id="spinnerContainer" class="spinner-container" style="display: none;">
+               <div id="spinner" class="spinner" role="status" aria-label="Loading..."></div>
+           </div>
+           <button type="submit" id="sendButton">Explore</button>
+        </form>
+      </div>
+
+    </div> <!-- End interaction-area -->
+
+    <!-- Info sections remain below the interaction area -->
     <div class="info-section">
       <h2>Why We're Here</h2>
       <p>
@@ -455,7 +645,6 @@
       </p>
     </div>
 
-    <!-- Info section 2: About Belief Explorer -->
     <div class="info-section">
       <h2>About Belief Explorer</h2>
       <p>
@@ -469,7 +658,6 @@
       </p>
     </div>
 
-    <!-- Add information about the Critical Thinking Model -->
     <div class="info-section">
       <h2>Our Critical Thinking Framework</h2>
       <p>
@@ -488,379 +676,565 @@
   </div>
 
   <script>
-    // Update your n8n webhook URL here
-    const API_URL = 'https://gpu.haielab.org/webhook/6d437c73-8849-4dba-9d88-634c930fc2b3';
+    // --- Configuration ---
+    const API_URL = 'https://gpu.haielab.org/webhook/6d437c73-8849-4dba-9d88-634c930fc2b3'; // Your n8n webhook URL
+
+    // --- DOM Elements ---
     const chatContainer = document.getElementById('chatContainer');
     const userInput = document.getElementById('userInput');
     const sendButton = document.getElementById('sendButton');
-    const spinner = document.getElementById('spinner');
+    const chatForm = document.getElementById('chatForm');
+    const spinnerContainer = document.getElementById('spinnerContainer');
     const toggleAnalysis = document.getElementById('toggleAnalysis');
     const analysisColumn = document.getElementById('analysisColumn');
     const claimsAnalysis = document.getElementById('claimsAnalysis');
     const perspectivesContent = document.getElementById('perspectivesContent');
     const metricsOverview = document.getElementById('metricsOverview');
     const metricsExplanation = document.getElementById('metricsExplanation');
-    
-    // Tab handling
-    const tabs = document.querySelectorAll('.tabs button');
-    const tabContents = document.querySelectorAll('.tab-content');
-    
-    // Radar chart instance
-    let radarChart = null;
-    
-    tabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        // Deactivate all tabs
-        tabs.forEach(t => t.classList.remove('active'));
-        tabContents.forEach(content => content.style.display = 'none');
-        
-        // Activate selected tab
-        tab.classList.add('active');
-        const tabId = tab.getAttribute('data-tab') + 'Tab';
-        document.getElementById(tabId).style.display = 'block';
-      });
-    });
+    const tabs = document.querySelectorAll('.tabs button[role="tab"]');
+    const tabContents = document.querySelectorAll('.tab-content[role="tabpanel"]');
+    const radarCanvas = document.getElementById('radarChart');
 
+    // --- State ---
     let conversationHistory = [
       { role: 'assistant', content: 'What belief or idea would you like to explore together?' }
     ];
-    
     let lastAnalysisData = null;
+    let radarChart = null; // Chart instance
+
+    // --- Helper Functions ---
+
+    // Creates score name and bar element
+    function createScoreElement(label, value, labelId = '') {
+        const container = document.createDocumentFragment(); // Use fragment for efficiency
+        const scoreValue = Math.max(0, Math.min(100, parseFloat(value) * 100)); // Clamp value 0-100
+
+        const scoreName = document.createElement('div');
+        scoreName.className = 'score-name';
+        scoreName.innerHTML = `<span ${labelId ? `id="${labelId}"` : ''}>${label}</span><span>${scoreValue.toFixed(0)}%</span>`;
+        container.appendChild(scoreName);
+
+        const scoreBar = document.createElement('div');
+        scoreBar.className = 'score-bar';
+        scoreBar.setAttribute('role', 'meter');
+        scoreBar.setAttribute('aria-valuenow', scoreValue.toFixed(0));
+        scoreBar.setAttribute('aria-valuemin', '0');
+        scoreBar.setAttribute('aria-valuemax', '100');
+        if (labelId) {
+          scoreBar.setAttribute('aria-labelledby', labelId);
+        } else {
+          scoreBar.setAttribute('aria-label', `${label} score`);
+        }
+
+
+        const scoreFill = document.createElement('div');
+        scoreFill.className = 'fill';
+        scoreFill.style.width = `${scoreValue}%`;
+        scoreBar.appendChild(scoreFill);
+        container.appendChild(scoreBar);
+
+        return container;
+    }
+
+    // Format camelCase to Title Case
+    function formatCamelCase(str) {
+        return str
+            .replace(/([A-Z])/g, ' $1') // Add space before capitals
+            .replace(/^./, s => s.toUpperCase()); // Capitalize first letter
+    }
+
+    // --- Rendering Functions ---
 
     function renderConversation() {
-      chatContainer.innerHTML = '';
+      chatContainer.innerHTML = ''; // Clear previous messages
       conversationHistory.forEach(turn => {
         const div = document.createElement('div');
         div.className = 'message ' + (turn.role === 'assistant' ? 'assistant-message' : 'user-message');
+        // Basic sanitation: render as text content to prevent XSS from conversation history
         div.textContent = turn.content;
         chatContainer.appendChild(div);
       });
+      // Scroll to the bottom
       chatContainer.scrollTop = chatContainer.scrollHeight;
     }
-    
+
     function renderClaimsAnalysis(analysisData) {
       if (!analysisData || analysisData.length === 0) {
-        claimsAnalysis.innerHTML = '<div class="placeholder">No claims to analyze yet.</div>';
+        claimsAnalysis.innerHTML = '<div class="placeholder">No claims analyzed in this turn.</div>';
         return;
       }
-      
-      claimsAnalysis.innerHTML = '';
-      
-      analysisData.forEach(item => {
-        const claimDiv = document.createElement('div');
+
+      claimsAnalysis.innerHTML = ''; // Clear previous
+
+      analysisData.forEach((item, index) => {
+        const claimDiv = document.createElement('article'); // Use article for claim box
         claimDiv.className = 'claim-box';
-        
+        claimDiv.setAttribute('aria-labelledby', `claim-text-${index}`);
+
         // Claim text
         const claimText = document.createElement('div');
         claimText.className = 'claim-text';
+        claimText.id = `claim-text-${index}`;
         claimText.textContent = item.claim;
         claimDiv.appendChild(claimText);
-        
+
         // Assumption tag
         if (item.assumptions) {
           const assumptionTag = document.createElement('div');
           assumptionTag.className = 'assumption-tag';
-          assumptionTag.textContent = item.assumptions;
+          assumptionTag.textContent = `Assumption: ${item.assumptions}`;
           claimDiv.appendChild(assumptionTag);
         }
-        
-        // Overall score
-        const overallScoreName = document.createElement('div');
-        overallScoreName.className = 'score-name';
-        overallScoreName.innerHTML = '<span>Verifact Score</span><span>' + 
-          (parseFloat(item.verifactScore.overallScore) * 100).toFixed(0) + '%</span>';
-        claimDiv.appendChild(overallScoreName);
-        
-        const overallScoreBar = document.createElement('div');
-        overallScoreBar.className = 'score-bar';
-        const overallScoreFill = document.createElement('div');
-        overallScoreFill.className = 'fill';
-        overallScoreFill.style.width = (parseFloat(item.verifactScore.overallScore) * 100) + '%';
-        overallScoreBar.appendChild(overallScoreFill);
-        claimDiv.appendChild(overallScoreBar);
-        
-        // Component scores
-        const components = item.verifactScore.components;
-        for (const [key, value] of Object.entries(components)) {
-          const formattedKey = key.replace(/([A-Z])/g, ' $1')
-            .replace(/^./, str => str.toUpperCase());
-          
-          const scoreName = document.createElement('div');
-          scoreName.className = 'score-name';
-          scoreName.innerHTML = '<span>' + formattedKey + '</span><span>' + 
-            (parseFloat(value) * 100).toFixed(0) + '%</span>';
-          claimDiv.appendChild(scoreName);
-          
-          const scoreBar = document.createElement('div');
-          scoreBar.className = 'score-bar';
-          const scoreFill = document.createElement('div');
-          scoreFill.className = 'fill';
-          scoreFill.style.width = (parseFloat(value) * 100) + '%';
-          scoreBar.appendChild(scoreFill);
-          claimDiv.appendChild(scoreBar);
+
+        // Verifact Score (Check structure carefully based on your N8N output)
+        if (item.verifactScore) {
+          // Overall score
+          const overallScore = item.verifactScore.overallScore ?? 0.5; // Default if missing
+           claimDiv.appendChild(createScoreElement('Verifact Score', overallScore, `verifact-label-${index}`));
+
+          // Component scores
+          if (item.verifactScore.components) {
+              const components = item.verifactScore.components;
+              Object.entries(components).forEach(([key, value], compIndex) => {
+                  const formattedKey = formatCamelCase(key);
+                  claimDiv.appendChild(createScoreElement(formattedKey, value, `verifact-comp-${index}-${compIndex}-label`));
+              });
+          }
+        } else {
+             const noScore = document.createElement('p');
+             noScore.textContent = "Verifact score not available.";
+             claimDiv.appendChild(noScore);
         }
-        
+
+
         claimsAnalysis.appendChild(claimDiv);
       });
     }
-    
+
     function renderPerspectives(analysisData) {
-      if (!analysisData || analysisData.length === 0 || !analysisData[0].perspectives) {
-        perspectivesContent.innerHTML = '<div class="placeholder">Share a belief to see alternative perspectives.</div>';
-        return;
-      }
-      
-      perspectivesContent.innerHTML = '';
-      
-      // Get the first claim's perspectives (assuming one claim at a time for simplicity)
-      const item = analysisData[0];
-      
-      // Create the perspectives container
-      const perspectivesContainer = document.createElement('div');
-      perspectivesContainer.className = 'perspectives-container';
-      
-      // Add each perspective
-      item.perspectives.forEach(perspective => {
-        const perspDiv = document.createElement('div');
-        perspDiv.className = 'perspective-panel';
-        
-        // Perspective title and score
-        const titleDiv = document.createElement('div');
-        titleDiv.className = 'perspective-title';
-        
-        const titleSpan = document.createElement('span');
-        titleSpan.textContent = perspective.name;
-        
-        const scoreSpan = document.createElement('span');
-        scoreSpan.className = 'perspective-score';
-        scoreSpan.textContent = (parseFloat(perspective.score) * 100).toFixed(0) + '%';
-        
-        titleDiv.appendChild(titleSpan);
-        titleDiv.appendChild(scoreSpan);
-        perspDiv.appendChild(titleDiv);
-        
-        // Perspective description
-        const descDiv = document.createElement('div');
-        descDiv.className = 'perspective-description';
-        descDiv.textContent = perspective.description;
-        perspDiv.appendChild(descDiv);
-        
-        // Perspective assessment
-        const assessDiv = document.createElement('div');
-        assessDiv.className = 'perspective-assessment';
-        assessDiv.textContent = perspective.assessment;
-        perspDiv.appendChild(assessDiv);
-        
-        perspectivesContainer.appendChild(perspDiv);
-      });
-      
-      perspectivesContent.appendChild(perspectivesContainer);
+        // Placeholder: This function expects `analysisData[0].perspectives` array
+        // Your current n8n workflow doesn't provide this.
+        // We'll keep the placeholder logic.
+        const placeholder = '<div class="placeholder">Perspective analysis is not yet available.</div>';
+
+        if (!analysisData || analysisData.length === 0 || !analysisData[0].perspectives) {
+            perspectivesContent.innerHTML = placeholder;
+            return;
+        }
+
+        // --- Start: Actual Rendering Logic (when data is available) ---
+        // const item = analysisData[0]; // Assuming analysis applies to the first claim for now
+        // perspectivesContent.innerHTML = ''; // Clear placeholder
+
+        // const perspectivesContainer = document.createElement('div');
+        // perspectivesContainer.className = 'perspectives-container';
+
+        // item.perspectives.forEach(perspective => {
+        //   const perspDiv = document.createElement('div');
+        //   perspDiv.className = 'perspective-panel';
+
+        //   // Title and Score
+        //   const titleDiv = document.createElement('div');
+        //   titleDiv.className = 'perspective-title';
+        //   const titleSpan = document.createElement('span');
+        //   titleSpan.textContent = perspective.name;
+        //   const scoreSpan = document.createElement('span');
+        //   scoreSpan.className = 'perspective-score';
+        //   scoreSpan.textContent = (parseFloat(perspective.score || 0) * 100).toFixed(0) + '%';
+        //   titleDiv.appendChild(titleSpan);
+        //   titleDiv.appendChild(scoreSpan);
+        //   perspDiv.appendChild(titleDiv);
+
+        //   // Description
+        //   if (perspective.description) {
+        //     const descDiv = document.createElement('div');
+        //     descDiv.className = 'perspective-description';
+        //     descDiv.textContent = perspective.description;
+        //     perspDiv.appendChild(descDiv);
+        //   }
+
+        //   // Assessment
+        //   if (perspective.assessment) {
+        //     const assessDiv = document.createElement('div');
+        //     assessDiv.className = 'perspective-assessment';
+        //     assessDiv.textContent = perspective.assessment;
+        //     perspDiv.appendChild(assessDiv);
+        //   }
+
+        //   perspectivesContainer.appendChild(perspDiv);
+        // });
+        // perspectivesContent.appendChild(perspectivesContainer);
+        // --- End: Actual Rendering Logic ---
+
+        // For now, just show the placeholder until N8N provides the data
+        perspectivesContent.innerHTML = placeholder;
     }
-    
+
+
     function renderAdvancedMetrics(analysisData) {
-      if (!analysisData || analysisData.length === 0) {
-        metricsOverview.innerHTML = '<div class="placeholder">No metrics available yet.</div>';
-        metricsExplanation.innerHTML = '';
-        return;
-      }
-      
-      // Get the first claim's metrics (assuming one claim at a time for simplicity)
-      const item = analysisData[0];
-      
-      // Extract metrics from the data (with fallbacks for missing values)
-      const verifactScore = parseFloat(item.verifactScore.overallScore || 0.5);
-      const modelDiversityScore = parseFloat(item.verifactScore.components.modelDiversity || 0.5);
-      const contextualSensitivityScore = parseFloat(item.verifactScore.components.contextualSensitivity || 0.5);
-      const empiricalScore = parseFloat(item.verifactScore.components.empiricalVerifiability || 0.5);
-      const logicalScore = parseFloat(item.verifactScore.components.logicalConsistency || 0.5);
-      
-      // Create metric boxes - FIXED: Added backticks around template string
-      metricsOverview.innerHTML = `
-        <div class="metric-box">
-          <div class="metric-title">Verifact Score</div>
-          <div class="metric-value">${(verifactScore * 100).toFixed(0)}%</div>
-        </div>
-        <div class="metric-box">
-          <div class="metric-title">Model Diversity</div>
-          <div class="metric-value">${(modelDiversityScore * 100).toFixed(0)}%</div>
-        </div>
-        <div class="metric-box">
-          <div class="metric-title">Contextual Sensitivity</div>
-          <div class="metric-value">${(contextualSensitivityScore * 100).toFixed(0)}%</div>
-        </div>
-        <div class="metric-box">
-          <div class="metric-title">Logical Consistency</div>
-          <div class="metric-value">${(logicalScore * 100).toFixed(0)}%</div>
-        </div>
-      `;
-      
-      // Create radar chart
-      const ctx = document.getElementById('radarChart').getContext('2d');
-      
-      // Destroy existing chart if it exists
-      if (radarChart) {
-        radarChart.destroy();
-      }
-      
-      // Create new chart
-      radarChart = new Chart(ctx, {
-        type: 'radar',
-        data: {
-          labels: ['Empirical Evidence', 'Logical Consistency', 'Model Diversity', 'Contextual Sensitivity', 'Reflective Index'],
-          datasets: [{
-            label: 'Critical Thinking Metrics',
-            data: [
-              empiricalScore * 100,
-              logicalScore * 100,
-              modelDiversityScore * 100,
-              contextualSensitivityScore * 100,
-              (empiricalScore + logicalScore) / 2 * 100 // placeholder for reflective index
-            ],
-            backgroundColor: 'rgba(54, 162, 235, 0.2)',
-            borderColor: 'rgb(54, 162, 235)',
-            pointBackgroundColor: 'rgb(54, 162, 235)',
-            pointBorderColor: '#fff',
-            pointHoverBackgroundColor: '#fff',
-            pointHoverBorderColor: 'rgb(54, 162, 235)'
-          }]
-        },
-        options: {
-          elements: {
-            line: {
-              borderWidth: 3
-            }
+        // Placeholder: This expects detailed metrics beyond the basic Verifact components.
+        // Your current n8n workflow only provides basic components.
+        // We will derive from what's available for the boxes and chart,
+        // but show placeholders where data is truly missing.
+
+        const placeholder = '<div class="placeholder">Detailed metrics are not yet available.</div>';
+        const explanationPlaceholder = '<p>Metric explanations will appear here when data is available.</p>';
+
+        if (!analysisData || analysisData.length === 0 || !analysisData[0].verifactScore?.components) {
+            metricsOverview.innerHTML = placeholder;
+            metricsExplanation.innerHTML = explanationPlaceholder;
+            if (radarChart) { radarChart.destroy(); radarChart = null; } // Clear chart
+            radarCanvas.style.display = 'none'; // Hide canvas area
+            return;
+        }
+
+        const components = analysisData[0].verifactScore.components;
+        const overallScore = parseFloat(analysisData[0].verifactScore.overallScore || 0.5);
+
+        // --- Metrics Overview Boxes ---
+        // Use available components, provide defaults for missing ones needed by UI
+        const empiricalScore = parseFloat(components.empiricalVerifiability || 0.5);
+        const logicalScore = parseFloat(components.logicalConsistency || 0.5);
+        // Defaults for metrics not yet generated by N8N:
+        const modelDiversityScore = parseFloat(components.modelDiversity || 0.5); // Example: Check if N8N adds this
+        const contextualSensitivityScore = parseFloat(components.contextualSensitivity || 0.5); // Example: Check if N8N adds this
+
+        metricsOverview.innerHTML = `
+            <div class="metric-box">
+              <div class="metric-title">Verifact Score</div>
+              <div class="metric-value">${(overallScore * 100).toFixed(0)}%</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-title">Model Diversity (Est.)</div>
+              <div class="metric-value">${(modelDiversityScore * 100).toFixed(0)}%</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-title">Contextual Sensitivity (Est.)</div>
+              <div class="metric-value">${(contextualSensitivityScore * 100).toFixed(0)}%</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-title">Logical Consistency</div>
+              <div class="metric-value">${(logicalScore * 100).toFixed(0)}%</div>
+            </div>
+             <div class="metric-box">
+              <div class="metric-title">Empirical Verifiability</div>
+              <div class="metric-value">${(empiricalScore * 100).toFixed(0)}%</div>
+            </div>
+          `;
+
+        // --- Radar Chart ---
+        const ctx = radarCanvas.getContext('2d');
+        radarCanvas.style.display = 'block'; // Ensure canvas is visible
+
+        // Define labels based on framework description / desired metrics
+        const radarLabels = ['Empirical Evidence', 'Logical Consistency', 'Model Diversity', 'Contextual Sensitivity', 'Reflective Index'];
+        // Map available/estimated data to labels
+        const radarData = [
+          empiricalScore * 100,
+          logicalScore * 100,
+          modelDiversityScore * 100,       // Using estimate
+          contextualSensitivityScore * 100, // Using estimate
+          (overallScore * 100) // Using overall score as placeholder for Reflective Index
+        ];
+
+        // Destroy existing chart before creating new one
+        if (radarChart) {
+          radarChart.destroy();
+        }
+
+        // Determine chart colors based on theme
+        const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.1)';
+        const tickColor = isDarkMode ? '#ccc' : '#666';
+        const pointBgColor = isDarkMode ? '#6bb8ff' : 'rgb(54, 162, 235)';
+        const pointBorderColor = isDarkMode ? '#121212' : '#fff';
+        const lineBorderColor = isDarkMode ? '#6bb8ff' : 'rgb(54, 162, 235)';
+        const lineBgColor = isDarkMode ? 'rgba(107, 184, 255, 0.2)' : 'rgba(54, 162, 235, 0.2)';
+
+
+        radarChart = new Chart(ctx, {
+          type: 'radar',
+          data: {
+            labels: radarLabels,
+            datasets: [{
+              label: 'Critical Thinking Metrics',
+              data: radarData,
+              backgroundColor: lineBgColor,
+              borderColor: lineBorderColor,
+              pointBackgroundColor: pointBgColor,
+              pointBorderColor: pointBorderColor,
+              pointHoverBackgroundColor: pointBorderColor, // Invert on hover
+              pointHoverBorderColor: pointBgColor,
+              borderWidth: 2, // Thinner line
+              pointRadius: 4, // Smaller points
+            }]
           },
-          scales: {
-            r: {
-              angleLines: {
-                display: true
-              },
-              suggestedMin: 0,
-              suggestedMax: 100
+          options: {
+            responsive: true,
+            maintainAspectRatio: true, // Let the container size dictate
+            scales: {
+              r: {
+                angleLines: {
+                  display: true,
+                  color: gridColor
+                },
+                grid: {
+                  color: gridColor
+                },
+                pointLabels: {
+                   color: tickColor,
+                   font: {
+                       size: 10 // Smaller labels
+                   }
+                },
+                ticks: {
+                  color: tickColor,
+                  backdropColor: 'transparent', // Remove tick background
+                  stepSize: 25,
+                  font: {
+                      size: 9
+                  }
+                },
+                suggestedMin: 0,
+                suggestedMax: 100
+              }
+            },
+            plugins: {
+                 legend: {
+                    display: false // Hide legend if only one dataset
+                 },
+                 tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            if (context.parsed.r !== null) {
+                                label += context.parsed.r.toFixed(0) + '%';
+                            }
+                            return label;
+                        }
+                    }
+                 }
             }
           }
-        }
-      });
-      
-      // Create metrics explanation - FIXED: Added backticks around template string
-      metricsExplanation.innerHTML = `
-        <h4>What These Metrics Mean</h4>
-        <p><strong>Verifact Score:</strong> Overall measure of claim verifiability and logical consistency.</p>
-        <p><strong>Model Diversity:</strong> How different reasoning approaches view this claim.</p>
-        <p><strong>Contextual Sensitivity:</strong> How appropriate the claim is within its relevant context.</p>
-        <p><strong>Logical Consistency:</strong> Internal coherence and adherence to logical principles.</p>
-        <p><strong>Empirical Evidence:</strong> Availability of observable evidence supporting the claim.</p>
-      `;
-    }
-    
-    function renderAnalysis(analysisData) {
-      // Render all three views
-      renderClaimsAnalysis(analysisData);
-      renderPerspectives(analysisData);
-      renderAdvancedMetrics(analysisData);
+        });
+
+        // --- Metrics Explanation ---
+        // Provide explanations for the metrics shown in the chart/boxes
+         metricsExplanation.innerHTML = `
+            <h4>What These Metrics Mean</h4>
+            <p><strong>Verifact Score:</strong> Overall measure of claim verifiability and logical consistency.</p>
+            <p><strong>Empirical Evidence:</strong> Availability of observable evidence supporting the claim.</p>
+            <p><strong>Logical Consistency:</strong> Internal coherence and adherence to logical principles.</p>
+            <p><strong>Model Diversity (Est.):</strong> How different reasoning approaches might view this claim (estimated).</p>
+            <p><strong>Contextual Sensitivity (Est.):</strong> How appropriate the claim might be within its relevant context (estimated).</p>
+            <p><strong>Reflective Index (Est.):</strong> Assessment of awareness of assumptions and bias recognition (estimated using overall score).</p>
+            <p><em>Note: Metrics marked (Est.) are placeholders until fully implemented in the backend analysis.</em></p>
+          `;
     }
 
-    toggleAnalysis.addEventListener('click', () => {
-      if (analysisColumn.style.display === 'none' || !analysisColumn.style.display) {
-        analysisColumn.style.display = 'block';
-        toggleAnalysis.textContent = 'Hide Analysis Panel';
-      } else {
+    function renderAnalysis(analysisData) {
+      if (!analysisData || !Array.isArray(analysisData) || analysisData.length === 0) {
+          console.log("No analysis data to render.");
+          // Clear analysis sections
+          claimsAnalysis.innerHTML = '<div class="placeholder">No claims analyzed in this turn.</div>';
+          perspectivesContent.innerHTML = '<div class="placeholder">No perspectives available.</div>';
+          metricsOverview.innerHTML = '<div class="placeholder">No metrics available.</div>';
+          if (radarChart) { radarChart.destroy(); radarChart = null; }
+          radarCanvas.style.display = 'none';
+          metricsExplanation.innerHTML = '';
+
+          // Keep toggle button visible if it was already, but maybe hide panel?
+          // Or hide toggle button if analysis is consistently empty?
+          // toggleAnalysis.style.display = 'none'; // Uncomment to hide toggle if no data
+          return;
+      }
+
+      // Render all three views using the provided data
+      renderClaimsAnalysis(analysisData);
+      renderPerspectives(analysisData); // Will currently use placeholders
+      renderAdvancedMetrics(analysisData); // Will currently use derived/placeholder data
+
+      // Ensure toggle button is visible now that we have data
+      toggleAnalysis.style.display = 'inline-block'; // Use inline-block for button
+
+      // Auto-show panel first time analysis is available? (Optional)
+      // if (analysisColumn.style.display === 'none' || !analysisColumn.style.display) {
+      //    analysisColumn.style.display = 'block';
+      //    toggleAnalysis.textContent = 'Hide Analysis Panel';
+      //    toggleAnalysis.setAttribute('aria-expanded', 'true');
+      // }
+    }
+
+    // --- Event Handlers ---
+
+    function handleTabClick(event) {
+        const clickedTab = event.currentTarget;
+
+        // Deactivate all tabs and hide all content
+        tabs.forEach(tab => {
+            tab.classList.remove('active');
+            tab.setAttribute('aria-selected', 'false');
+            tab.setAttribute('tabindex', '-1'); // Not focusable unless active
+        });
+        tabContents.forEach(content => {
+            content.style.display = 'none';
+            content.setAttribute('hidden', true);
+        });
+
+        // Activate the clicked tab and show its content
+        clickedTab.classList.add('active');
+        clickedTab.setAttribute('aria-selected', 'true');
+        clickedTab.setAttribute('tabindex', '0'); // Make focusable
+
+        const contentId = clickedTab.getAttribute('aria-controls');
+        const activeContent = document.getElementById(contentId);
+        if (activeContent) {
+            activeContent.style.display = 'block';
+            activeContent.removeAttribute('hidden');
+        }
+    }
+
+    function handleToggleAnalysis() {
+      const isExpanded = toggleAnalysis.getAttribute('aria-expanded') === 'true';
+      if (isExpanded) {
         analysisColumn.style.display = 'none';
         toggleAnalysis.textContent = 'Show Analysis Panel';
+        toggleAnalysis.setAttribute('aria-expanded', 'false');
+      } else {
+        analysisColumn.style.display = 'block'; // Or 'flex' if it's a flex item
+        toggleAnalysis.textContent = 'Hide Analysis Panel';
+        toggleAnalysis.setAttribute('aria-expanded', 'true');
       }
-    });
+    }
 
-    renderConversation();
+    async function handleSend(event) {
+      if (event) event.preventDefault(); // Prevent form submission if called by form
 
-    async function handleSend() {
       const text = userInput.value.trim();
-      if (!text) return;
-      
+      if (!text || sendButton.disabled) return; // Prevent sending empty or while loading
+
+      // Add user message to history and render immediately
       conversationHistory.push({ role: 'user', content: text });
       renderConversation();
-      
+
+      // Clear input and disable form elements
       userInput.value = '';
       userInput.disabled = true;
       sendButton.disabled = true;
-      spinner.style.display = 'block';
-      
+      spinnerContainer.style.display = 'flex'; // Show spinner container
+
+      // Clear previous analysis display while waiting? (Optional)
+      // renderAnalysis(null);
+
       try {
         console.log("Sending request to:", API_URL);
-        console.log("Request payload:", JSON.stringify({
+        const payload = {
           statement: text,
-          history: conversationHistory
-        }));
-        
+          history: conversationHistory // Send history *including* the new user message
+        };
+        console.log("Request payload:", JSON.stringify(payload));
+
         const response = await fetch(API_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            statement: text,
-            history: conversationHistory
-          })
+          body: JSON.stringify(payload)
         });
-        
-        console.log("Response status:", response.status);
-        
-        if (!response.ok) throw new Error(`Server error: ${response.status}`);
-        
-        const responseText = await response.text();
-        console.log("Raw response:", responseText);
-        
-        let data;
-        try {
-          data = JSON.parse(responseText);
-          console.log("Parsed data:", data);
-        } catch (e) {
-          console.error("JSON parse error:", e);
-          throw new Error("Invalid JSON response");
-        }
-        
-        // Extract the assistant response
-        const aiText = data.Response || "No answer returned";
-        console.log("AI response text:", aiText);
-        
-        conversationHistory.push({ role: 'assistant', content: aiText });
-        renderConversation();
-        
-        // Extract and display analysis data
-        if (data.AnalysisJSON) {
-          try {
-            const analysisData = JSON.parse(data.AnalysisJSON);
-            console.log("Analysis data:", analysisData);
-            
-            if (analysisData && analysisData.length > 0) {
-              lastAnalysisData = analysisData;
-              renderAnalysis(lastAnalysisData);
-              
-              // Show the toggle button and panel
-              toggleAnalysis.style.display = 'block';
-              analysisColumn.style.display = 'block';
-              toggleAnalysis.textContent = 'Hide Analysis Panel';
+
+        console.log("Response status:", response.status, response.statusText);
+
+        if (!response.ok) {
+            let errorBody = `Server error ${response.status}: ${response.statusText}`;
+            try {
+                 // Try to get more details from JSON error response
+                 const errorJson = await response.json();
+                 errorBody += ` - ${errorJson.message || JSON.stringify(errorJson)}`;
+            } catch(e) {
+                 // If response is not JSON, try text
+                 try { errorBody = await response.text(); } catch(e2) { /* ignore */ }
             }
-          } catch (e) {
-            console.error("Error parsing analysis JSON:", e);
-          }
+            console.error("Server error response:", errorBody);
+            throw new Error(`Server error: ${response.status}. Check console for details.`);
         }
+
+        // Parse the successful JSON response
+        const data = await response.json();
+        console.log("Parsed response data:", data);
+
+        // Extract the assistant response
+        const aiText = data.answer || "Sorry, I couldn't generate a response.";
+        console.log("AI response text:", aiText);
+
+        conversationHistory.push({ role: 'assistant', content: aiText });
+        renderConversation(); // Render the new assistant message
+
+        // Extract and display analysis data
+        const analysisData = data.metadata?.criticalThinkingAnalysis;
+        console.log("Analysis data received:", analysisData);
+
+        if (analysisData && Array.isArray(analysisData)) { // Check it's an array
+          lastAnalysisData = analysisData; // Store for potential refresh
+          renderAnalysis(lastAnalysisData); // Render the analysis sections
+        } else {
+          console.log("No valid analysis data found in response metadata.");
+          renderAnalysis(null); // Clear out old analysis if none came back
+        }
+
       } catch (err) {
-        console.error("API Error:", err);
-        conversationHistory.push({ role: 'assistant', content: 'An error occurred: ' + err.message });
+        console.error("API/Processing Error:", err);
+        // Display a user-friendly error in the chat
+        conversationHistory.push({ role: 'assistant', content: `Sorry, an error occurred: ${err.message}. Please try again later.` });
         renderConversation();
+         // Also clear analysis panel on error
+         renderAnalysis(null);
       } finally {
-        spinner.style.display = 'none';
+        // Re-enable form elements
+        spinnerContainer.style.display = 'none'; // Hide spinner
         userInput.disabled = false;
         sendButton.disabled = false;
-        userInput.focus();
+        userInput.focus(); // Focus input for next message
       }
     }
 
-    sendButton.addEventListener('click', handleSend);
+    // --- Initial Setup ---
+
+    // Add event listeners
+    tabs.forEach(tab => tab.addEventListener('click', handleTabClick));
+    toggleAnalysis.addEventListener('click', handleToggleAnalysis);
+    chatForm.addEventListener('submit', handleSend); // Handle form submission
+    // Handle Enter key press in textarea (Shift+Enter for newline)
     userInput.addEventListener('keypress', (e) => {
       if (e.key === 'Enter' && !e.shiftKey && !userInput.disabled) {
-        e.preventDefault();
-        handleSend();
+        e.preventDefault(); // Prevent newline
+        handleSend(); // Trigger send
       }
     });
+
+    // Adjust textarea height dynamically based on content
+    userInput.addEventListener('input', () => {
+        userInput.style.height = 'auto'; // Reset height
+        userInput.style.height = (userInput.scrollHeight) + 'px'; // Set to scroll height
+    });
+
+
+    // Initial render of the first message
+    renderConversation();
+
+    // Set initial state for analysis panel visibility based on toggle button's default aria-expanded
+    if (toggleAnalysis.getAttribute('aria-expanded') === 'true') {
+        analysisColumn.style.display = 'block';
+    } else {
+        analysisColumn.style.display = 'none';
+    }
+    // Set initial focus to the first tab
+    const initialTab = document.querySelector('.tabs button[role="tab"][aria-selected="true"]');
+    if (initialTab) {
+        initialTab.setAttribute('tabindex', '0');
+    }
+
+
   </script>
 </body>
 </html>
