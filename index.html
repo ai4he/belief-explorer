@@ -10,125 +10,83 @@
       font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       margin: 0;
       padding: 20px;
-      background-color: #ffffff;
-      color: #000;
+      background-color: #ffffff; /* White background */
+      color: #000000; /* Black text */
       line-height: 1.6;
     }
 
     @media (prefers-color-scheme: dark) {
       body {
-        background-color: #121212;
-        color: #fff;
+        background-color: #121212; /* Dark background */
+        color: #e0e0e0; /* Light grey text */
       }
       textarea {
         background-color: #2c2c2c;
-        color: #fff;
-        border-color: #555; /* Dark mode border for textarea */
+        color: #e0e0e0;
+        border-color: #555;
       }
-       button {
-         background-color: #eee; /* Lighter button background */
-         color: #111; /* Darker text */
+       button#sendButton { /* Target button specifically */
+         background-color: #3a3a3a; /* Darker button background */
+         color: #e0e0e0;
        }
-       button:hover:not(:disabled) {
-         background-color: #ddd;
+       button#sendButton:hover:not(:disabled) {
+         background-color: #4a4a4a;
        }
-       button:disabled {
+       button#sendButton:disabled {
          background-color: #555;
          color: #999;
        }
       .message.assistant-message {
         background: #2c2c2c;
-        color: #fff;
+        color: #e0e0e0;
       }
       .message.user-message {
-        background: #3e3e3e; /* Slightly different dark user message */
-        color: #fff;
+        /* background: #3e3e3e; Slightly different dark user message */
+        background: #0056b3; /* Use a darker blue for user in dark mode */
+        color: #ffffff;
       }
       .analysis-panel {
-        background-color: #1e1e1e !important; /* Kept !important for specificity, review later if needed */
-        border-color: #333 !important;
+        background-color: #1e1e1e; /* Removed !important, try specificity */
+        border-color: #333;
       }
+      .analysis-panel h3 { color: #eee; } /* Ensure headings visible */
        .claim-box {
         background-color: #2c2c2c;
         border-color: #444;
-      }
+       }
+       .claim-text { color: #e0e0e0; } /* Ensure claim text visible */
        .assumption-tag {
          background: #444;
-         color: #eee;
+         color: #ccc;
        }
-       .score-name {
-          /* Ensure score names are visible */
-          color: #ccc;
-       }
-       .score-bar {
-          background: #444; /* Darker bar background */
-       }
-      .score-bar .fill {
-        background-color: #4f94cd; /* Keep fill color */
-      }
+       .score-name { color: #aaa; } /* Ensure score names visible */
+       .score-bar { background: #444; }
+       .score-bar .fill { background-color: #4f94cd; }
       .tabs button {
-        color: #ccc; /* Lighter tab text */
+        color: #ccc;
         border-color: #333;
       }
       .tabs button.active {
         background-color: #333;
         border-bottom-color: #333;
-        color: #fff; /* Active tab text */
+        color: #fff;
       }
-       .tab-content h3 {
-         color: #eee; /* Lighter headings */
-       }
-       .tab-content .placeholder, .tab-content .tab-description {
-          color: #aaa; /* Lighter placeholder text */
-       }
-      .info-section {
-        color: #ccc;
-      }
-       .info-section h2 {
-         color: #eee;
-       }
-       .info-section a {
-          color: #6bb8ff; /* Lighter link color */
-       }
-      .perspective-panel {
-        background-color: #2a2a2a;
-        border-color: #444;
-      }
-       .perspective-title {
-         color: #eee;
-       }
-       .perspective-score {
-         background-color: #4f94cd; /* Ensure score bg is visible */
-       }
-       .perspective-description {
-         color: #aaa;
-       }
-       .perspective-assessment {
-         color: #ccc;
-       }
-       .metrics-overview .metric-box {
-         background: #2c2c2c;
-         border-color: #444;
-       }
-       .metrics-overview .metric-title {
-         color: #aaa;
-       }
-       .metrics-overview .metric-value {
-         color: #eee;
-       }
-      .radar-chart {
-        /* Use filter for chart in dark mode or style chart options */
-        /* filter: invert(0.9) hue-rotate(180deg); /* Example filter */
-      }
-      .toggle-analysis {
-        background-color: transparent;
-        border: 1px solid #555;
-        color: #aaa;
-      }
-      .spinner {
-        border: 4px solid rgba(255,255,255,0.2); /* Lighter spinner track */
-        border-left-color: #fff; /* White spinner head */
-      }
+       .tab-content .placeholder, .tab-content .tab-description { color: #aaa; }
+      .info-section { color: #ccc; border-top-color: #333; }
+       .info-section h2 { color: #eee; }
+       .info-section a { color: #6bb8ff; }
+      .perspective-panel { background-color: #2a2a2a; border-color: #444; }
+       .perspective-title { color: #eee; }
+       .perspective-score { background-color: #4f94cd; }
+       .perspective-description { color: #aaa; }
+       .perspective-assessment { color: #ccc; }
+       .metrics-overview .metric-box { background: #2c2c2c; border-color: #444; }
+       .metrics-overview .metric-title { color: #aaa; }
+       .metrics-overview .metric-value { color: #eee; }
+      /* Radar chart colors handled in JS based on theme */
+      .toggle-analysis { border: 1px solid #555; color: #aaa; }
+      .spinner { border: 4px solid rgba(255,255,255,0.2); border-left-color: #fff; }
+       .chat-container { border-color: #333; } /* Dark mode chat border */
     }
 
     /* Main container */
@@ -144,25 +102,27 @@
       margin: 0 auto 10px;
       max-width: 100%;
       height: auto;
-      max-height: 150px; /* Limit header image height */
+      max-height: 150px;
     }
 
     /* Layout for main interaction area */
     .interaction-area {
       display: flex;
       gap: 20px;
-      flex-wrap: wrap; /* Allow wrapping on smaller screens */
+      flex-wrap: wrap;
     }
 
     .main-column {
-      flex: 1 1 600px; /* Allow shrinking but prefer 600px */
-      min-width: 300px; /* Minimum width before wrapping */
+      flex: 1 1 600px;
+      min-width: 300px;
+      display: flex; /* Make main-column a flex container */
+      flex-direction: column; /* Stack chat and input vertically */
     }
 
     .analysis-column {
-      flex: 1 1 400px; /* Allow shrinking but prefer 400px */
-      min-width: 300px; /* Minimum width */
-      display: none; /* Hidden by default, shown when analysis is available */
+      flex: 1 1 400px;
+      min-width: 300px;
+      display: none;
     }
 
     /* Analysis panel styling */
@@ -172,386 +132,155 @@
       border-radius: 12px;
       padding: 15px;
       margin-bottom: 20px;
-      position: sticky; /* Make panel sticky */
-      top: 20px; /* Stick near the top */
+      position: sticky;
+      top: 20px;
     }
+    .analysis-panel h3 { margin-top: 0; font-size: 16px; color: #495057; }
+    /* ... other analysis panel styles ... */
+     .claim-box { background: #fff; border: 1px solid #dee2e6; border-radius: 8px; padding: 12px; margin-bottom: 16px; }
+     .claim-text { font-weight: 500; margin-bottom: 8px; color: inherit; } /* Inherit color */
+     .assumption-tag { display: inline-block; background: #e9ecef; color: #495057; font-size: 12px; padding: 2px 8px; border-radius: 12px; margin-bottom: 8px; }
+     .score-name { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 2px; color: #6c757d; }
+     .score-bar { height: 6px; background: #e9ecef; border-radius: 3px; margin-bottom: 8px; overflow: hidden; }
+     .score-bar .fill { height: 100%; background-color: #0d6efd; border-radius: 3px; transition: width 0.3s ease-in-out; }
+     .perspectives-container { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px; }
+     .perspective-panel { flex: 1; min-width: calc(33% - 10px); background: #f0f0f0; border: 1px solid #ddd; border-radius: 8px; padding: 10px; }
+     .perspective-title { font-weight: 600; font-size: 14px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center; color: inherit; }
+     .perspective-score { background: #0d6efd; color: white; border-radius: 12px; padding: 1px 8px; font-size: 12px; margin-left: 5px; }
+     .perspective-description { font-size: 12px; color: #666; margin-bottom: 6px; }
+     .perspective-assessment { font-size: 13px; color: inherit; }
+     .radar-container { width: 100%; max-width: 350px; height: auto; aspect-ratio: 1 / 1; margin: 15px auto; }
+     .metrics-overview { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 15px; }
+     .metric-box { flex: 1; min-width: calc(50% - 10px); background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; padding: 10px; text-align: center; }
+     .metric-title { font-size: 12px; color: #6c757d; margin-bottom: 4px; }
+     .metric-value { font-size: 20px; font-weight: 600; color: #212529; }
+     .tabs { display: flex; border-bottom: 1px solid #dee2e6; margin-bottom: 15px; }
+     .tabs button { background: none; border: 1px solid transparent; border-bottom: none; border-radius: 8px 8px 0 0; padding: 8px 12px; color: #495057; cursor: pointer; font-size: 14px; margin: 0 2px -1px 0; position: relative; top: 1px; }
+     .tabs button.active { background-color: #f8f9fa; border-color: #dee2e6; border-bottom-color: #f8f9fa; color: #0d6efd; font-weight: 500; }
+     .tab-content .placeholder, .tab-content .tab-description { color: #6c757d; } /* Ensure placeholders visible */
 
-    .analysis-panel h3 {
-      margin-top: 0;
-      font-size: 16px;
-      color: #495057;
-    }
-
-    .claim-box {
-      background: #fff;
-      border: 1px solid #dee2e6;
-      border-radius: 8px;
-      padding: 12px;
-      margin-bottom: 16px;
-    }
-
-    .claim-text {
-      font-weight: 500;
-      margin-bottom: 8px;
-    }
-
-    .assumption-tag {
-      display: inline-block;
-      background: #e9ecef;
-      color: #495057;
-      font-size: 12px;
-      padding: 2px 8px;
-      border-radius: 12px;
-      margin-bottom: 8px;
-    }
-
-    .score-name {
-      display: flex;
-      justify-content: space-between;
-      font-size: 12px;
-      margin-bottom: 2px;
-      color: #6c757d; /* Dimmer color for score names */
-    }
-
-    .score-bar {
-      height: 6px;
-      background: #e9ecef;
-      border-radius: 3px;
-      margin-bottom: 8px;
-      overflow: hidden;
-    }
-
-    .score-bar .fill {
-      height: 100%;
-      background-color: #0d6efd;
-      border-radius: 3px;
-      transition: width 0.3s ease-in-out; /* Animate score bar fill */
-    }
-
-    /* Perspective panels */
-    .perspectives-container {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 15px;
-    }
-
-    .perspective-panel {
-      flex: 1;
-      min-width: calc(33% - 10px); /* Adjust basis */
-      background: #f0f0f0;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      padding: 10px;
-    }
-
-    .perspective-title {
-      font-weight: 600;
-      font-size: 14px;
-      margin-bottom: 6px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center; /* Align title and score */
-    }
-
-    .perspective-score {
-      background: #0d6efd;
-      color: white;
-      border-radius: 12px;
-      padding: 1px 8px;
-      font-size: 12px;
-      margin-left: 5px; /* Space between title and score */
-    }
-
-    .perspective-description {
-      font-size: 12px;
-      color: #666;
-      margin-bottom: 6px;
-    }
-
-    .perspective-assessment {
-      font-size: 13px;
-    }
-
-    /* Radar chart */
-    .radar-container {
-      width: 100%;
-      max-width: 350px; /* Limit chart width */
-      height: auto; /* Allow aspect ratio to control height */
-      aspect-ratio: 1 / 1; /* Maintain square aspect ratio */
-      margin: 15px auto; /* Center chart */
-    }
-
-    .metrics-overview {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 15px;
-    }
-
-    .metric-box {
-      flex: 1;
-      min-width: calc(50% - 10px); /* Two boxes per row */
-      background: #f8f9fa;
-      border: 1px solid #e9ecef;
-      border-radius: 8px;
-      padding: 10px;
-      text-align: center;
-    }
-
-    .metric-title {
-      font-size: 12px;
-      color: #6c757d;
-      margin-bottom: 4px;
-    }
-
-    .metric-value {
-      font-size: 20px;
-      font-weight: 600;
-      color: #212529;
-    }
-
-    /* Tabs for analysis modes */
-    .tabs {
-      display: flex;
-      border-bottom: 1px solid #dee2e6;
-      margin-bottom: 15px;
-    }
-
-    .tabs button {
-      background: none;
-      border: 1px solid transparent;
-      border-bottom: none;
-      border-radius: 8px 8px 0 0;
-      padding: 8px 12px;
-      color: #495057;
-      cursor: pointer;
-      font-size: 14px;
-      margin: 0 2px -1px 0; /* Overlap border slightly */
-      position: relative;
-      top: 1px; /* Align with bottom border */
-    }
-
-    .tabs button.active {
-      background-color: #f8f9fa; /* Match panel bg */
-      border-color: #dee2e6;
-      border-bottom-color: #f8f9fa; /* Hide bottom border */
-      color: #0d6efd;
-      font-weight: 500; /* Emphasize active tab */
-    }
-
-    /* Chat container */
+    /* Chat container - REVISED */
     .chat-container {
-      background: transparent; /* Use body background */
+      background: transparent;
+      border: 1px solid #eee; /* Subtle border */
+      border-radius: 12px;
       padding: 15px;
-      /* Let height be flexible within flex container */
-      /* height: 600px; */
-      max-height: 70vh; /* Limit max height */
-      overflow-y: auto;
-      margin-bottom: 20px;
+      overflow-y: auto; /* Allow scrolling */
+      margin-bottom: 20px; /* Space below chat */
       display: flex;
       flex-direction: column;
       gap: 10px;
-      border: 1px solid #eee; /* Add subtle border */
-      border-radius: 12px; /* Match panel radius */
+      flex-grow: 1; /* Allow chat to grow and fill space in main-column */
+      min-height: 300px; /* Ensure it has a minimum size */
+      max-height: 70vh; /* But limit maximum height */
     }
-     @media (prefers-color-scheme: dark) {
-        .chat-container {
-            border-color: #333;
-        }
-     }
 
     .message {
       padding: 10px 14px;
-      border-radius: 18px; /* More rounded messages */
-      max-width: 80%; /* Allow slightly wider messages */
+      border-radius: 18px;
+      max-width: 80%;
       word-wrap: break-word;
-      line-height: 1.4; /* Improve readability */
+      line-height: 1.4;
+      color: inherit; /* Inherit text color from body */
     }
     .assistant-message {
-      background: #e9ecef; /* Lighter assistant message */
-      color: #000;
+      background: #e9ecef;
+      color: #000000; /* Explicit black text for assistant */
       align-self: flex-start;
-      border-bottom-left-radius: 4px; /* Squarish corner */
+      border-bottom-left-radius: 4px;
     }
     .user-message {
-      background: #0d6efd; /* User primary color */
-      color: #fff;
+      background: #0d6efd;
+      color: #ffffff; /* Explicit white text for user */
       align-self: flex-end;
-      border-bottom-right-radius: 4px; /* Squarish corner */
+      border-bottom-right-radius: 4px;
     }
-    /* Dark mode overrides for messages defined in @media query */
+    /* Dark mode overrides handled in @media query */
 
     /* Input area */
     .input-area {
       display: flex;
-      flex-direction: column; /* Stack vertically */
+      flex-direction: column;
       gap: 10px;
-      margin-bottom: 20px;
-      align-items: flex-end; /* Align button to the right */
+      /* margin-bottom: 20px; /* Removed, main-column handles spacing */
+      align-items: flex-end;
+      flex-shrink: 0; /* Prevent input area from shrinking */
     }
     textarea {
       width: 100%;
       padding: 12px;
       font-size: 16px;
-      resize: vertical; /* Allow vertical resize only */
-      min-height: 50px; /* Minimum height for one line + padding */
-      max-height: 200px; /* Limit growth */
+      resize: vertical;
+      min-height: 50px;
+      max-height: 200px;
       box-sizing: border-box;
-      background: #fff; /* Explicit background */
+      background: #fff;
       border: 1px solid #ccc;
       border-radius: 18px;
       outline: none;
       line-height: 1.4;
+      color: #000000; /* Explicit black text */
     }
-    /* Dark mode override for textarea defined in @media query */
-
-    button#sendButton { /* Be more specific */
-      background-color: #0d6efd; /* Primary button color */
+    button#sendButton {
+      background-color: #0d6efd;
       color: #fff;
       font-size: 16px;
       font-weight: 500;
       border: none;
-      padding: 10px 20px; /* Adjust padding */
+      padding: 10px 20px;
       border-radius: 18px;
       cursor: pointer;
       transition: background-color 0.2s ease;
     }
-    button#sendButton:hover:not(:disabled) {
-      background-color: #0b5ed7; /* Darker hover */
-    }
-    button#sendButton:disabled {
-      background-color: #aaa;
-      cursor: not-allowed;
-    }
-    /* Dark mode overrides for button defined in @media query */
+    button#sendButton:hover:not(:disabled) { background-color: #0b5ed7; }
+    button#sendButton:disabled { background-color: #aaa; cursor: not-allowed; }
+    /* Dark mode overrides handled in @media query */
 
 
     /* Spinner */
-    .spinner-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 10px 0;
-    }
-    .spinner {
-      border: 4px solid rgba(0,0,0,0.1);
-      width: 24px; /* Slightly smaller spinner */
-      height: 24px;
-      border-radius: 50%;
-      border-left-color: #0d6efd; /* Match primary color */
-      animation: spin 1s linear infinite;
-      /* margin: 10px auto; /* Removed, handled by container */
-    }
-     /* Dark mode override for spinner defined in @media query */
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
+    .spinner-container { display: flex; justify-content: center; align-items: center; padding: 10px 0; }
+    .spinner { border: 4px solid rgba(0,0,0,0.1); width: 24px; height: 24px; border-radius: 50%; border-left-color: #0d6efd; animation: spin 1s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
     /* Toggle button for analysis panel */
-    .toggle-analysis {
-      background-color: transparent;
-      border: 1px solid #ccc;
-      color: #666;
-      font-size: 14px;
-      padding: 8px 12px;
-      margin-bottom: 10px;
-      border-radius: 18px;
-      cursor: pointer;
-      display: none; /* Hidden by default, shown when analysis exists */
-    }
-    /* Dark mode override for toggle defined in @media query */
+    .toggle-analysis { background-color: transparent; border: 1px solid #ccc; color: #666; font-size: 14px; padding: 8px 12px; margin-bottom: 10px; border-radius: 18px; cursor: pointer; display: none; }
+    /* Dark mode override handled in @media query */
 
 
-    /* Info sections at the bottom */
-    .info-section {
-      margin-top: 30px; /* More space */
-      padding-top: 20px; /* Space above */
-      border-top: 1px solid #eee; /* Separator line */
-      line-height: 1.6; /* Consistent line height */
-      color: #555;
-    }
-     @media (prefers-color-scheme: dark) {
-        .info-section {
-            border-top-color: #333;
-        }
-     }
-    .info-section h2 {
-      margin-top: 0;
-      font-size: 1.5em;
-      color: #333; /* Darker heading */
-    }
-    /* Dark mode override for info h2 defined in @media query */
-
-    .info-section p, .info-section ul {
-      margin: 10px 0;
-    }
-    .info-section ul {
-        padding-left: 20px; /* Indent list */
-    }
-    .info-section a {
-        color: #0d6efd;
-        text-decoration: none;
-    }
-    .info-section a:hover {
-        text-decoration: underline;
-    }
-    /* Dark mode override for info link defined in @media query */
+    /* Info sections */
+    .info-section { margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; line-height: 1.6; color: #555; }
+    .info-section h2 { margin-top: 0; font-size: 1.5em; color: #333; }
+    .info-section p, .info-section ul { margin: 10px 0; color: inherit; }
+    .info-section ul { padding-left: 20px; }
+    .info-section a { color: #0d6efd; text-decoration: none; }
+    .info-section a:hover { text-decoration: underline; }
+    /* Dark mode overrides handled in @media query */
 
 
     /* Responsive layout adjustments */
-    @media (max-width: 992px) { /* Adjust breakpoint for panel */
-       .interaction-area {
-          flex-direction: column;
-       }
-       .analysis-column {
-          width: 100%; /* Take full width when wrapped */
-          order: -1; /* Move analysis panel above chat on smaller screens */
-          position: static; /* Disable sticky positioning when wrapped */
-       }
-       .toggle-analysis {
-          display: block; /* Always show toggle on smaller screens if analysis exists */
-       }
-       .analysis-panel {
-          margin-bottom: 10px; /* Reduce margin when stacked */
-       }
-       .main-column {
-           order: 0; /* Ensure main column follows analysis */
-       }
+    @media (max-width: 992px) {
+       .interaction-area { flex-direction: column; }
+       .analysis-column { width: 100%; order: -1; position: static; }
+       /* Keep toggle button display controlled by JS based on analysis data */
+       /* .toggle-analysis { display: block; } */
+       .analysis-panel { margin-bottom: 10px; }
+       .main-column { order: 0; }
+       /* Adjust chat height for smaller viewports if needed */
+       .chat-container { max-height: 60vh; min-height: 250px; }
     }
      @media (max-width: 768px) {
-        .container {
-            padding: 0 10px; /* Reduce side padding */
-        }
-        .metric-box {
-           min-width: calc(50% - 5px); /* Adjust for smaller gap */
-        }
-        .perspective-panel {
-           min-width: calc(50% - 5px); /* Adjust for smaller gap */
-        }
+        .container { padding: 0 10px; }
+        .metric-box { min-width: calc(50% - 5px); }
+        .perspective-panel { min-width: calc(50% - 5px); }
      }
      @media (max-width: 480px) {
-        .message {
-            max-width: 90%; /* Allow slightly wider messages on small screens */
-        }
-        .metric-box, .perspective-panel {
-           min-width: 100%; /* Stack metrics/perspectives fully */
-           flex-basis: 100%;
-        }
+        .message { max-width: 90%; }
+        .metric-box, .perspective-panel { min-width: 100%; flex-basis: 100%; }
+        .chat-container { max-height: 55vh; min-height: 200px; }
      }
 
-     /* Utility class for visually hidden elements (for accessibility) */
-    .visually-hidden {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      margin: -1px;
-      padding: 0;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      border: 0;
-    }
+    /* Utility class */
+    .visually-hidden { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0; }
 
   </style>
   <!-- Include Chart.js for radar chart -->
@@ -707,7 +436,7 @@
     // Creates score name and bar element
     function createScoreElement(label, value, labelId = '') {
         const container = document.createDocumentFragment(); // Use fragment for efficiency
-        const scoreValue = Math.max(0, Math.min(100, parseFloat(value) * 100)); // Clamp value 0-100
+        const scoreValue = Math.max(0, Math.min(100, parseFloat(value || 0) * 100)); // Clamp value 0-100, default 0 if invalid
 
         const scoreName = document.createElement('div');
         scoreName.className = 'score-name';
@@ -738,6 +467,7 @@
 
     // Format camelCase to Title Case
     function formatCamelCase(str) {
+        if (!str || typeof str !== 'string') return '';
         return str
             .replace(/([A-Z])/g, ' $1') // Add space before capitals
             .replace(/^./, s => s.toUpperCase()); // Capitalize first letter
@@ -795,7 +525,12 @@
           // Component scores
           if (item.verifactScore.components) {
               const components = item.verifactScore.components;
+              // Define order or filter if necessary
+              const displayOrder = ['empiricalVerifiability', 'logicalConsistency', 'falsifiability']; // Only show these for now?
               Object.entries(components).forEach(([key, value], compIndex) => {
+                  // Optional: Only display specific components if desired
+                  // if (!displayOrder.includes(key)) return;
+
                   const formattedKey = formatCamelCase(key);
                   claimDiv.appendChild(createScoreElement(formattedKey, value, `verifact-comp-${index}-${compIndex}-label`));
               });
@@ -803,6 +538,8 @@
         } else {
              const noScore = document.createElement('p');
              noScore.textContent = "Verifact score not available.";
+             noScore.style.fontSize = '12px';
+             noScore.style.color = '#888';
              claimDiv.appendChild(noScore);
         }
 
@@ -812,74 +549,66 @@
     }
 
     function renderPerspectives(analysisData) {
-        // Placeholder: This function expects `analysisData[0].perspectives` array
-        // Your current n8n workflow doesn't provide this.
-        // We'll keep the placeholder logic.
-        const placeholder = '<div class="placeholder">Perspective analysis is not yet available.</div>';
+        const placeholder = '<div class="placeholder">Perspective analysis is not yet available for this claim.</div>';
 
-        if (!analysisData || analysisData.length === 0 || !analysisData[0].perspectives) {
+        // Check if perspectives array exists and is not empty on the FIRST claim object
+        if (!analysisData || analysisData.length === 0 || !Array.isArray(analysisData[0].perspectives) || analysisData[0].perspectives.length === 0) {
             perspectivesContent.innerHTML = placeholder;
             return;
         }
 
-        // --- Start: Actual Rendering Logic (when data is available) ---
-        // const item = analysisData[0]; // Assuming analysis applies to the first claim for now
-        // perspectivesContent.innerHTML = ''; // Clear placeholder
+        // --- Start: Actual Rendering Logic ---
+        const item = analysisData[0]; // Assuming perspectives apply to the first claim
+        perspectivesContent.innerHTML = ''; // Clear placeholder
 
-        // const perspectivesContainer = document.createElement('div');
-        // perspectivesContainer.className = 'perspectives-container';
+        const perspectivesContainer = document.createElement('div');
+        perspectivesContainer.className = 'perspectives-container';
 
-        // item.perspectives.forEach(perspective => {
-        //   const perspDiv = document.createElement('div');
-        //   perspDiv.className = 'perspective-panel';
+        item.perspectives.forEach(perspective => {
+          const perspDiv = document.createElement('div');
+          perspDiv.className = 'perspective-panel';
 
-        //   // Title and Score
-        //   const titleDiv = document.createElement('div');
-        //   titleDiv.className = 'perspective-title';
-        //   const titleSpan = document.createElement('span');
-        //   titleSpan.textContent = perspective.name;
-        //   const scoreSpan = document.createElement('span');
-        //   scoreSpan.className = 'perspective-score';
-        //   scoreSpan.textContent = (parseFloat(perspective.score || 0) * 100).toFixed(0) + '%';
-        //   titleDiv.appendChild(titleSpan);
-        //   titleDiv.appendChild(scoreSpan);
-        //   perspDiv.appendChild(titleDiv);
+          // Title and Score (Using the placeholder score added in N8N for now)
+          const titleDiv = document.createElement('div');
+          titleDiv.className = 'perspective-title';
+          const titleSpan = document.createElement('span');
+          titleSpan.textContent = perspective.name || 'Unnamed Perspective'; // Fallback name
+          // Display the placeholder score (added in Merge node)
+          const scoreSpan = document.createElement('span');
+          scoreSpan.className = 'perspective-score';
+          scoreSpan.textContent = (parseFloat(perspective.score || 0) * 100).toFixed(0) + '%';
+          titleDiv.appendChild(titleSpan);
+          titleDiv.appendChild(scoreSpan); // Append score
+          perspDiv.appendChild(titleDiv);
 
-        //   // Description
-        //   if (perspective.description) {
-        //     const descDiv = document.createElement('div');
-        //     descDiv.className = 'perspective-description';
-        //     descDiv.textContent = perspective.description;
-        //     perspDiv.appendChild(descDiv);
-        //   }
+          // Description
+          if (perspective.description) {
+            const descDiv = document.createElement('div');
+            descDiv.className = 'perspective-description';
+            descDiv.textContent = perspective.description;
+            perspDiv.appendChild(descDiv);
+          }
 
-        //   // Assessment
-        //   if (perspective.assessment) {
-        //     const assessDiv = document.createElement('div');
-        //     assessDiv.className = 'perspective-assessment';
-        //     assessDiv.textContent = perspective.assessment;
-        //     perspDiv.appendChild(assessDiv);
-        //   }
+          // Assessment
+          if (perspective.assessment) {
+            const assessDiv = document.createElement('div');
+            assessDiv.className = 'perspective-assessment';
+            assessDiv.textContent = perspective.assessment;
+            perspDiv.appendChild(assessDiv);
+          }
 
-        //   perspectivesContainer.appendChild(perspDiv);
-        // });
-        // perspectivesContent.appendChild(perspectivesContainer);
+          perspectivesContainer.appendChild(perspDiv);
+        });
+        perspectivesContent.appendChild(perspectivesContainer);
         // --- End: Actual Rendering Logic ---
-
-        // For now, just show the placeholder until N8N provides the data
-        perspectivesContent.innerHTML = placeholder;
     }
 
 
     function renderAdvancedMetrics(analysisData) {
-        // Placeholder: This expects detailed metrics beyond the basic Verifact components.
-        // Your current n8n workflow only provides basic components.
-        // We will derive from what's available for the boxes and chart,
-        // but show placeholders where data is truly missing.
-
         const placeholder = '<div class="placeholder">Detailed metrics are not yet available.</div>';
         const explanationPlaceholder = '<p>Metric explanations will appear here when data is available.</p>';
 
+        // Check specifically for the components object within the first claim's verifactScore
         if (!analysisData || analysisData.length === 0 || !analysisData[0].verifactScore?.components) {
             metricsOverview.innerHTML = placeholder;
             metricsExplanation.innerHTML = explanationPlaceholder;
@@ -892,33 +621,37 @@
         const overallScore = parseFloat(analysisData[0].verifactScore.overallScore || 0.5);
 
         // --- Metrics Overview Boxes ---
-        // Use available components, provide defaults for missing ones needed by UI
+        // Use available components, provide defaults (0.5) for missing ones
         const empiricalScore = parseFloat(components.empiricalVerifiability || 0.5);
         const logicalScore = parseFloat(components.logicalConsistency || 0.5);
-        // Defaults for metrics not yet generated by N8N:
-        const modelDiversityScore = parseFloat(components.modelDiversity || 0.5); // Example: Check if N8N adds this
-        const contextualSensitivityScore = parseFloat(components.contextualSensitivity || 0.5); // Example: Check if N8N adds this
+        const modelDiversityScore = parseFloat(components.modelDiversity || 0.5); // Heuristic from N8N
+        const contextualSensitivityScore = parseFloat(components.contextualSensitivity || 0.5); // Heuristic from N8N
+        const reflectiveScore = parseFloat(components.reflectiveIndex || 0.5); // Heuristic from N8N
 
         metricsOverview.innerHTML = `
             <div class="metric-box">
               <div class="metric-title">Verifact Score</div>
               <div class="metric-value">${(overallScore * 100).toFixed(0)}%</div>
             </div>
+             <div class="metric-box">
+              <div class="metric-title">Empirical</div>
+              <div class="metric-value">${(empiricalScore * 100).toFixed(0)}%</div>
+            </div>
+             <div class="metric-box">
+              <div class="metric-title">Logical</div>
+              <div class="metric-value">${(logicalScore * 100).toFixed(0)}%</div>
+            </div>
             <div class="metric-box">
-              <div class="metric-title">Model Diversity (Est.)</div>
+              <div class="metric-title">Model Diversity</div>
               <div class="metric-value">${(modelDiversityScore * 100).toFixed(0)}%</div>
             </div>
             <div class="metric-box">
-              <div class="metric-title">Contextual Sensitivity (Est.)</div>
+              <div class="metric-title">Contextual Sens.</div>
               <div class="metric-value">${(contextualSensitivityScore * 100).toFixed(0)}%</div>
             </div>
-            <div class="metric-box">
-              <div class="metric-title">Logical Consistency</div>
-              <div class="metric-value">${(logicalScore * 100).toFixed(0)}%</div>
-            </div>
              <div class="metric-box">
-              <div class="metric-title">Empirical Verifiability</div>
-              <div class="metric-value">${(empiricalScore * 100).toFixed(0)}%</div>
+              <div class="metric-title">Reflective Index</div>
+              <div class="metric-value">${(reflectiveScore * 100).toFixed(0)}%</div>
             </div>
           `;
 
@@ -926,15 +659,15 @@
         const ctx = radarCanvas.getContext('2d');
         radarCanvas.style.display = 'block'; // Ensure canvas is visible
 
-        // Define labels based on framework description / desired metrics
-        const radarLabels = ['Empirical Evidence', 'Logical Consistency', 'Model Diversity', 'Contextual Sensitivity', 'Reflective Index'];
+        // Define labels matching the framework description & heuristics
+        const radarLabels = ['Empirical', 'Logical', 'Model Diversity', 'Contextual', 'Reflective'];
         // Map available/estimated data to labels
         const radarData = [
           empiricalScore * 100,
           logicalScore * 100,
-          modelDiversityScore * 100,       // Using estimate
-          contextualSensitivityScore * 100, // Using estimate
-          (overallScore * 100) // Using overall score as placeholder for Reflective Index
+          modelDiversityScore * 100,
+          contextualSensitivityScore * 100,
+          reflectiveScore * 100
         ];
 
         // Destroy existing chart before creating new one
@@ -1022,40 +755,41 @@
         });
 
         // --- Metrics Explanation ---
-        // Provide explanations for the metrics shown in the chart/boxes
          metricsExplanation.innerHTML = `
-            <h4>What These Metrics Mean</h4>
+            <h4>What These Metrics Mean (Estimates)</h4>
             <p><strong>Verifact Score:</strong> Overall measure of claim verifiability and logical consistency.</p>
-            <p><strong>Empirical Evidence:</strong> Availability of observable evidence supporting the claim.</p>
-            <p><strong>Logical Consistency:</strong> Internal coherence and adherence to logical principles.</p>
-            <p><strong>Model Diversity (Est.):</strong> How different reasoning approaches might view this claim (estimated).</p>
-            <p><strong>Contextual Sensitivity (Est.):</strong> How appropriate the claim might be within its relevant context (estimated).</p>
-            <p><strong>Reflective Index (Est.):</strong> Assessment of awareness of assumptions and bias recognition (estimated using overall score).</p>
-            <p><em>Note: Metrics marked (Est.) are placeholders until fully implemented in the backend analysis.</em></p>
+            <p><strong>Empirical:</strong> Availability of observable evidence supporting the claim.</p>
+            <p><strong>Logical:</strong> Internal coherence and adherence to logical principles.</p>
+            <p><strong>Model Diversity:</strong> How different reasoning approaches might view this claim.</p>
+            <p><strong>Contextual:</strong> How appropriate the claim might be within its relevant context.</p>
+            <p><strong>Reflective Index:</strong> Assessment of awareness of assumptions and bias recognition.</p>
+            <p><em>Note: These scores are generated using heuristics and provide an initial estimate.</em></p>
           `;
     }
 
     function renderAnalysis(analysisData) {
-      if (!analysisData || !Array.isArray(analysisData) || analysisData.length === 0) {
-          console.log("No analysis data to render.");
+      // Check if data is valid (array, not empty)
+      const isValidAnalysis = analysisData && Array.isArray(analysisData) && analysisData.length > 0;
+
+      if (!isValidAnalysis) {
+          console.log("No valid analysis data to render.");
           // Clear analysis sections
           claimsAnalysis.innerHTML = '<div class="placeholder">No claims analyzed in this turn.</div>';
           perspectivesContent.innerHTML = '<div class="placeholder">No perspectives available.</div>';
           metricsOverview.innerHTML = '<div class="placeholder">No metrics available.</div>';
           if (radarChart) { radarChart.destroy(); radarChart = null; }
-          radarCanvas.style.display = 'none';
+          if (radarCanvas) radarCanvas.style.display = 'none';
           metricsExplanation.innerHTML = '';
 
-          // Keep toggle button visible if it was already, but maybe hide panel?
-          // Or hide toggle button if analysis is consistently empty?
-          // toggleAnalysis.style.display = 'none'; // Uncomment to hide toggle if no data
+          // Keep toggle button hidden if no valid data ever shown
+          // toggleAnalysis.style.display = 'none';
           return;
       }
 
       // Render all three views using the provided data
       renderClaimsAnalysis(analysisData);
-      renderPerspectives(analysisData); // Will currently use placeholders
-      renderAdvancedMetrics(analysisData); // Will currently use derived/placeholder data
+      renderPerspectives(analysisData); // Now attempts to render actual data
+      renderAdvancedMetrics(analysisData); // Now renders heuristic data
 
       // Ensure toggle button is visible now that we have data
       toggleAnalysis.style.display = 'inline-block'; // Use inline-block for button
@@ -1077,7 +811,7 @@
         tabs.forEach(tab => {
             tab.classList.remove('active');
             tab.setAttribute('aria-selected', 'false');
-            tab.setAttribute('tabindex', '-1'); // Not focusable unless active
+            tab.setAttribute('tabindex', '-1');
         });
         tabContents.forEach(content => {
             content.style.display = 'none';
@@ -1087,24 +821,28 @@
         // Activate the clicked tab and show its content
         clickedTab.classList.add('active');
         clickedTab.setAttribute('aria-selected', 'true');
-        clickedTab.setAttribute('tabindex', '0'); // Make focusable
+        clickedTab.setAttribute('tabindex', '0');
 
         const contentId = clickedTab.getAttribute('aria-controls');
         const activeContent = document.getElementById(contentId);
         if (activeContent) {
             activeContent.style.display = 'block';
             activeContent.removeAttribute('hidden');
+            // Ensure chart redraws if its tab becomes active and it exists
+            if (contentId === 'metricsTab' && radarChart) {
+                 // radarChart.resize(); // May not be needed if canvas display:block works
+            }
         }
     }
 
     function handleToggleAnalysis() {
-      const isExpanded = toggleAnalysis.getAttribute('aria-expanded') === 'true';
-      if (isExpanded) {
+      const isAnalysisVisible = analysisColumn.style.display !== 'none';
+      if (isAnalysisVisible) {
         analysisColumn.style.display = 'none';
         toggleAnalysis.textContent = 'Show Analysis Panel';
         toggleAnalysis.setAttribute('aria-expanded', 'false');
       } else {
-        analysisColumn.style.display = 'block'; // Or 'flex' if it's a flex item
+        analysisColumn.style.display = 'block'; // Or 'flex' if needed by layout
         toggleAnalysis.textContent = 'Hide Analysis Panel';
         toggleAnalysis.setAttribute('aria-expanded', 'true');
       }
@@ -1148,14 +886,18 @@
         if (!response.ok) {
             let errorBody = `Server error ${response.status}: ${response.statusText}`;
             try {
-                 // Try to get more details from JSON error response
                  const errorJson = await response.json();
-                 errorBody += ` - ${errorJson.message || JSON.stringify(errorJson)}`;
+                 console.error("Server error JSON:", errorJson); // Log the specific error from N8N if available
+                 // Try to find a message field in common error structures
+                 errorBody += ` - ${errorJson.message || errorJson.error?.message || JSON.stringify(errorJson)}`;
             } catch(e) {
-                 // If response is not JSON, try text
-                 try { errorBody = await response.text(); } catch(e2) { /* ignore */ }
+                 try {
+                     const errorText = await response.text();
+                     console.error("Server error text:", errorText);
+                     errorBody = errorText || errorBody; // Use text response if JSON fails
+                 } catch(e2) { /* ignore */ }
             }
-            console.error("Server error response:", errorBody);
+            console.error("Full server error details:", errorBody);
             throw new Error(`Server error: ${response.status}. Check console for details.`);
         }
 
@@ -1167,20 +909,22 @@
         const aiText = data.answer || "Sorry, I couldn't generate a response.";
         console.log("AI response text:", aiText);
 
-        conversationHistory.push({ role: 'assistant', content: aiText });
-        renderConversation(); // Render the new assistant message
+        // Add assistant response ONLY IF IT'S NOT EMPTY
+        if (aiText && aiText.trim().length > 0) {
+             conversationHistory.push({ role: 'assistant', content: aiText });
+        } else {
+             console.warn("Received empty AI response.");
+             // Optionally push a fallback message?
+             // conversationHistory.push({ role: 'assistant', content: "(No response generated)" });
+        }
+        renderConversation(); // Render the conversation including the new assistant message (or lack thereof)
 
         // Extract and display analysis data
         const analysisData = data.metadata?.criticalThinkingAnalysis;
         console.log("Analysis data received:", analysisData);
 
-        if (analysisData && Array.isArray(analysisData)) { // Check it's an array
-          lastAnalysisData = analysisData; // Store for potential refresh
-          renderAnalysis(lastAnalysisData); // Render the analysis sections
-        } else {
-          console.log("No valid analysis data found in response metadata.");
-          renderAnalysis(null); // Clear out old analysis if none came back
-        }
+        // Render analysis (function handles null/empty case)
+        renderAnalysis(analysisData);
 
       } catch (err) {
         console.error("API/Processing Error:", err);
@@ -1195,6 +939,9 @@
         userInput.disabled = false;
         sendButton.disabled = false;
         userInput.focus(); // Focus input for next message
+        // Reset textarea height in case it grew
+        userInput.style.height = 'auto';
+        userInput.style.height = (userInput.scrollHeight) + 'px';
       }
     }
 
@@ -1215,7 +962,7 @@
     // Adjust textarea height dynamically based on content
     userInput.addEventListener('input', () => {
         userInput.style.height = 'auto'; // Reset height
-        userInput.style.height = (userInput.scrollHeight) + 'px'; // Set to scroll height
+        userInput.style.height = Math.min(userInput.scrollHeight, 200) + 'px'; // Set to scroll height, respecting max-height
     });
 
 
@@ -1223,16 +970,24 @@
     renderConversation();
 
     // Set initial state for analysis panel visibility based on toggle button's default aria-expanded
-    if (toggleAnalysis.getAttribute('aria-expanded') === 'true') {
-        analysisColumn.style.display = 'block';
-    } else {
-        analysisColumn.style.display = 'none';
-    }
-    // Set initial focus to the first tab
+    // And ensure panel is hidden initially regardless of CSS order changes
+    analysisColumn.style.display = 'none';
+    toggleAnalysis.setAttribute('aria-expanded', 'false');
+    // if (toggleAnalysis.getAttribute('aria-expanded') === 'true') {
+    //     analysisColumn.style.display = 'block';
+    // } else {
+    //     analysisColumn.style.display = 'none';
+    // }
+
+    // Set initial focus state for tabs
     const initialTab = document.querySelector('.tabs button[role="tab"][aria-selected="true"]');
-    if (initialTab) {
-        initialTab.setAttribute('tabindex', '0');
-    }
+    tabs.forEach(tab => {
+        if (tab === initialTab) {
+            tab.setAttribute('tabindex', '0');
+        } else {
+            tab.setAttribute('tabindex', '-1'); // Ensure non-active tabs are not in tab order initially
+        }
+    });
 
 
   </script>
