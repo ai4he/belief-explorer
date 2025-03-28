@@ -120,7 +120,7 @@
     .analysis-column {
       flex: 1 1 400px; /* Allow shrinking but prefer 400px */
       min-width: 300px; /* Minimum width */
-      display: none; /* ** CORRECTED: Start hidden by default ** */
+      display: none; /* ** Start hidden by default ** */
     }
 
     /* Analysis panel styling */
@@ -134,7 +134,7 @@
       top: 20px;
     }
     .analysis-panel h3 { margin-top: 0; font-size: 16px; color: #495057; }
-     /* ... other analysis panel styles (unchanged from previous good version) ... */
+     /* ... other analysis panel styles ... */
      .claim-box { background: #fff; border: 1px solid #dee2e6; border-radius: 8px; padding: 12px; margin-bottom: 16px; }
      .claim-text { font-weight: 500; margin-bottom: 8px; color: inherit; }
      .assumption-tag { display: inline-block; background: #e9ecef; color: #495057; font-size: 12px; padding: 2px 8px; border-radius: 12px; margin-bottom: 8px; }
@@ -237,7 +237,7 @@
     @keyframes spin { to { transform: rotate(360deg); } }
 
     /* Toggle button for analysis panel */
-    .toggle-analysis { background-color: transparent; border: 1px solid #ccc; color: #666; font-size: 14px; padding: 8px 12px; margin-bottom: 10px; border-radius: 18px; cursor: pointer; display: none; }
+    .toggle-analysis { background-color: transparent; border: 1px solid #ccc; color: #666; font-size: 14px; padding: 8px 12px; margin-bottom: 10px; border-radius: 18px; cursor: pointer; display: none; /* ** Start hidden, JS shows it ** */ }
 
     /* Info sections */
     .info-section { margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; line-height: 1.6; color: #555; }
@@ -255,10 +255,9 @@
            width: 100%;
            order: -1; /* Move analysis panel above chat */
            position: static; /* Disable sticky when stacked */
-           /* display: block; /* Don't force block here, let JS handle visibility */
+           /* display controlled by JS */
         }
-       /* Keep toggle button display controlled by JS based on data */
-       /* .toggle-analysis { display: block; } */
+       /* Keep toggle button display controlled by JS */
        .analysis-panel { margin-bottom: 10px; }
        .main-column { order: 0; }
        .chat-container { max-height: 60vh; min-height: 250px; }
@@ -346,29 +345,44 @@
 
     </div> <!-- End interaction-area -->
 
-    <!-- Info Sections -->
+    <!-- Info Sections - RESTORED WITH ORIGINAL TEXT -->
     <div class="info-section">
-      <h2>Why We're Here</h2>
-      <p>...</p> {/* Keep your original info text */}
-      <p>...</p>
+       <h2>Why We're Here</h2>
+       <p>
+         Sometimes, we hold beliefs without fully realizing the assumptions behind them. When we question those assumptions, a guide can help us arrive at conclusions that resonate more deeply with our inner core. This platform was designed to do just that. It doesn't judge or force; it simply listens and gently reveals the underlying premises that would need to be true for a given claim. In exploring those premises, you decide if they align with your sense of truth.
+       </p>
+       <p>
+         Ask a question or state a belief—like "Is the Earth hollow?"—and we'll help you examine the chain of assumptions. The goal is to provoke your own internal reasoning. Think of it as a friend helping you see your path more clearly, not an authority telling you what to do.
+       </p>
+     </div>
+     <div class="info-section">
+       <h2>About Belief Explorer</h2>
+       <p>
+         Human history is a story of beliefs – and the biases that cling to them. From political ideologies to personal convictions, we all see the world through subjective lenses shaped by upbringing, culture, and emotion. These biases influence what we accept as true, often overpowering facts and logical arguments. In the modern era, debates on social media or television often entrench opposing sides rather than resolve differences. As polarization grows, a provocative question arises: can artificial intelligence succeed where humans struggle?
+       </p>
+       <p>
+         Our platform is designed to build the first unbiased repository of human beliefs—one that validates ideas based on factual alignment and observation rather than emotional bias. By helping individuals reflect on and critically examine their beliefs, we empower users to defend their ideas through evidence and reason.
+       </p>
+       <p>
+         Contact: <a href="mailto:info@metacognitioninstitute.com">info@metacognitioninstitute.com</a>
+       </p>
+     </div>
+     <div class="info-section">
+       <h2>Our Critical Thinking Framework</h2>
+       <p>
+         Belief Explorer utilizes a comprehensive critical thinking formalization to help analyze beliefs and claims. This multi-dimensional framework includes:
+       </p>
+       <ul>
+         <li><strong>Verifact Score</strong>: A measure of how empirically verifiable and logically consistent a claim is.</li>
+         <li><strong>Model Diversity Quotient (MDQ)</strong>: Evaluates how different reasoning approaches view the claim.</li>
+         <li><strong>Contextual Sensitivity Index (CSI)</strong>: Measures how appropriate a claim is within its relevant context.</li>
+         <li><strong>Reflective Index</strong>: Assesses awareness of assumptions and bias recognition.</li>
+       </ul>
+       <p>
+         Rather than judging beliefs as simply "right" or "wrong," our system helps users understand the foundations of their thinking and strengthen their reasoning processes across multiple dimensions.
+       </p>
     </div>
-    <div class="info-section">
-      <h2>About Belief Explorer</h2>
-      <p>...</p> {/* Keep your original info text */}
-      <p>...</p>
-      <p>Contact: <a href="mailto:info@metacognitioninstitute.com">info@metacognitioninstitute.com</a></p>
-    </div>
-    <div class="info-section">
-      <h2>Our Critical Thinking Framework</h2>
-      <p>...</p> {/* Keep your original info text */}
-      <ul>
-        <li><strong>Verifact Score</strong>...</li>
-        <li><strong>Model Diversity Quotient (MDQ)</strong>...</li>
-        <li><strong>Contextual Sensitivity Index (CSI)</strong>...</li>
-        <li><strong>Reflective Index</strong>...</li>
-      </ul>
-      <p>...</p>
-    </div>
+    <!-- END Info Sections -->
   </div>
 
   <script>
@@ -439,7 +453,7 @@
     }
 
     function renderClaimsAnalysis(analysisData) {
-      // Keep this function as is - it renders based on received data
+      // Renders claims based on received data
       if (!analysisData || analysisData.length === 0) {
         claimsAnalysis.innerHTML = '<div class="placeholder">No claims analyzed in this turn.</div>';
         return;
@@ -481,7 +495,7 @@
     }
 
     function renderPerspectives(analysisData) {
-      // Keep this function as is
+      // Renders perspectives based on received data
         const placeholder = '<div class="placeholder">Perspective analysis is not yet available for this claim.</div>';
         if (!analysisData || analysisData.length === 0 || !Array.isArray(analysisData[0].perspectives) || analysisData[0].perspectives.length === 0) {
             perspectivesContent.innerHTML = placeholder;
@@ -522,7 +536,7 @@
     }
 
     function renderAdvancedMetrics(analysisData) {
-       // Keep this function as is
+       // Renders metrics based on received data
         const placeholder = '<div class="placeholder">Detailed metrics are not yet available.</div>';
         const explanationPlaceholder = '<p>Metric explanations will appear here when data is available.</p>';
         if (!analysisData || analysisData.length === 0 || !analysisData[0].verifactScore?.components) {
@@ -566,29 +580,44 @@
     }
 
     function renderAnalysis(analysisData) {
-      // Keep this function as is
+      // Controls visibility of analysis panel based on data
       const isValidAnalysis = analysisData && Array.isArray(analysisData) && analysisData.length > 0;
+
       if (!isValidAnalysis) {
-          console.log("No valid analysis data to render.");
+          console.log("No valid analysis data to render. Hiding panel.");
+          // Clear placeholders (important in case they were previously filled)
           claimsAnalysis.innerHTML = '<div class="placeholder">No claims analyzed in this turn.</div>';
           perspectivesContent.innerHTML = '<div class="placeholder">No perspectives available.</div>';
           metricsOverview.innerHTML = '<div class="placeholder">No metrics available.</div>';
           if (radarChart) { radarChart.destroy(); radarChart = null; }
           if (radarCanvas) radarCanvas.style.display = 'none';
           metricsExplanation.innerHTML = '';
-          // Hide toggle button if no analysis data
+
+          // Hide toggle button and panel
           if (toggleAnalysis) toggleAnalysis.style.display = 'none';
-          if (analysisColumn) analysisColumn.style.display = 'none'; // Ensure panel hides if data invalid
+          if (analysisColumn) analysisColumn.style.display = 'none';
           return;
       }
+
+      console.log("Valid analysis data received. Rendering panel content.")
+      // Render content into the different tabs
       renderClaimsAnalysis(analysisData);
       renderPerspectives(analysisData);
       renderAdvancedMetrics(analysisData);
+
       // Show toggle button now that we have data
-      if (toggleAnalysis) toggleAnalysis.style.display = 'inline-block';
-      // Ensure analysis column is potentially visible (user controls via toggle)
-      // Don't force it open here, just ensure it's not hard-coded to display:none if data exists
-      // analysisColumn.style.display = 'block'; // NO - let toggle handle this
+      if (toggleAnalysis) {
+        toggleAnalysis.style.display = 'inline-block'; // Use inline-block for button
+        // Reset toggle text/state if analysis panel is not currently shown
+        if (analysisColumn && analysisColumn.style.display === 'none') {
+            toggleAnalysis.textContent = 'Show Analysis Panel';
+            toggleAnalysis.setAttribute('aria-expanded', 'false');
+        }
+      }
+
+      // IMPORTANT: Do NOT automatically show the panel here.
+      // The user must click the toggle button.
+      // The panel's display ('none' or 'block') is controlled ONLY by handleToggleAnalysis.
     }
 
     // --- Event Handlers ---
@@ -603,20 +632,24 @@
     }
 
     function handleToggleAnalysis() {
+      // Toggles the visibility of the analysis panel
       const isAnalysisVisible = analysisColumn.style.display !== 'none';
       if (isAnalysisVisible) {
         analysisColumn.style.display = 'none';
         toggleAnalysis.textContent = 'Show Analysis Panel';
         toggleAnalysis.setAttribute('aria-expanded', 'false');
       } else {
-        analysisColumn.style.display = 'block'; // Use block as it's not a flex item itself
-        toggleAnalysis.textContent = 'Hide Analysis Panel';
-        toggleAnalysis.setAttribute('aria-expanded', 'true');
+        // ONLY show if analysisColumn exists
+        if (analysisColumn) {
+            analysisColumn.style.display = 'block'; // Use block as it's not a flex item itself
+            toggleAnalysis.textContent = 'Hide Analysis Panel';
+            toggleAnalysis.setAttribute('aria-expanded', 'true');
+        }
       }
     }
 
     async function handleSend(event) {
-      // Keep this function as is
+      // Handles sending message and processing response
       if (event) event.preventDefault();
       const text = userInput.value.trim();
       if (!text || sendButton.disabled) return;
@@ -644,7 +677,7 @@
         else { console.warn("Received empty AI response."); }
         renderConversation();
         const analysisData = data.metadata?.criticalThinkingAnalysis; console.log("Analysis data received:", analysisData);
-        renderAnalysis(analysisData);
+        renderAnalysis(analysisData); // Call render analysis AFTER getting response
       } catch (err) {
         console.error("API/Processing Error:", err);
         conversationHistory.push({ role: 'assistant', content: `Sorry, an error occurred: ${err.message}. Please try again later.` });
@@ -658,14 +691,17 @@
 
     // --- Initial Setup ---
     tabs.forEach(tab => tab.addEventListener('click', handleTabClick));
-    if (toggleAnalysis) toggleAnalysis.addEventListener('click', handleToggleAnalysis); // Check if toggle exists
+    if (toggleAnalysis) toggleAnalysis.addEventListener('click', handleToggleAnalysis);
     chatForm.addEventListener('submit', handleSend);
     userInput.addEventListener('keypress', (e) => { if (e.key === 'Enter' && !e.shiftKey && !userInput.disabled) { e.preventDefault(); handleSend(); } });
     userInput.addEventListener('input', () => { userInput.style.height = 'auto'; userInput.style.height = Math.min(userInput.scrollHeight, 200) + 'px'; });
     renderConversation(); // Initial render
     // Ensure panel starts hidden and toggle reflects this
     if(analysisColumn) analysisColumn.style.display = 'none';
-    if(toggleAnalysis) toggleAnalysis.setAttribute('aria-expanded', 'false');
+    if(toggleAnalysis) {
+        toggleAnalysis.style.display = 'none'; // Start toggle hidden too
+        toggleAnalysis.setAttribute('aria-expanded', 'false');
+    }
     // Set initial tab focus
     const initialTab = document.querySelector('.tabs button[role="tab"][aria-selected="true"]');
     tabs.forEach(tab => { tab.setAttribute('tabindex', (tab === initialTab) ? '0' : '-1'); });
