@@ -10,81 +10,124 @@
       font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       margin: 0;
       padding: 20px;
-      background-color: #ffffff; /* White background */
-      color: #000000; /* Black text */
+      background-color: #ffffff;
+      color: #000;
       line-height: 1.6;
     }
 
     @media (prefers-color-scheme: dark) {
       body {
-        background-color: #121212; /* Dark background */
-        color: #e0e0e0; /* Light grey text */
+        background-color: #121212;
+        color: #fff;
       }
-      textarea {
+      textarea, button {
         background-color: #2c2c2c;
-        color: #e0e0e0;
+        color: #fff;
         border-color: #555;
       }
-       button#sendButton { /* Target button specifically */
-         background-color: #3a3a3a; /* Darker button background */
-         color: #e0e0e0;
-       }
-       button#sendButton:hover:not(:disabled) {
-         background-color: #4a4a4a;
-       }
-       button#sendButton:disabled {
-         background-color: #555;
-         color: #999;
-       }
+      button:hover:not(:disabled) {
+        background-color: #444;
+      }
+       button:disabled {
+        background-color: #555;
+        color: #888;
+      }
       .message.assistant-message {
         background: #2c2c2c;
-        color: #e0e0e0;
+        color: #fff;
       }
       .message.user-message {
-        background: #0056b3; /* Use a darker blue for user in dark mode */
-        color: #ffffff;
+        background: #3a3a3a; /* Slightly different dark for user */
+        color: #fff;
       }
       .analysis-panel {
-        background-color: #1e1e1e;
-        border-color: #333;
+        background-color: #1e1e1e !important;
+        border-color: #333 !important;
+        color: #ccc; /* Text color for panel */
       }
-      .analysis-panel h3 { color: #eee; }
-       .claim-box {
-        background-color: #2c2c2c;
-        border-color: #444;
+       .analysis-panel h3 {
+         color: #eee; /* Lighter heading */
        }
-       .claim-text { color: #e0e0e0; }
-       .assumption-tag {
-         background: #444;
-         color: #ccc;
+       .analysis-panel .placeholder {
+         color: #888;
        }
-       .score-name { color: #aaa; }
-       .score-bar { background: #444; }
-       .score-bar .fill { background-color: #4f94cd; }
+      .score-bar {
+          background: #444; /* Darker bar background */
+      }
+      .score-bar .fill {
+        background-color: #4f94cd; /* Keep fill color or adjust */
+      }
+      .score-name {
+          color: #bbb; /* Lighter score names */
+      }
       .tabs button {
-        color: #ccc;
+        color: #bbb;
         border-color: #333;
       }
       .tabs button.active {
         background-color: #333;
         border-bottom-color: #333;
-        color: #fff;
+        color: #fff; /* Active tab text */
       }
-       .tab-content .placeholder, .tab-content .tab-description { color: #aaa; }
-      .info-section { color: #ccc; border-top-color: #333; }
-       .info-section h2 { color: #eee; }
-       .info-section a { color: #6bb8ff; }
-      .perspective-panel { background-color: #2a2a2a; border-color: #444; }
-       .perspective-title { color: #eee; }
-       .perspective-score { background-color: #4f94cd; }
-       .perspective-description { color: #aaa; }
-       .perspective-assessment { color: #ccc; }
-       .metrics-overview .metric-box { background: #2c2c2c; border-color: #444; }
-       .metrics-overview .metric-title { color: #aaa; }
-       .metrics-overview .metric-value { color: #eee; }
-      .toggle-analysis { border: 1px solid #555; color: #aaa; }
-      .spinner { border: 4px solid rgba(255,255,255,0.2); border-left-color: #fff; }
-       .chat-container { border-color: #333; }
+      .info-section {
+        color: #ccc;
+      }
+      .info-section h2 {
+        color: #eee;
+      }
+      .info-section a {
+        color: #64b5f6; /* Link color for dark mode */
+      }
+      .perspective-panel {
+        background-color: #2a2a2a;
+        border-color: #444;
+        color: #ccc;
+      }
+      .perspective-title {
+          color: #eee;
+      }
+      .perspective-description {
+          color: #aaa;
+      }
+      .perspective-assessment {
+          color: #ccc;
+      }
+      .perspective-score {
+          background: #4f94cd; /* Adjust if needed */
+      }
+      .radar-chart-container canvas { /* Target canvas specifically */
+        filter: invert(0.9) hue-rotate(180deg); /* Adjust filter for better dark mode radar */
+      }
+      .claim-box {
+        background-color: #2c2c2c;
+        border-color: #444;
+        color: #ccc;
+      }
+      .claim-text {
+          color: #eee;
+      }
+      .assumption-tag {
+          background: #444;
+          color: #ccc;
+      }
+      .metric-box {
+          background: #2a2a2a;
+          border-color: #444;
+      }
+      .metric-title {
+          color: #aaa;
+      }
+      .metric-value {
+          color: #eee;
+      }
+      .toggle-analysis {
+          background-color: #2c2c2c;
+          border-color: #555;
+          color: #bbb;
+      }
+      .spinner {
+          border-left-color: #fff; /* White spinner on dark */
+      }
     }
 
     /* Main container */
@@ -100,27 +143,26 @@
       margin: 0 auto 10px;
       max-width: 100%;
       height: auto;
-      max-height: 150px;
+      max-height: 150px; /* Optional: constrain header height */
     }
 
     /* Layout for main interaction area */
     .interaction-area {
       display: flex;
       gap: 20px;
-      flex-wrap: wrap; /* Allow wrapping on smaller screens */
+      margin-top: 20px;
     }
 
     .main-column {
-      flex: 1 1 600px;
-      min-width: 300px;
+      flex: 1;
       display: flex;
       flex-direction: column;
     }
 
     .analysis-column {
-      flex: 1 1 400px; /* Allow shrinking but prefer 400px */
-      min-width: 300px; /* Minimum width */
-      display: none; /* ** Start hidden by default ** */
+      width: 400px;
+      display: none; /* Hidden by default, shown when analysis is available */
+      flex-shrink: 0; /* Prevent shrinking */
     }
 
     /* Analysis panel styling */
@@ -130,152 +172,379 @@
       border-radius: 12px;
       padding: 15px;
       margin-bottom: 20px;
-      position: sticky; /* Restore sticky */
-      top: 20px;
+      height: calc(600px + 70px); /* Match chat height + input area approx height */
+      overflow-y: auto; /* Allow scrolling within analysis panel */
     }
-    .analysis-panel h3 { margin-top: 0; font-size: 16px; color: #495057; }
-     /* ... other analysis panel styles ... */
-     .claim-box { background: #fff; border: 1px solid #dee2e6; border-radius: 8px; padding: 12px; margin-bottom: 16px; }
-     .claim-text { font-weight: 500; margin-bottom: 8px; color: inherit; }
-     .assumption-tag { display: inline-block; background: #e9ecef; color: #495057; font-size: 12px; padding: 2px 8px; border-radius: 12px; margin-bottom: 8px; }
-     .score-name { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 2px; color: #6c757d; }
-     .score-bar { height: 6px; background: #e9ecef; border-radius: 3px; margin-bottom: 8px; overflow: hidden; }
-     .score-bar .fill { height: 100%; background-color: #0d6efd; border-radius: 3px; transition: width 0.3s ease-in-out; }
-     .perspectives-container { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px; }
-     .perspective-panel { flex: 1; min-width: calc(33% - 10px); background: #f0f0f0; border: 1px solid #ddd; border-radius: 8px; padding: 10px; }
-     .perspective-title { font-weight: 600; font-size: 14px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center; color: inherit; }
-     .perspective-score { background: #0d6efd; color: white; border-radius: 12px; padding: 1px 8px; font-size: 12px; margin-left: 5px; }
-     .perspective-description { font-size: 12px; color: #666; margin-bottom: 6px; }
-     .perspective-assessment { font-size: 13px; color: inherit; }
-     .radar-container { width: 100%; max-width: 350px; height: auto; aspect-ratio: 1 / 1; margin: 15px auto; }
-     .metrics-overview { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 15px; }
-     .metric-box { flex: 1; min-width: calc(50% - 10px); background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; padding: 10px; text-align: center; }
-     .metric-title { font-size: 12px; color: #6c757d; margin-bottom: 4px; }
-     .metric-value { font-size: 20px; font-weight: 600; color: #212529; }
-     .tabs { display: flex; border-bottom: 1px solid #dee2e6; margin-bottom: 15px; }
-     .tabs button { background: none; border: 1px solid transparent; border-bottom: none; border-radius: 8px 8px 0 0; padding: 8px 12px; color: #495057; cursor: pointer; font-size: 14px; margin: 0 2px -1px 0; position: relative; top: 1px; }
-     .tabs button.active { background-color: #f8f9fa; border-color: #dee2e6; border-bottom-color: #f8f9fa; color: #0d6efd; font-weight: 500; }
-     .tab-content .placeholder, .tab-content .tab-description { color: #6c757d; }
+
+    .analysis-panel h3 {
+      margin-top: 0;
+      font-size: 16px;
+      color: #495057;
+      border-bottom: 1px solid #dee2e6;
+      padding-bottom: 8px;
+      margin-bottom: 12px;
+    }
+
+     .tab-content .placeholder {
+        color: #6c757d;
+        font-style: italic;
+        text-align: center;
+        padding: 20px;
+     }
+
+    .claim-box {
+      background: #fff;
+      border: 1px solid #dee2e6;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 16px;
+    }
+
+    .claim-text {
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+
+    .assumption-tag {
+      display: inline-block;
+      background: #e9ecef;
+      color: #495057;
+      font-size: 12px;
+      padding: 2px 8px;
+      border-radius: 12px;
+      margin-bottom: 8px;
+    }
+
+    .score-name {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      margin-bottom: 2px;
+      color: #495057;
+    }
+
+    .score-bar {
+      height: 6px;
+      background: #e9ecef;
+      border-radius: 3px;
+      margin-bottom: 8px;
+      overflow: hidden;
+    }
+
+    .score-bar .fill {
+      height: 100%;
+      background-color: #0d6efd;
+      border-radius: 3px;
+      transition: width 0.5s ease-in-out;
+    }
+
+    /* Perspective panels */
+    .perspectives-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .perspective-panel {
+      flex: 1 1 calc(50% - 10px); /* Allow wrapping, aim for 2 per row */
+      min-width: 150px; /* Minimum width before wrapping */
+      background: #f0f0f0;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+
+    .perspective-title {
+      font-weight: 600;
+      font-size: 14px;
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .perspective-score {
+      background: #0d6efd;
+      color: white;
+      border-radius: 12px;
+      padding: 1px 8px;
+      font-size: 12px;
+      margin-left: 5px; /* Space between title and score */
+    }
+
+    .perspective-description {
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 6px;
+    }
+
+    .perspective-assessment {
+      font-size: 13px;
+    }
+
+    /* Radar chart */
+    .radar-chart-container { /* Use a container div */
+      width: 100%;
+      max-width: 350px; /* Limit radar size */
+      height: auto; /* Adjust height automatically */
+      margin: 15px auto; /* Center chart */
+    }
+
+    .metrics-overview {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .metric-box {
+      flex: 1 1 calc(50% - 10px); /* Two boxes per row */
+      min-width: 120px;
+      background: #f8f9fa;
+      border: 1px solid #e9ecef;
+      border-radius: 8px;
+      padding: 10px;
+      text-align: center;
+      box-sizing: border-box;
+    }
+
+    .metric-title {
+      font-size: 12px;
+      color: #6c757d;
+      margin-bottom: 4px;
+      text-transform: capitalize; /* Nicer titles */
+    }
+
+    .metric-value {
+      font-size: 20px;
+      font-weight: 600;
+      color: #212529;
+    }
+
+    /* Tabs for analysis modes */
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid #dee2e6;
+      margin-bottom: 15px;
+    }
+
+    .tabs button {
+      background: none;
+      border: 1px solid transparent;
+      border-bottom: none;
+      border-radius: 8px 8px 0 0;
+      padding: 8px 12px;
+      color: #495057;
+      cursor: pointer;
+      font-size: 14px;
+      margin-right: 5px; /* Space between tabs */
+      transition: background-color 0.2s, color 0.2s;
+    }
+
+    .tabs button.active {
+      background-color: #f8f9fa;
+      border-color: #dee2e6;
+      border-bottom-color: #f8f9fa; /* Hide bottom border part */
+      color: #0d6efd;
+      font-weight: 500;
+    }
+     .tabs button:hover:not(.active) {
+         background-color: #e9ecef;
+     }
 
     /* Chat container */
     .chat-container {
-      background: transparent;
-      border: 1px solid #eee;
-      border-radius: 12px;
+      background: transparent; /* Let body background show */
       padding: 15px;
-      overflow-y: auto;
-      margin-bottom: 20px;
+      height: 600px; /* Fixed height */
+      overflow-y: auto; /* Scrollable */
+      margin-bottom: 10px; /* Reduced margin */
       display: flex;
       flex-direction: column;
       gap: 10px;
-      flex-grow: 1;
-      min-height: 300px;
-      max-height: 70vh;
+      border: 1px solid #ccc; /* Add border for visibility */
+      border-radius: 12px;
+      flex-grow: 1; /* Allow chat to grow */
     }
-
     .message {
       padding: 10px 14px;
-      border-radius: 18px;
-      max-width: 80%;
+      border-radius: 18px; /* More rounded */
+      max-width: 75%; /* Slightly wider max */
       word-wrap: break-word;
+      margin: 0;
       line-height: 1.4;
-      color: inherit;
     }
     .assistant-message {
-      background: #e9ecef;
-      color: #000000;
+      background: #e9ecef; /* Lighter assistant */
+      color: #000;
       align-self: flex-start;
-      border-bottom-left-radius: 4px;
+      border-bottom-left-radius: 4px; /* Bubble tail effect */
     }
     .user-message {
-      background: #0d6efd;
-      color: #ffffff;
+      background: #007bff; /* User blue */
+      color: #fff;
       align-self: flex-end;
-      border-bottom-right-radius: 4px;
+      border-bottom-right-radius: 4px; /* Bubble tail effect */
     }
 
     /* Input area */
     .input-area {
       display: flex;
-      flex-direction: column;
       gap: 10px;
-      align-items: flex-end;
-      flex-shrink: 0;
+      align-items: center; /* Align items vertically */
+      margin-top: 10px; /* Space above input */
     }
     textarea {
-      width: 100%;
-      padding: 12px;
+      flex-grow: 1; /* Take available space */
+      padding: 10px 15px;
       font-size: 16px;
-      resize: vertical;
-      min-height: 50px;
-      max-height: 200px;
+      resize: none;
       box-sizing: border-box;
-      background: #fff;
+      background: #fff; /* White background */
       border: 1px solid #ccc;
-      border-radius: 18px;
+      border-radius: 20px; /* Pill shape */
       outline: none;
-      line-height: 1.4;
-      color: #000000;
+      min-height: 42px; /* Ensure minimum height */
+      max-height: 150px; /* Limit excessive growth */
+      overflow-y: auto; /* Scroll if needed */
     }
-    button#sendButton {
-      background-color: #0d6efd;
+    button#sendButton { /* Target send button specifically */
+      background-color: #007bff;
       color: #fff;
       font-size: 16px;
-      font-weight: 500;
       border: none;
-      padding: 10px 20px;
-      border-radius: 18px;
+      padding: 10px 16px;
+      border-radius: 20px; /* Pill shape */
       cursor: pointer;
-      transition: background-color 0.2s ease;
+      transition: background-color 0.3s;
+      flex-shrink: 0; /* Prevent button shrinking */
     }
-    button#sendButton:hover:not(:disabled) { background-color: #0b5ed7; }
-    button#sendButton:disabled { background-color: #aaa; cursor: not-allowed; }
+    button#sendButton:hover:not(:disabled) {
+      background-color: #0056b3;
+    }
+    button#sendButton:disabled {
+      background-color: #a0c7e4; /* Lighter blue when disabled */
+      cursor: not-allowed;
+    }
 
     /* Spinner */
-    .spinner-container { display: flex; justify-content: center; align-items: center; padding: 10px 0; }
-    .spinner { border: 4px solid rgba(0,0,0,0.1); width: 24px; height: 24px; border-radius: 50%; border-left-color: #0d6efd; animation: spin 1s linear infinite; }
-    @keyframes spin { to { transform: rotate(360deg); } }
+    .spinner-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 42px; /* Match button height */
+        margin-left: 10px; /* Space from input/button */
+    }
+    .spinner {
+      border: 3px solid rgba(0,0,0,0.1);
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border-left-color: #007bff; /* Match button color */
+      animation: spin 1s linear infinite;
+      /* margin: 10px auto; */ /* Removed margin */
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
 
     /* Toggle button for analysis panel */
-    .toggle-analysis { background-color: transparent; border: 1px solid #ccc; color: #666; font-size: 14px; padding: 8px 12px; margin-bottom: 10px; border-radius: 18px; cursor: pointer; display: none; /* ** Start hidden, JS shows it ** */ }
+    .toggle-analysis-container {
+        text-align: right; /* Position button to the right */
+        margin-bottom: 10px;
+    }
+    .toggle-analysis {
+      background-color: #6c757d;
+      border: none;
+      color: #fff;
+      font-size: 12px;
+      padding: 6px 10px;
+      border-radius: 15px;
+      cursor: pointer;
+      display: none; /* Hidden by default, shown when analysis exists */
+      transition: background-color 0.2s;
+    }
+    .toggle-analysis:hover {
+        background-color: #5a6268;
+    }
 
-    /* Info sections */
-    .info-section { margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; line-height: 1.6; color: #555; }
-    .info-section h2 { margin-top: 0; font-size: 1.5em; color: #333; }
-    .info-section p, .info-section ul { margin: 10px 0; color: inherit; }
-    .info-section ul { padding-left: 20px; }
-    .info-section a { color: #0d6efd; text-decoration: none; }
-    .info-section a:hover { text-decoration: underline; }
+    /* Info sections at the bottom */
+    .info-section {
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid #eee;
+      line-height: 1.5;
+      color: #555;
+    }
+    .info-section h2 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      font-size: 18px;
+      color: #333;
+    }
+    .info-section p, .info-section ul {
+      margin: 10px 0;
+      font-size: 14px;
+    }
+    .info-section ul {
+        padding-left: 20px;
+    }
+    .info-section li {
+        margin-bottom: 5px;
+    }
+    .info-section a {
+        color: #007bff;
+        text-decoration: none;
+    }
+    .info-section a:hover {
+        text-decoration: underline;
+    }
 
 
-    /* Responsive layout adjustments - RESTORED */
-    @media (max-width: 992px) {
-       .interaction-area { flex-direction: column; }
-       .analysis-column {
-           width: 100%;
-           order: -1; /* Move analysis panel above chat */
-           position: static; /* Disable sticky when stacked */
-           /* display controlled by JS */
-        }
-       /* Keep toggle button display controlled by JS */
-       .analysis-panel { margin-bottom: 10px; }
-       .main-column { order: 0; }
-       .chat-container { max-height: 60vh; min-height: 250px; }
+    /* Responsive layout adjustments */
+    @media (max-width: 992px) { /* Adjust breakpoint */
+      .interaction-area {
+        flex-direction: column;
+      }
+      .analysis-column {
+        width: 100%; /* Full width on smaller screens */
+        margin-top: 20px;
+        height: auto; /* Auto height */
+        max-height: 600px; /* Optional max height */
+      }
+       .analysis-panel {
+           height: auto; /* Auto height for panel */
+           max-height: 600px; /* Optional max height */
+       }
     }
      @media (max-width: 768px) {
-        .container { padding: 0 10px; }
-        .metric-box { min-width: calc(50% - 5px); }
-        .perspective-panel { min-width: calc(50% - 5px); }
+         .metric-box {
+             flex-basis: calc(50% - 10px); /* Ensure two per row on medium */
+         }
+         .perspective-panel {
+             flex-basis: 100%; /* One perspective per row on small */
+         }
      }
-     @media (max-width: 480px) {
-        .message { max-width: 90%; }
-        .metric-box, .perspective-panel { min-width: 100%; flex-basis: 100%; }
-        .chat-container { max-height: 55vh; min-height: 200px; }
-     }
-
-    /* Utility class */
-    .visually-hidden { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0; }
-
+      @media (max-width: 480px) {
+         .message {
+             max-width: 90%; /* Wider messages on very small screens */
+         }
+         .input-area {
+             flex-direction: column;
+             align-items: stretch; /* Stretch items */
+         }
+         button#sendButton {
+             width: 100%; /* Full width button */
+         }
+         .spinner-container {
+             margin: 5px auto; /* Center spinner below input */
+         }
+         .metric-box {
+             flex-basis: 100%; /* One metric box per row */
+         }
+      }
   </style>
   <!-- Include Chart.js for radar chart -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -284,116 +553,130 @@
   <div class="container">
     <img src="BELIEFEXPLORER.png" alt="Belief Explorer" class="header-image">
 
-    <button id="toggleAnalysis" class="toggle-analysis" aria-expanded="false" aria-controls="analysisColumn">Show Analysis Panel</button>
+    <div class="toggle-analysis-container">
+        <button id="toggleAnalysis" class="toggle-analysis">Show Analysis</button>
+    </div>
 
     <div class="interaction-area">
-      <!-- Analysis panel - Starts hidden via CSS, JS controls visibility -->
-      <div class="analysis-column" id="analysisColumn" role="region" aria-live="polite">
+      <div class="main-column">
+        <!-- Chat container -->
+        <div class="chat-container" id="chatContainer">
+          <div class="message assistant-message">
+            What belief or idea would you like to explore together?
+          </div>
+        </div>
+
+        <!-- Input area -->
+        <div class="input-area">
+          <textarea id="userInput" rows="1" placeholder="Share your thoughts..."></textarea>
+          <button id="sendButton">Explore</button>
+          <div id="spinnerContainer" class="spinner-container" style="display: none;">
+              <div class="spinner"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Analysis panel - hidden by default -->
+      <div class="analysis-column" id="analysisColumn">
         <div class="analysis-panel">
-          <div class="tabs" role="tablist" aria-label="Analysis Sections">
-            <button role="tab" id="tab-criticalThinking" aria-controls="criticalThinkingTab" aria-selected="true" class="active" data-tab="criticalThinking">Critical Thinking</button>
-            <button role="tab" id="tab-perspectives" aria-controls="perspectivesTab" aria-selected="false" data-tab="perspectives">Perspectives</button>
-            <button role="tab" id="tab-metrics" aria-controls="metricsTab" aria-selected="false" data-tab="metrics">Advanced Metrics</button>
+          <div class="tabs">
+            <button class="active" data-tab="criticalThinking">Critical Thinking</button>
+            <button data-tab="perspectives">Perspectives</button>
+            <button data-tab="metrics">Advanced Metrics</button>
           </div>
 
-          <div id="criticalThinkingTab" class="tab-content" role="tabpanel" aria-labelledby="tab-criticalThinking">
-            <h3>Critical Thinking Analysis</h3>
+          <div id="criticalThinkingTab" class="tab-content">
+            <h3>Claim Analysis</h3>
             <div id="claimsAnalysis">
-              <div class="placeholder">Submit a statement to analyze its claims.</div>
+              <div class="placeholder">No claims analyzed yet.</div>
             </div>
           </div>
 
-          <div id="perspectivesTab" class="tab-content" role="tabpanel" aria-labelledby="tab-perspectives" style="display: none;">
+          <div id="perspectivesTab" class="tab-content" style="display: none;">
             <h3>Multiple Perspectives</h3>
-            <p class="tab-description">View how different reasoning approaches assess this claim:</p>
+            <!-- <p class="tab-description">View how different reasoning approaches assess this claim:</p> -->
             <div id="perspectivesContent">
               <div class="placeholder">Share a belief to see alternative perspectives.</div>
             </div>
           </div>
 
-          <div id="metricsTab" class="tab-content" role="tabpanel" aria-labelledby="tab-metrics" style="display: none;">
+          <div id="metricsTab" class="tab-content" style="display: none;">
             <h3>Advanced Metrics</h3>
-            <p class="tab-description">Detailed critical thinking metrics based on our formalization:</p>
+            <!-- <p class="tab-description">Detailed critical thinking metrics based on our formalization:</p> -->
+
+            <!-- Metrics overview boxes -->
             <div class="metrics-overview" id="metricsOverview">
-               <div class="placeholder">No metrics available yet.</div>
+                 <div class="placeholder">No metrics available yet.</div>
             </div>
-            <div class="radar-container">
+
+            <!-- Radar chart for visualizing metrics -->
+            <div class="radar-chart-container">
               <canvas id="radarChart"></canvas>
             </div>
+
             <div id="metricsExplanation">
+              <!-- Will be populated with metrics explanations -->
             </div>
           </div>
         </div>
       </div>
-
-      <!-- Main Column (Chat + Input) -->
-      <div class="main-column">
-        <div class="chat-container" id="chatContainer" aria-live="polite">
-          <div class="message assistant-message">
-            What belief or idea would you like to explore together?
-          </div>
-        </div>
-        <form id="chatForm" class="input-area">
-           <label for="userInput" class="visually-hidden">Share your thoughts</label>
-           <textarea id="userInput" name="statement" rows="2" placeholder="Share your thoughts..." aria-label="Your message"></textarea>
-           <div id="spinnerContainer" class="spinner-container" style="display: none;">
-               <div id="spinner" class="spinner" role="status" aria-label="Loading..."></div>
-           </div>
-           <button type="submit" id="sendButton">Explore</button>
-        </form>
-      </div>
-
-    </div> <!-- End interaction-area -->
-
-    <!-- Info Sections - RESTORED WITH ORIGINAL TEXT -->
-    <div class="info-section">
-       <h2>Why We're Here</h2>
-       <p>
-         Sometimes, we hold beliefs without fully realizing the assumptions behind them. When we question those assumptions, a guide can help us arrive at conclusions that resonate more deeply with our inner core. This platform was designed to do just that. It doesn't judge or force; it simply listens and gently reveals the underlying premises that would need to be true for a given claim. In exploring those premises, you decide if they align with your sense of truth.
-       </p>
-       <p>
-         Ask a question or state a belief—like "Is the Earth hollow?"—and we'll help you examine the chain of assumptions. The goal is to provoke your own internal reasoning. Think of it as a friend helping you see your path more clearly, not an authority telling you what to do.
-       </p>
-     </div>
-     <div class="info-section">
-       <h2>About Belief Explorer</h2>
-       <p>
-         Human history is a story of beliefs – and the biases that cling to them. From political ideologies to personal convictions, we all see the world through subjective lenses shaped by upbringing, culture, and emotion. These biases influence what we accept as true, often overpowering facts and logical arguments. In the modern era, debates on social media or television often entrench opposing sides rather than resolve differences. As polarization grows, a provocative question arises: can artificial intelligence succeed where humans struggle?
-       </p>
-       <p>
-         Our platform is designed to build the first unbiased repository of human beliefs—one that validates ideas based on factual alignment and observation rather than emotional bias. By helping individuals reflect on and critically examine their beliefs, we empower users to defend their ideas through evidence and reason.
-       </p>
-       <p>
-         Contact: <a href="mailto:info@metacognitioninstitute.com">info@metacognitioninstitute.com</a>
-       </p>
-     </div>
-     <div class="info-section">
-       <h2>Our Critical Thinking Framework</h2>
-       <p>
-         Belief Explorer utilizes a comprehensive critical thinking formalization to help analyze beliefs and claims. This multi-dimensional framework includes:
-       </p>
-       <ul>
-         <li><strong>Verifact Score</strong>: A measure of how empirically verifiable and logically consistent a claim is.</li>
-         <li><strong>Model Diversity Quotient (MDQ)</strong>: Evaluates how different reasoning approaches view the claim.</li>
-         <li><strong>Contextual Sensitivity Index (CSI)</strong>: Measures how appropriate a claim is within its relevant context.</li>
-         <li><strong>Reflective Index</strong>: Assesses awareness of assumptions and bias recognition.</li>
-       </ul>
-       <p>
-         Rather than judging beliefs as simply "right" or "wrong," our system helps users understand the foundations of their thinking and strengthen their reasoning processes across multiple dimensions.
-       </p>
     </div>
-    <!-- END Info Sections -->
+
+    <!-- Info section 1: Why We're Here -->
+    <div class="info-section">
+      <h2>Why We're Here</h2>
+      <p>
+        Sometimes, we hold beliefs without fully realizing the assumptions behind them. When we question those assumptions, a guide can help us arrive at conclusions that resonate more deeply with our inner core. This platform was designed to do just that. It doesn't judge or force; it simply listens and gently reveals the underlying premises that would need to be true for a given claim. In exploring those premises, you decide if they align with your sense of truth.
+      </p>
+      <p>
+        Ask a question or state a belief—like "Is the Earth hollow?"—and we'll help you examine the chain of assumptions. The goal is to provoke your own internal reasoning. Think of it as a friend helping you see your path more clearly, not an authority telling you what to do.
+      </p>
+    </div>
+
+    <!-- Info section 2: About Belief Explorer -->
+    <div class="info-section">
+      <h2>About Belief Explorer</h2>
+      <p>
+        Human history is a story of beliefs – and the biases that cling to them. From political ideologies to personal convictions, we all see the world through subjective lenses shaped by upbringing, culture, and emotion. These biases influence what we accept as true, often overpowering facts and logical arguments. In the modern era, debates on social media or television often entrench opposing sides rather than resolve differences. As polarization grows, a provocative question arises: can artificial intelligence succeed where humans struggle?
+      </p>
+      <p>
+        Our platform is designed to build the first unbiased repository of human beliefs—one that validates ideas based on factual alignment and observation rather than emotional bias. By helping individuals reflect on and critically examine their beliefs, we empower users to defend their ideas through evidence and reason.
+      </p>
+      <p>
+        Contact: <a href="mailto:info@metacognitioninstitute.com">info@metacognitioninstitute.com</a>
+      </p>
+    </div>
+
+    <!-- Add information about the Critical Thinking Model -->
+    <div class="info-section">
+      <h2>Our Critical Thinking Framework</h2>
+      <p>
+        Belief Explorer utilizes a comprehensive critical thinking formalization to help analyze beliefs and claims. This multi-dimensional framework includes:
+      </p>
+      <ul>
+        <li><strong>Verifact Score</strong>: A measure of how empirically verifiable and logically consistent a claim is.</li>
+        <li><strong>Model Diversity Quotient (MDQ)</strong>: Evaluates how different reasoning approaches view the claim.</li>
+        <li><strong>Contextual Sensitivity Index (CSI)</strong>: Measures how appropriate a claim is within its relevant context.</li>
+        <li><strong>Reflective Index</strong>: Assesses awareness of assumptions and bias recognition.</li>
+      </ul>
+      <p>
+        Rather than judging beliefs as simply "right" or "wrong," our system helps users understand the foundations of their thinking and strengthen their reasoning processes across multiple dimensions.
+      </p>
+    </div>
   </div>
 
   <script>
-    // --- Configuration ---
-    const API_URL = 'https://gpu.haielab.org/webhook/6d437c73-8849-4dba-9d88-634c930fc2b3'; // Your n8n webhook URL
+    // ########################################################################
+    // ## IMPORTANT: REPLACE WITH YOUR ACTUAL N8N PRODUCTION WEBHOOK URL ##
+    // ########################################################################
+    const API_URL = 'https://[YOUR_N8N_DOMAIN_HERE]/webhook/6d437c73-8849-4dba-9d88-634c930fc2b3';
+    // Example: const API_URL = 'https://my-n8n.example.com/webhook/6d437c73-8849-4dba-9d88-634c930fc2b3';
+    // ########################################################################
 
-    // --- DOM Elements ---
+
     const chatContainer = document.getElementById('chatContainer');
     const userInput = document.getElementById('userInput');
     const sendButton = document.getElementById('sendButton');
-    const chatForm = document.getElementById('chatForm');
     const spinnerContainer = document.getElementById('spinnerContainer');
     const toggleAnalysis = document.getElementById('toggleAnalysis');
     const analysisColumn = document.getElementById('analysisColumn');
@@ -401,310 +684,516 @@
     const perspectivesContent = document.getElementById('perspectivesContent');
     const metricsOverview = document.getElementById('metricsOverview');
     const metricsExplanation = document.getElementById('metricsExplanation');
-    const tabs = document.querySelectorAll('.tabs button[role="tab"]');
-    const tabContents = document.querySelectorAll('.tab-content[role="tabpanel"]');
-    const radarCanvas = document.getElementById('radarChart');
+    const radarChartCanvas = document.getElementById('radarChart');
 
-    // --- State ---
+    // Tab handling
+    const tabs = document.querySelectorAll('.tabs button');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    // Radar chart instance
+    let radarChart = null;
+
+    // Initial conversation state
     let conversationHistory = [
       { role: 'assistant', content: 'What belief or idea would you like to explore together?' }
     ];
-    let lastAnalysisData = null;
-    let radarChart = null; // Chart instance
 
-    // --- Helper Functions ---
-    function createScoreElement(label, value, labelId = '') {
-        const container = document.createDocumentFragment();
-        const scoreValue = Math.max(0, Math.min(100, parseFloat(value || 0) * 100));
-        const scoreName = document.createElement('div');
-        scoreName.className = 'score-name';
-        scoreName.innerHTML = `<span ${labelId ? `id="${labelId}"` : ''}>${label}</span><span>${scoreValue.toFixed(0)}%</span>`;
-        container.appendChild(scoreName);
-        const scoreBar = document.createElement('div');
-        scoreBar.className = 'score-bar';
-        scoreBar.setAttribute('role', 'meter');
-        scoreBar.setAttribute('aria-valuenow', scoreValue.toFixed(0));
-        scoreBar.setAttribute('aria-valuemin', '0');
-        scoreBar.setAttribute('aria-valuemax', '100');
-        if (labelId) { scoreBar.setAttribute('aria-labelledby', labelId); }
-        else { scoreBar.setAttribute('aria-label', `${label} score`); }
-        const scoreFill = document.createElement('div');
-        scoreFill.className = 'fill';
-        scoreFill.style.width = `${scoreValue}%`;
-        scoreBar.appendChild(scoreFill);
-        container.appendChild(scoreBar);
-        return container;
-    }
-    function formatCamelCase(str) {
-        if (!str || typeof str !== 'string') return '';
-        return str.replace(/([A-Z])/g, ' $1').replace(/^./, s => s.toUpperCase());
-    }
+    let lastAnalysisData = null; // Store the last valid analysis data
+
+    // --- Event Listeners ---
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        tabContents.forEach(content => content.style.display = 'none');
+
+        tab.classList.add('active');
+        const tabId = tab.getAttribute('data-tab') + 'Tab';
+        document.getElementById(tabId).style.display = 'block';
+      });
+    });
+
+    toggleAnalysis.addEventListener('click', () => {
+      const isHidden = analysisColumn.style.display === 'none' || !analysisColumn.style.display;
+      analysisColumn.style.display = isHidden ? 'block' : 'none';
+      toggleAnalysis.textContent = isHidden ? 'Hide Analysis' : 'Show Analysis';
+    });
+
+    sendButton.addEventListener('click', handleSend);
+
+    userInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey && !userInput.disabled) {
+        e.preventDefault();
+        handleSend();
+      }
+    });
+
+     // Auto-resize textarea
+     userInput.addEventListener('input', () => {
+        userInput.style.height = 'auto'; // Reset height
+        userInput.style.height = (userInput.scrollHeight) + 'px'; // Set to scroll height
+     });
+
 
     // --- Rendering Functions ---
+
     function renderConversation() {
-      chatContainer.innerHTML = '';
+      chatContainer.innerHTML = ''; // Clear existing messages
       conversationHistory.forEach(turn => {
         const div = document.createElement('div');
         div.className = 'message ' + (turn.role === 'assistant' ? 'assistant-message' : 'user-message');
-        div.textContent = turn.content;
+        // Basic sanitization (replace potential HTML tags)
+        div.textContent = turn.content; // Use textContent for safety
         chatContainer.appendChild(div);
       });
+      // Scroll to the bottom
       chatContainer.scrollTop = chatContainer.scrollHeight;
     }
 
     function renderClaimsAnalysis(analysisData) {
-      // Renders claims based on received data
-      if (!analysisData || analysisData.length === 0) {
-        claimsAnalysis.innerHTML = '<div class="placeholder">No claims analyzed in this turn.</div>';
-        return;
-      }
-      claimsAnalysis.innerHTML = '';
-      analysisData.forEach((item, index) => {
-        const claimDiv = document.createElement('article');
-        claimDiv.className = 'claim-box';
-        claimDiv.setAttribute('aria-labelledby', `claim-text-${index}`);
-        const claimText = document.createElement('div');
-        claimText.className = 'claim-text';
-        claimText.id = `claim-text-${index}`;
-        claimText.textContent = item.claim;
-        claimDiv.appendChild(claimText);
-        if (item.assumptions) {
-          const assumptionTag = document.createElement('div');
-          assumptionTag.className = 'assumption-tag';
-          assumptionTag.textContent = `Assumption: ${item.assumptions}`;
-          claimDiv.appendChild(assumptionTag);
-        }
-        if (item.verifactScore) {
-          const overallScore = item.verifactScore.overallScore ?? 0.5;
-           claimDiv.appendChild(createScoreElement('Verifact Score', overallScore, `verifact-label-${index}`));
-          if (item.verifactScore.components) {
-              const components = item.verifactScore.components;
-              Object.entries(components).forEach(([key, value], compIndex) => {
-                  const formattedKey = formatCamelCase(key);
-                  claimDiv.appendChild(createScoreElement(formattedKey, value, `verifact-comp-${index}-${compIndex}-label`));
-              });
-          }
-        } else {
-             const noScore = document.createElement('p');
-             noScore.textContent = "Verifact score not available.";
-             noScore.style.fontSize = '12px'; noScore.style.color = '#888';
-             claimDiv.appendChild(noScore);
-        }
-        claimsAnalysis.appendChild(claimDiv);
-      });
-    }
-
-    function renderPerspectives(analysisData) {
-      // Renders perspectives based on received data
-        const placeholder = '<div class="placeholder">Perspective analysis is not yet available for this claim.</div>';
-        if (!analysisData || analysisData.length === 0 || !Array.isArray(analysisData[0].perspectives) || analysisData[0].perspectives.length === 0) {
-            perspectivesContent.innerHTML = placeholder;
+        if (!analysisData || !Array.isArray(analysisData) || analysisData.length === 0) {
+            claimsAnalysis.innerHTML = '<div class="placeholder">No specific claims were identified for analysis in the last statement.</div>';
             return;
         }
+
+        claimsAnalysis.innerHTML = ''; // Clear previous
+
+        analysisData.forEach((item, index) => {
+            const claimDiv = document.createElement('div');
+            claimDiv.className = 'claim-box';
+
+            // Claim text
+            const claimText = document.createElement('div');
+            claimText.className = 'claim-text';
+            claimText.textContent = `Claim ${index + 1}: ${item.claim || 'N/A'}`;
+            claimDiv.appendChild(claimText);
+
+            // Assumption tag
+            if (item.assumptions) {
+            const assumptionTag = document.createElement('div');
+            assumptionTag.className = 'assumption-tag';
+            assumptionTag.textContent = item.assumptions;
+            claimDiv.appendChild(assumptionTag);
+            }
+
+            // Scores (only if verifactScore exists)
+            if (item.verifactScore && item.verifactScore.components) {
+                const components = item.verifactScore.components;
+                const overallScore = item.verifactScore.overallScore;
+
+                // Display Overall Score First (if available)
+                if (overallScore != null) {
+                    appendScoreBar(claimDiv, 'Verifact Score', overallScore);
+                }
+
+                // Display Component Scores
+                for (const [key, value] of Object.entries(components)) {
+                    // Format key: empiricalVerifiability -> Empirical Verifiability
+                    const formattedKey = key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
+                    appendScoreBar(claimDiv, formattedKey, value);
+                }
+            } else {
+                 const noScore = document.createElement('div');
+                 noScore.textContent = 'Detailed scores not available for this claim.';
+                 noScore.style.fontSize = '12px';
+                 noScore.style.color = '#888';
+                 claimDiv.appendChild(noScore);
+            }
+
+            claimsAnalysis.appendChild(claimDiv);
+        });
+    }
+
+    function appendScoreBar(parentDiv, label, value) {
+        const numericValue = parseFloat(value);
+        if (isNaN(numericValue)) return; // Don't render if value is not a number
+
+        const scoreName = document.createElement('div');
+        scoreName.className = 'score-name';
+        scoreName.innerHTML = `<span>${label}</span><span>${(numericValue * 100).toFixed(0)}%</span>`;
+        parentDiv.appendChild(scoreName);
+
+        const scoreBar = document.createElement('div');
+        scoreBar.className = 'score-bar';
+        const scoreFill = document.createElement('div');
+        scoreFill.className = 'fill';
+        // Use setTimeout to trigger animation after element is added to DOM
+        setTimeout(() => {
+             scoreFill.style.width = (numericValue * 100) + '%';
+        }, 50);
+        scoreBar.appendChild(scoreFill);
+        parentDiv.appendChild(scoreBar);
+    }
+
+
+    function renderPerspectives(analysisData) {
+        // Check if the first claim has perspectives
+        if (!analysisData || !Array.isArray(analysisData) || analysisData.length === 0 || !analysisData[0].perspectives || analysisData[0].perspectives.length === 0) {
+            perspectivesContent.innerHTML = '<div class="placeholder">No alternative perspectives were generated for the primary claim.</div>';
+            return;
+        }
+
+        perspectivesContent.innerHTML = ''; // Clear previous
+
+        // Get the first claim's perspectives (workflow focuses analysis on the first claim)
         const item = analysisData[0];
-        perspectivesContent.innerHTML = '';
+
+        // Create the perspectives container
         const perspectivesContainer = document.createElement('div');
         perspectivesContainer.className = 'perspectives-container';
+
+        // Add each perspective
         item.perspectives.forEach(perspective => {
-          const perspDiv = document.createElement('div');
-          perspDiv.className = 'perspective-panel';
-          const titleDiv = document.createElement('div');
-          titleDiv.className = 'perspective-title';
-          const titleSpan = document.createElement('span');
-          titleSpan.textContent = perspective.name || 'Unnamed Perspective';
-          const scoreSpan = document.createElement('span');
-          scoreSpan.className = 'perspective-score';
-          scoreSpan.textContent = (parseFloat(perspective.score || 0) * 100).toFixed(0) + '%';
-          titleDiv.appendChild(titleSpan);
-          titleDiv.appendChild(scoreSpan);
-          perspDiv.appendChild(titleDiv);
-          if (perspective.description) {
+            if (!perspective || !perspective.name || !perspective.description || !perspective.assessment) {
+                console.warn("Skipping invalid perspective:", perspective);
+                return; // Skip malformed perspectives
+            }
+
+            const perspDiv = document.createElement('div');
+            perspDiv.className = 'perspective-panel';
+
+            // Perspective title and score
+            const titleDiv = document.createElement('div');
+            titleDiv.className = 'perspective-title';
+
+            const titleSpan = document.createElement('span');
+            titleSpan.textContent = perspective.name;
+            titleDiv.appendChild(titleSpan);
+
+            // Add score only if it exists and is a number
+            const scoreValue = parseFloat(perspective.score);
+            if (!isNaN(scoreValue)) {
+                const scoreSpan = document.createElement('span');
+                scoreSpan.className = 'perspective-score';
+                scoreSpan.textContent = (scoreValue * 100).toFixed(0) + '%';
+                titleDiv.appendChild(scoreSpan);
+            }
+
+            perspDiv.appendChild(titleDiv);
+
+            // Perspective description
             const descDiv = document.createElement('div');
             descDiv.className = 'perspective-description';
             descDiv.textContent = perspective.description;
             perspDiv.appendChild(descDiv);
-          }
-          if (perspective.assessment) {
+
+            // Perspective assessment
             const assessDiv = document.createElement('div');
             assessDiv.className = 'perspective-assessment';
             assessDiv.textContent = perspective.assessment;
             perspDiv.appendChild(assessDiv);
-          }
-          perspectivesContainer.appendChild(perspDiv);
+
+            perspectivesContainer.appendChild(perspDiv);
         });
+
         perspectivesContent.appendChild(perspectivesContainer);
     }
 
     function renderAdvancedMetrics(analysisData) {
-       // Renders metrics based on received data
-        const placeholder = '<div class="placeholder">Detailed metrics are not yet available.</div>';
-        const explanationPlaceholder = '<p>Metric explanations will appear here when data is available.</p>';
-        if (!analysisData || analysisData.length === 0 || !analysisData[0].verifactScore?.components) {
-            metricsOverview.innerHTML = placeholder;
-            metricsExplanation.innerHTML = explanationPlaceholder;
-            if (radarChart) { radarChart.destroy(); radarChart = null; }
-            if (radarCanvas) radarCanvas.style.display = 'none';
+        if (!analysisData || !Array.isArray(analysisData) || analysisData.length === 0 || !analysisData[0].verifactScore || !analysisData[0].verifactScore.components) {
+            metricsOverview.innerHTML = '<div class="placeholder">No metrics available yet.</div>';
+            metricsExplanation.innerHTML = '';
+            // Clear existing chart if present
+             if (radarChart) {
+                radarChart.destroy();
+                radarChart = null;
+             }
+            radarChartCanvas.style.display = 'none'; // Hide canvas
             return;
         }
-        const components = analysisData[0].verifactScore.components;
-        const overallScore = parseFloat(analysisData[0].verifactScore.overallScore || 0.5);
-        const empiricalScore = parseFloat(components.empiricalVerifiability || 0.5);
-        const logicalScore = parseFloat(components.logicalConsistency || 0.5);
-        const modelDiversityScore = parseFloat(components.modelDiversity || 0.5);
-        const contextualSensitivityScore = parseFloat(components.contextualSensitivity || 0.5);
-        const reflectiveScore = parseFloat(components.reflectiveIndex || 0.5);
-        metricsOverview.innerHTML = `
-            <div class="metric-box"><div class="metric-title">Verifact Score</div><div class="metric-value">${(overallScore * 100).toFixed(0)}%</div></div>
-             <div class="metric-box"><div class="metric-title">Empirical</div><div class="metric-value">${(empiricalScore * 100).toFixed(0)}%</div></div>
-             <div class="metric-box"><div class="metric-title">Logical</div><div class="metric-value">${(logicalScore * 100).toFixed(0)}%</div></div>
-            <div class="metric-box"><div class="metric-title">Model Diversity</div><div class="metric-value">${(modelDiversityScore * 100).toFixed(0)}%</div></div>
-            <div class="metric-box"><div class="metric-title">Contextual Sens.</div><div class="metric-value">${(contextualSensitivityScore * 100).toFixed(0)}%</div></div>
-             <div class="metric-box"><div class="metric-title">Reflective Index</div><div class="metric-value">${(reflectiveScore * 100).toFixed(0)}%</div></div>`;
-        const ctx = radarCanvas.getContext('2d');
-        if (radarCanvas) radarCanvas.style.display = 'block';
-        const radarLabels = ['Empirical', 'Logical', 'Model Diversity', 'Contextual', 'Reflective'];
-        const radarData = [empiricalScore * 100, logicalScore * 100, modelDiversityScore * 100, contextualSensitivityScore * 100, reflectiveScore * 100];
-        if (radarChart) { radarChart.destroy(); }
+
+        // Get the first claim's metrics (workflow focuses analysis on the first claim)
+        const item = analysisData[0];
+        const components = item.verifactScore.components;
+        const overallScore = parseFloat(item.verifactScore.overallScore || 0);
+
+        // Define the metrics we want to display and their keys in the data
+        const metricsToShow = {
+            'Verifact Score': overallScore, // Use overall score here
+            'Empirical Verifiability': parseFloat(components.empiricalVerifiability || 0),
+            'Logical Consistency': parseFloat(components.logicalConsistency || 0),
+            'Falsifiability': parseFloat(components.falsifiability || 0),
+            'Model Diversity': parseFloat(components.modelDiversity || 0),
+            'Contextual Sensitivity': parseFloat(components.contextualSensitivity || 0),
+            'Reflective Index': parseFloat(components.reflectiveIndex || 0) // Use the actual key
+        };
+
+        // Create metric boxes
+        metricsOverview.innerHTML = ''; // Clear previous
+        Object.entries(metricsToShow).forEach(([title, value]) => {
+             // Skip Verifact Score for the boxes, show components
+             if (title === 'Verifact Score') return;
+
+             const metricBox = document.createElement('div');
+             metricBox.className = 'metric-box';
+             metricBox.innerHTML = `
+                <div class="metric-title">${title}</div>
+                <div class="metric-value">${(value * 100).toFixed(0)}%</div>
+             `;
+             metricsOverview.appendChild(metricBox);
+        });
+
+
+        // --- Create Radar Chart ---
+        const radarLabels = [
+            'Empirical', 'Logical', 'Falsifiable',
+            'Diversity', 'Contextual', 'Reflective'
+        ];
+        const radarData = [
+            metricsToShow['Empirical Verifiability'] * 100,
+            metricsToShow['Logical Consistency'] * 100,
+            metricsToShow['Falsifiability'] * 100,
+            metricsToShow['Model Diversity'] * 100,
+            metricsToShow['Contextual Sensitivity'] * 100,
+            metricsToShow['Reflective Index'] * 100
+        ];
+
+        const ctx = radarChartCanvas.getContext('2d');
+
+        // Destroy existing chart if it exists
+        if (radarChart) {
+            radarChart.destroy();
+        }
+
+        // Determine chart colors based on theme
         const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
         const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.1)';
         const tickColor = isDarkMode ? '#ccc' : '#666';
-        const pointBgColor = isDarkMode ? '#6bb8ff' : 'rgb(54, 162, 235)';
-        const pointBorderColor = isDarkMode ? '#121212' : '#fff';
-        const lineBorderColor = isDarkMode ? '#6bb8ff' : 'rgb(54, 162, 235)';
-        const lineBgColor = isDarkMode ? 'rgba(107, 184, 255, 0.2)' : 'rgba(54, 162, 235, 0.2)';
+        const pointColor = isDarkMode ? '#82cfff' : '#0d6efd'; // Lighter blue for dark mode points
+        const lineColor = isDarkMode ? '#82cfff' : '#0d6efd';
+        const backgroundColor = isDarkMode ? 'rgba(130, 207, 255, 0.2)' : 'rgba(13, 110, 253, 0.1)';
+
+
+        // Create new chart
+        radarChartCanvas.style.display = 'block'; // Ensure canvas is visible
         radarChart = new Chart(ctx, {
-          type: 'radar', data: { labels: radarLabels, datasets: [{ label: 'Critical Thinking Metrics', data: radarData, backgroundColor: lineBgColor, borderColor: lineBorderColor, pointBackgroundColor: pointBgColor, pointBorderColor: pointBorderColor, pointHoverBackgroundColor: pointBorderColor, pointHoverBorderColor: pointBgColor, borderWidth: 2, pointRadius: 4 }] },
-          options: { responsive: true, maintainAspectRatio: true, scales: { r: { angleLines: { display: true, color: gridColor }, grid: { color: gridColor }, pointLabels: { color: tickColor, font: { size: 10 } }, ticks: { color: tickColor, backdropColor: 'transparent', stepSize: 25, font: { size: 9 } }, suggestedMin: 0, suggestedMax: 100 } }, plugins: { legend: { display: false }, tooltip: { callbacks: { label: function(context) { let label = context.dataset.label || ''; if (label) { label += ': '; } if (context.parsed.r !== null) { label += context.parsed.r.toFixed(0) + '%'; } return label; } } } } }
+            type: 'radar',
+            data: {
+            labels: radarLabels,
+            datasets: [{
+                label: 'Critical Thinking Metrics (%)',
+                data: radarData,
+                backgroundColor: backgroundColor,
+                borderColor: lineColor,
+                pointBackgroundColor: pointColor,
+                pointBorderColor: '#fff',
+                pointHoverBackgroundColor: '#fff',
+                pointHoverBorderColor: pointColor,
+                borderWidth: 2, // Thinner line
+                pointRadius: 4, // Slightly larger points
+                pointHoverRadius: 6
+            }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true, // Let container control aspect ratio
+                elements: {
+                    line: {
+                        borderWidth: 2 // Consistent line width
+                    }
+                },
+                scales: {
+                    r: {
+                        angleLines: {
+                            display: true,
+                            color: gridColor // Grid line color
+                        },
+                        suggestedMin: 0,
+                        suggestedMax: 100,
+                        grid: {
+                            color: gridColor // Radial line color
+                        },
+                        pointLabels: {
+                            font: {
+                                size: 10 // Smaller labels
+                            },
+                            color: tickColor // Label text color
+                        },
+                        ticks: {
+                            color: tickColor, // Tick text color
+                            backdropColor: 'transparent', // No backdrop behind ticks
+                            stepSize: 20
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false // Hide legend if only one dataset
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed.r !== null) {
+                                    label += context.parsed.r.toFixed(0) + '%';
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
         });
-         metricsExplanation.innerHTML = `<h4>What These Metrics Mean (Estimates)</h4><p><strong>Verifact Score:</strong> Overall measure of claim verifiability and logical consistency.</p><p><strong>Empirical:</strong> Availability of observable evidence supporting the claim.</p><p><strong>Logical:</strong> Internal coherence and adherence to logical principles.</p><p><strong>Model Diversity:</strong> How different reasoning approaches might view this claim.</p><p><strong>Contextual:</strong> How appropriate the claim might be within its relevant context.</p><p><strong>Reflective Index:</strong> Assessment of awareness of assumptions and bias recognition.</p><p><em>Note: These scores are generated using heuristics and provide an initial estimate.</em></p>`;
+
+        // Create metrics explanation
+        metricsExplanation.innerHTML = `
+            <h4>Metric Descriptions</h4>
+            <p><strong>Empirical:</strong> Based on observable evidence.</p>
+            <p><strong>Logical:</strong> Internally consistent reasoning.</p>
+            <p><strong>Falsifiable:</strong> Can potentially be proven wrong.</p>
+            <p><strong>Diversity:</strong> Considers multiple viewpoints.</p>
+            <p><strong>Contextual:</strong> Appropriate for the situation.</p>
+            <p><strong>Reflective:</strong> Aware of own assumptions/biases.</p>
+        `;
+        metricsExplanation.style.fontSize = '12px';
+        metricsExplanation.style.color = isDarkMode ? '#aaa' : '#555';
+        metricsExplanation.querySelectorAll('strong').forEach(el => el.style.color = isDarkMode ? '#ccc' : '#333');
+
     }
 
     function renderAnalysis(analysisData) {
-      // Controls visibility of analysis panel based on data
-      const isValidAnalysis = analysisData && Array.isArray(analysisData) && analysisData.length > 0;
-
-      if (!isValidAnalysis) {
-          console.log("No valid analysis data to render. Hiding panel.");
-          // Clear placeholders (important in case they were previously filled)
-          claimsAnalysis.innerHTML = '<div class="placeholder">No claims analyzed in this turn.</div>';
-          perspectivesContent.innerHTML = '<div class="placeholder">No perspectives available.</div>';
-          metricsOverview.innerHTML = '<div class="placeholder">No metrics available.</div>';
-          if (radarChart) { radarChart.destroy(); radarChart = null; }
-          if (radarCanvas) radarCanvas.style.display = 'none';
-          metricsExplanation.innerHTML = '';
-
-          // Hide toggle button and panel
-          if (toggleAnalysis) toggleAnalysis.style.display = 'none';
-          if (analysisColumn) analysisColumn.style.display = 'none';
-          return;
-      }
-
-      console.log("Valid analysis data received. Rendering panel content.")
-      // Render content into the different tabs
-      renderClaimsAnalysis(analysisData);
-      renderPerspectives(analysisData);
-      renderAdvancedMetrics(analysisData);
-
-      // Show toggle button now that we have data
-      if (toggleAnalysis) {
-        toggleAnalysis.style.display = 'inline-block'; // Use inline-block for button
-        // Reset toggle text/state if analysis panel is not currently shown
-        if (analysisColumn && analysisColumn.style.display === 'none') {
-            toggleAnalysis.textContent = 'Show Analysis Panel';
-            toggleAnalysis.setAttribute('aria-expanded', 'false');
+        if (!analysisData || !Array.isArray(analysisData)) {
+             console.warn("Invalid analysis data received for rendering:", analysisData);
+             // Optionally clear all analysis panels or show a general error
+             renderClaimsAnalysis(null);
+             renderPerspectives(null);
+             renderAdvancedMetrics(null);
+             return;
         }
-      }
+        lastAnalysisData = analysisData; // Store valid data
 
-      // IMPORTANT: Do NOT automatically show the panel here.
-      // The user must click the toggle button.
-      // The panel's display ('none' or 'block') is controlled ONLY by handleToggleAnalysis.
+        // Render all three views
+        renderClaimsAnalysis(analysisData);
+        renderPerspectives(analysisData);
+        renderAdvancedMetrics(analysisData);
+
+        // Show the toggle button and potentially the panel if data exists
+        toggleAnalysis.style.display = 'block';
+        // Optional: Automatically show panel if it was hidden
+        // if (analysisColumn.style.display === 'none') {
+        //     analysisColumn.style.display = 'block';
+        //     toggleAnalysis.textContent = 'Hide Analysis';
+        // }
     }
 
-    // --- Event Handlers ---
-    function handleTabClick(event) {
-        const clickedTab = event.currentTarget;
-        tabs.forEach(tab => { tab.classList.remove('active'); tab.setAttribute('aria-selected', 'false'); tab.setAttribute('tabindex', '-1'); });
-        tabContents.forEach(content => { content.style.display = 'none'; content.setAttribute('hidden', true); });
-        clickedTab.classList.add('active'); clickedTab.setAttribute('aria-selected', 'true'); clickedTab.setAttribute('tabindex', '0');
-        const contentId = clickedTab.getAttribute('aria-controls');
-        const activeContent = document.getElementById(contentId);
-        if (activeContent) { activeContent.style.display = 'block'; activeContent.removeAttribute('hidden'); }
-    }
+    // --- API Call Logic ---
 
-    function handleToggleAnalysis() {
-      // Toggles the visibility of the analysis panel
-      const isAnalysisVisible = analysisColumn.style.display !== 'none';
-      if (isAnalysisVisible) {
-        analysisColumn.style.display = 'none';
-        toggleAnalysis.textContent = 'Show Analysis Panel';
-        toggleAnalysis.setAttribute('aria-expanded', 'false');
-      } else {
-        // ONLY show if analysisColumn exists
-        if (analysisColumn) {
-            analysisColumn.style.display = 'block'; // Use block as it's not a flex item itself
-            toggleAnalysis.textContent = 'Hide Analysis Panel';
-            toggleAnalysis.setAttribute('aria-expanded', 'true');
-        }
-      }
-    }
-
-    async function handleSend(event) {
-      // Handles sending message and processing response
-      if (event) event.preventDefault();
+    async function handleSend() {
       const text = userInput.value.trim();
-      if (!text || sendButton.disabled) return;
+      if (!text) return;
+
+      // Add user message to history and render immediately
       conversationHistory.push({ role: 'user', content: text });
       renderConversation();
-      userInput.value = ''; userInput.disabled = true; sendButton.disabled = true; spinnerContainer.style.display = 'flex';
+
+      // Clear input and disable controls
+      userInput.value = '';
+      userInput.style.height = 'auto'; // Reset height after clearing
+      userInput.disabled = true;
+      sendButton.disabled = true;
+      spinnerContainer.style.display = 'flex'; // Show spinner
+
+      // Prepare only the necessary history (e.g., last N turns) if needed
+      // const historyToSend = conversationHistory.slice(-10); // Example: last 10 turns
+
       try {
         console.log("Sending request to:", API_URL);
-        const payload = { statement: text, history: conversationHistory };
+        const payload = {
+          statement: text, // Send the current statement separately
+          history: conversationHistory.slice(0, -1) // Send history *before* the current user message
+        };
         console.log("Request payload:", JSON.stringify(payload));
-        const response = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+
+        const response = await fetch(API_URL, {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json' // Explicitly accept JSON
+            },
+          body: JSON.stringify(payload)
+        });
+
         console.log("Response status:", response.status, response.statusText);
+
         if (!response.ok) {
-            let errorBody = `Server error ${response.status}: ${response.statusText}`;
+            let errorText = `Server error: ${response.status} ${response.statusText}`;
             try {
-                 const errorJson = await response.json(); console.error("Server error JSON:", errorJson);
-                 errorBody += ` - ${errorJson.message || errorJson.error?.message || JSON.stringify(errorJson)}`;
-            } catch(e) { try { const errorText = await response.text(); console.error("Server error text:", errorText); errorBody = errorText || errorBody; } catch(e2) { /* ignore */ } }
-            console.error("Full server error details:", errorBody);
-            throw new Error(`Server error: ${response.status}. Check console for details.`);
+                // Try to get more specific error from response body
+                const errorData = await response.json();
+                errorText = errorData.message || JSON.stringify(errorData);
+            } catch (e) {
+                // If response body is not JSON or empty
+                errorText = await response.text() || errorText;
+            }
+             console.error("API Error Response:", errorText);
+             throw new Error(errorText);
         }
-        const data = await response.json(); console.log("Parsed response data:", data);
-        const aiText = data.answer || "Sorry, I couldn't generate a response."; console.log("AI response text:", aiText);
-        if (aiText && aiText.trim().length > 0) { conversationHistory.push({ role: 'assistant', content: aiText }); }
-        else { console.warn("Received empty AI response."); }
-        renderConversation();
-        const analysisData = data.metadata?.criticalThinkingAnalysis; console.log("Analysis data received:", analysisData);
-        renderAnalysis(analysisData); // Call render analysis AFTER getting response
+
+        // --- Process successful response ---
+        const responseText = await response.text(); // Get raw text first for debugging
+        console.log("Raw response:", responseText);
+
+        let data;
+        try {
+          data = JSON.parse(responseText);
+          console.log("Parsed data:", data);
+        } catch (e) {
+          console.error("JSON parse error:", e, "Raw text was:", responseText);
+          throw new Error("Received invalid JSON response from server.");
+        }
+
+        // Extract the assistant response (using the 'Response' key from n8n)
+        const aiText = data.Response || "Sorry, I couldn't generate a response.";
+        console.log("AI response text:", aiText);
+
+        conversationHistory.push({ role: 'assistant', content: aiText });
+        renderConversation(); // Render the new assistant message
+
+        // Extract and display analysis data (using 'AnalysisJSON' key from n8n)
+        let analysisData = null;
+        if (data.AnalysisJSON) {
+          try {
+            analysisData = JSON.parse(data.AnalysisJSON);
+            console.log("Parsed Analysis data:", analysisData);
+
+            // Basic validation if it's an array
+            if (Array.isArray(analysisData)) {
+                 renderAnalysis(analysisData); // Render the full analysis panel
+            } else {
+                console.warn("AnalysisJSON did not parse into an array:", analysisData);
+                renderAnalysis(null); // Clear analysis panels if data is invalid
+            }
+          } catch (e) {
+            console.error("Error parsing analysis JSON:", e, "AnalysisJSON was:", data.AnalysisJSON);
+            renderAnalysis(null); // Clear analysis panels on parse error
+          }
+        } else {
+             console.log("No AnalysisJSON found in response.");
+             renderAnalysis(null); // Clear analysis panels if no analysis provided
+        }
+
       } catch (err) {
-        console.error("API/Processing Error:", err);
-        conversationHistory.push({ role: 'assistant', content: `Sorry, an error occurred: ${err.message}. Please try again later.` });
+        console.error("Error during fetch or processing:", err);
+        // Add error message to chat
+        conversationHistory.push({ role: 'assistant', content: 'Sorry, an error occurred: ' + err.message + '. Please check the console for details or try again.' });
         renderConversation();
-        renderAnalysis(null); // Clear analysis on error
+        // Optionally clear analysis panel on error
+        renderAnalysis(null);
+
       } finally {
-        spinnerContainer.style.display = 'none'; userInput.disabled = false; sendButton.disabled = false; userInput.focus();
-        userInput.style.height = 'auto'; userInput.style.height = Math.min(userInput.scrollHeight, 200) + 'px';
+        // Re-enable controls regardless of success or failure
+        spinnerContainer.style.display = 'none'; // Hide spinner
+        userInput.disabled = false;
+        sendButton.disabled = false;
+        userInput.focus(); // Set focus back to input
       }
     }
 
-    // --- Initial Setup ---
-    tabs.forEach(tab => tab.addEventListener('click', handleTabClick));
-    if (toggleAnalysis) toggleAnalysis.addEventListener('click', handleToggleAnalysis);
-    chatForm.addEventListener('submit', handleSend);
-    userInput.addEventListener('keypress', (e) => { if (e.key === 'Enter' && !e.shiftKey && !userInput.disabled) { e.preventDefault(); handleSend(); } });
-    userInput.addEventListener('input', () => { userInput.style.height = 'auto'; userInput.style.height = Math.min(userInput.scrollHeight, 200) + 'px'; });
-    renderConversation(); // Initial render
-    // Ensure panel starts hidden and toggle reflects this
-    if(analysisColumn) analysisColumn.style.display = 'none';
-    if(toggleAnalysis) {
-        toggleAnalysis.style.display = 'none'; // Start toggle hidden too
-        toggleAnalysis.setAttribute('aria-expanded', 'false');
-    }
-    // Set initial tab focus
-    const initialTab = document.querySelector('.tabs button[role="tab"][aria-selected="true"]');
-    tabs.forEach(tab => { tab.setAttribute('tabindex', (tab === initialTab) ? '0' : '-1'); });
+    // --- Initial Render ---
+    renderConversation(); // Render the initial assistant message
 
   </script>
 </body>
