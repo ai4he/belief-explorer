@@ -1055,29 +1055,55 @@
     }
 
     function renderAnalysis(analysisData) {
-        if (!analysisData || !Array.isArray(analysisData)) {
-             console.warn("Invalid analysis data received for rendering:", analysisData);
-             // Optionally clear all analysis panels or show a general error
-             renderClaimsAnalysis(null);
-             renderPerspectives(null);
-             renderAdvancedMetrics(null);
-             return;
-        }
-        lastAnalysisData = analysisData; // Store valid data
-
-        // Render all three views
-        renderClaimsAnalysis(analysisData);
-        renderPerspectives(analysisData);
-        renderAdvancedMetrics(analysisData);
-
-        // Show the toggle button and potentially the panel if data exists
-        toggleAnalysis.style.display = 'block';
-        // Optional: Automatically show panel if it was hidden
-        // if (analysisColumn.style.display === 'none') {
-        //     analysisColumn.style.display = 'block';
-        //     toggleAnalysis.textContent = 'Hide Analysis';
-        // }
+    if (!analysisData || !Array.isArray(analysisData)) {
+         console.warn("Invalid analysis data received for rendering:", analysisData);
+         // Optionally clear all analysis panels or show a general error
+         renderClaimsAnalysis(null);
+         renderPerspectives(null);
+         renderAdvancedMetrics(null);
+         return;
     }
+    lastAnalysisData = analysisData; // Store valid data
+
+    // Add conversation context indicator
+    if (analysisData[0]?.conversationContext) {
+        const contextInfo = analysisData[0].conversationContext;
+        let contextHtml = '<div id="conversation-context" style="padding: 8px; background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 6px; margin-bottom: 15px; font-size: 12px;">';
+        contextHtml += `<strong>Conversation Turn:</strong> ${contextInfo.turnNumber || 1}`;
+        
+        if (contextInfo.topThemes && contextInfo.topThemes.length > 0) {
+            contextHtml += ' <span style="color: #6c757d;">| Themes: ' + contextInfo.topThemes.slice(0, 3).join(', ') + '</span>';
+        }
+        
+        if (analysisData[0].context?.isFollowUp) {
+            contextHtml += ' <span style="color: #28a745;">• Follow-up detected</span>';
+        }
+        contextHtml += '</div>';
+        
+        // Remove existing context if present
+        const existingContext = document.getElementById('conversation-context');
+        if (existingContext) {
+            existingContext.remove();
+        }
+        
+        // Insert at the top of the analysis panel
+        const analysisPanel = document.querySelector('.analysis-panel');
+        if (analysisPanel) {
+            const tabs = analysisPanel.querySelector('.tabs');
+            if (tabs) {
+                tabs.insertAdjacentHTML('afterend', contextHtml);
+            }
+        }
+    }
+
+    // Render all three views
+    renderClaimsAnalysis(analysisData);
+    renderPerspectives(analysisData);
+    renderAdvancedMetrics(analysisData);
+
+    // Show the toggle button and potentially the panel if data exists
+    toggleAnalysis.style.display = 'block';
+}
 
     // --- API Call Logic ---
 
