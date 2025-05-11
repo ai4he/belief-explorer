@@ -125,10 +125,14 @@
           border-color: #555;
           color: #bbb;
       }
-      .spinner {
-          border-left-color: #fff; /* White spinner on dark */
-      }
-    }
+.spinner {
+    border-left-color: #fff; /* White spinner on dark */
+}
+#conversation-context {
+  background-color: #2c2c2c !important;
+  border-color: #555 !important;
+  color: #ccc !important;
+}
 
     /* Main container */
     .container {
@@ -159,22 +163,22 @@
       flex-direction: column;
     }
 
-    .analysis-column {
-      width: 400px;
-      display: none; /* Hidden by default, shown when analysis is available */
-      flex-shrink: 0; /* Prevent shrinking */
-    }
+     .analysis-column {
+     width: 400px;
+     display: block; /* Always visible on desktop */
+     flex-shrink: 0; /* Prevent shrinking */
+   }
 
     /* Analysis panel styling */
     .analysis-panel {
-      background: #f8f9fa;
-      border: 1px solid #e9ecef;
-      border-radius: 12px;
-      padding: 15px;
-      margin-bottom: 20px;
-      height: calc(600px + 70px); /* Match chat height + input area approx height */
-      overflow-y: auto; /* Allow scrolling within analysis panel */
-    }
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 12px;
+  padding: 15px;
+  margin-bottom: 20px;
+  height: calc(600px + 100px); /* Increased height for metrics */
+  overflow-y: auto; /* Allow scrolling within analysis panel */
+}
 
     .analysis-panel h3 {
       margin-top: 0;
@@ -455,17 +459,31 @@
         text-align: right; /* Position button to the right */
         margin-bottom: 10px;
     }
-    .toggle-analysis {
-      background-color: #6c757d;
-      border: none;
-      color: #fff;
-      font-size: 12px;
-      padding: 6px 10px;
-      border-radius: 15px;
-      cursor: pointer;
-      display: none; /* Hidden by default, shown when analysis exists */
-      transition: background-color 0.2s;
-    }
+   .toggle-analysis {
+  background-color: #6c757d;
+  border: none;
+  color: #fff;
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 15px;
+  cursor: pointer;
+  display: none; /* Hidden by default, shown when analysis exists */
+  transition: background-color 0.2s;
+}
+
+/* Show toggle only on mobile */
+@media (max-width: 992px) {
+  .toggle-analysis {
+    display: inline-block;
+  }
+}
+
+/* Hide toggle on desktop */
+@media (min-width: 993px) {
+  .toggle-analysis {
+    display: none !important;
+  }
+}
     .toggle-analysis:hover {
         background-color: #5a6268;
     }
@@ -505,20 +523,21 @@
 
     /* Responsive layout adjustments */
     @media (max-width: 992px) { /* Adjust breakpoint */
-      .interaction-area {
-        flex-direction: column;
-      }
-      .analysis-column {
-        width: 100%; /* Full width on smaller screens */
-        margin-top: 20px;
-        height: auto; /* Auto height */
-        max-height: 600px; /* Optional max height */
-      }
-       .analysis-panel {
-           height: auto; /* Auto height for panel */
-           max-height: 600px; /* Optional max height */
-       }
-    }
+  .interaction-area {
+    flex-direction: column;
+  }
+  .analysis-column {
+    width: 100%; /* Full width on smaller screens */
+    margin-top: 20px;
+    height: auto; /* Auto height */
+    max-height: 600px; /* Optional max height */
+    display: none; /* Hidden by default on mobile */
+  }
+   .analysis-panel {
+       height: auto; /* Auto height for panel */
+       max-height: 600px; /* Optional max height */
+   }
+}
      @media (max-width: 768px) {
          .metric-box {
              flex-basis: calc(50% - 10px); /* Ensure two per row on medium */
@@ -713,11 +732,14 @@
       });
     });
 
-    toggleAnalysis.addEventListener('click', () => {
-      const isHidden = analysisColumn.style.display === 'none' || !analysisColumn.style.display;
-      analysisColumn.style.display = isHidden ? 'block' : 'none';
-      toggleAnalysis.textContent = isHidden ? 'Hide Analysis' : 'Show Analysis';
-    });
+toggleAnalysis.addEventListener('click', () => {
+  if (window.innerWidth <= 992) {
+    // Only toggle on mobile
+    const isHidden = analysisColumn.style.display === 'none' || !analysisColumn.style.display;
+    analysisColumn.style.display = isHidden ? 'block' : 'none';
+    toggleAnalysis.textContent = isHidden ? 'Hide Analysis' : 'Show Analysis';
+  }
+});
 
     sendButton.addEventListener('click', handleSend);
 
@@ -1101,9 +1123,17 @@
     renderPerspectives(analysisData);
     renderAdvancedMetrics(analysisData);
 
-    // Show the toggle button and potentially the panel if data exists
-    toggleAnalysis.style.display = 'block';
-}
+ // Show the toggle button only on mobile when analysis exists
+    if (window.innerWidth <= 992) {
+      toggleAnalysis.style.display = 'block';
+    } else {
+      toggleAnalysis.style.display = 'none';
+    }
+    
+    // Always show analysis panel on desktop when data exists
+    if (window.innerWidth > 992) {
+      analysisColumn.style.display = 'block';
+    }
 
     // --- API Call Logic ---
 
@@ -1220,7 +1250,21 @@
 
     // --- Initial Render ---
     renderConversation(); // Render the initial assistant message
-
+    
+    // Handle window resize to adjust analysis panel visibility
+    window.addEventListener('resize', () => {
+      if (lastAnalysisData) {
+        if (window.innerWidth > 992) {
+          // Desktop: always show analysis
+          analysisColumn.style.display = 'block';
+          toggleAnalysis.style.display = 'none';
+        } else {
+          // Mobile: show toggle button
+          toggleAnalysis.style.display = 'block';
+          // Keep current state of analysis panel
+        }
+      }
+    });
   </script>
 </body>
 </html>
