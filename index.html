@@ -37,28 +37,28 @@
         color: #fff;
       }
       .message.user-message {
-        background: #3a3a3a; /* Slightly different dark for user */
+        background: #3a3a3a;
         color: #fff;
       }
       .analysis-panel {
         background-color: #1e1e1e !important;
         border-color: #333 !important;
-        color: #ccc; /* Text color for panel */
+        color: #ccc;
       }
        .analysis-panel h3 {
-         color: #eee; /* Lighter heading */
+         color: #eee;
        }
        .analysis-panel .placeholder {
          color: #888;
        }
       .score-bar {
-          background: #444; /* Darker bar background */
+          background: #444;
       }
       .score-bar .fill {
-        background-color: #4f94cd; /* Keep fill color or adjust */
+        background-color: #4f94cd;
       }
       .score-name {
-          color: #bbb; /* Lighter score names */
+          color: #bbb;
       }
       .tabs button {
         color: #bbb;
@@ -67,7 +67,7 @@
       .tabs button.active {
         background-color: #333;
         border-bottom-color: #333;
-        color: #fff; /* Active tab text */
+        color: #fff;
       }
       .info-section {
         color: #ccc;
@@ -76,7 +76,7 @@
         color: #eee;
       }
       .info-section a {
-        color: #64b5f6; /* Link color for dark mode */
+        color: #64b5f6;
       }
       .perspective-panel {
         background-color: #2a2a2a;
@@ -93,10 +93,10 @@
           color: #ccc;
       }
       .perspective-score {
-          background: #4f94cd; /* Adjust if needed */
+          background: #4f94cd;
       }
-      .radar-chart-container canvas { /* Target canvas specifically */
-        filter: invert(0.9) hue-rotate(180deg); /* Adjust filter for better dark mode radar */
+      .radar-chart-container canvas {
+        filter: invert(0.9) hue-rotate(180deg);
       }
       .claim-box {
         background-color: #2c2c2c;
@@ -125,18 +125,19 @@
           border-color: #555;
           color: #bbb;
       }
-.spinner {
-    border-left-color: #fff; /* White spinner on dark */
-}
-#conversation-context {
-  background-color: #2c2c2c !important;
-  border-color: #555 !important;
-  color: #ccc !important;
-}
+      .spinner {
+          border-left-color: #fff;
+      }
+      #conversation-context {
+        background-color: #2c2c2c !important;
+        border-color: #555 !important;
+        color: #ccc !important;
+      }
+    }
 
     /* Main container */
     .container {
-      max-width: 1200px;
+      max-width: none;
       margin: 0 auto;
       padding: 0 20px;
     }
@@ -145,54 +146,59 @@
     .header-image {
       display: block;
       margin: 0 auto 10px;
-      max-width: 100%;
+      max-width: 400px;
       height: auto;
-      max-height: 150px; /* Optional: constrain header height */
     }
 
     /* Layout for main interaction area */
-.interaction-area {
-  display: flex;
-  gap: 20px;
-  margin-top: 20px;
-  width: 100%;
-  max-width: 100%;
-}
+    .interaction-area {
+      display: flex;
+      gap: 20px;
+      margin-top: 20px;
+    }
 
-.main-column {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  min-width: 0; /* Important for flex shrinking */
-}
-.analysis-column {
-  width: 400px;
-  flex-shrink: 0; /* Prevent shrinking */
-}
+    .main-column {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
 
-/* Show on desktop, hide on mobile initially */
-@media (min-width: 993px) {
-  .analysis-column {
-    display: block;
-  }
-}
+    .analysis-column {
+      width: 400px;
+      flex-shrink: 0;
+    }
 
-@media (max-width: 992px) {
-  .analysis-column {
-    display: none;
-    width: 100%;
-  }
-}
+    /* Show Analysis button container */
+    .toggle-analysis-container {
+        text-align: right;
+        margin-bottom: 10px;
+    }
+
+    .toggle-analysis {
+      background-color: #6c757d;
+      border: none;
+      color: #fff;
+      font-size: 12px;
+      padding: 6px 10px;
+      border-radius: 15px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      display: none; /* Hidden by default */
+    }
+    .toggle-analysis:hover {
+        background-color: #5a6268;
+    }
+
     /* Analysis panel styling */
     .analysis-panel {
-  background: #f8f9fa;
-  border: 1px solid #e9ecef;
-  border-radius: 12px;
-  padding: 15px;
-  margin-bottom: 20px;
-  height: calc(600px + 100px); /* Increased height for metrics */
-  overflow-y: auto; /* Allow scrolling within analysis panel */
-}
+      background: #f8f9fa;
+      border: 1px solid #e9ecef;
+      border-radius: 12px;
+      padding: 15px;
+      height: calc(100vh - 250px);
+      overflow-y: auto;
+    }
 
     .analysis-panel h3 {
       margin-top: 0;
@@ -265,8 +271,8 @@
     }
 
     .perspective-panel {
-      flex: 1 1 calc(50% - 10px); /* Allow wrapping, aim for 2 per row */
-      min-width: 150px; /* Minimum width before wrapping */
+      flex: 1 1 calc(50% - 10px);
+      min-width: 150px;
       background: #f0f0f0;
       border: 1px solid #ddd;
       border-radius: 8px;
@@ -289,7 +295,7 @@
       border-radius: 12px;
       padding: 1px 8px;
       font-size: 12px;
-      margin-left: 5px; /* Space between title and score */
+      margin-left: 5px;
     }
 
     .perspective-description {
@@ -303,11 +309,11 @@
     }
 
     /* Radar chart */
-    .radar-chart-container { /* Use a container div */
+    .radar-chart-container {
       width: 100%;
-      max-width: 350px; /* Limit radar size */
-      height: auto; /* Adjust height automatically */
-      margin: 15px auto; /* Center chart */
+      max-width: 350px;
+      height: auto;
+      margin: 15px auto;
     }
 
     .metrics-overview {
@@ -318,7 +324,7 @@
     }
 
     .metric-box {
-      flex: 1 1 calc(50% - 10px); /* Two boxes per row */
+      flex: 1 1 calc(50% - 10px);
       min-width: 120px;
       background: #f8f9fa;
       border: 1px solid #e9ecef;
@@ -332,7 +338,7 @@
       font-size: 12px;
       color: #6c757d;
       margin-bottom: 4px;
-      text-transform: capitalize; /* Nicer titles */
+      text-transform: capitalize;
     }
 
     .metric-value {
@@ -357,14 +363,14 @@
       color: #495057;
       cursor: pointer;
       font-size: 14px;
-      margin-right: 5px; /* Space between tabs */
+      margin-right: 5px;
       transition: background-color 0.2s, color 0.2s;
     }
 
     .tabs button.active {
       background-color: #f8f9fa;
       border-color: #dee2e6;
-      border-bottom-color: #f8f9fa; /* Hide bottom border part */
+      border-bottom-color: #f8f9fa;
       color: #0d6efd;
       font-weight: 500;
     }
@@ -374,76 +380,76 @@
 
     /* Chat container */
     .chat-container {
-      background: transparent; /* Let body background show */
+      background: transparent;
       padding: 15px;
-      height: 600px; /* Fixed height */
-      overflow-y: auto; /* Scrollable */
-      margin-bottom: 10px; /* Reduced margin */
+      height: calc(100vh - 350px);
+      overflow-y: auto;
+      margin-bottom: 10px;
       display: flex;
       flex-direction: column;
       gap: 10px;
-      border: 1px solid #ccc; /* Add border for visibility */
+      border: 1px solid #ccc;
       border-radius: 12px;
-      flex-grow: 1; /* Allow chat to grow */
+      flex-grow: 1;
     }
     .message {
       padding: 10px 14px;
-      border-radius: 18px; /* More rounded */
-      max-width: 75%; /* Slightly wider max */
+      border-radius: 18px;
+      max-width: 75%;
       word-wrap: break-word;
       margin: 0;
       line-height: 1.4;
     }
     .assistant-message {
-      background: #e9ecef; /* Lighter assistant */
+      background: #e9ecef;
       color: #000;
       align-self: flex-start;
-      border-bottom-left-radius: 4px; /* Bubble tail effect */
+      border-bottom-left-radius: 4px;
     }
     .user-message {
-      background: #007bff; /* User blue */
+      background: #007bff;
       color: #fff;
       align-self: flex-end;
-      border-bottom-right-radius: 4px; /* Bubble tail effect */
+      border-bottom-right-radius: 4px;
     }
 
     /* Input area */
     .input-area {
       display: flex;
       gap: 10px;
-      align-items: center; /* Align items vertically */
-      margin-top: 10px; /* Space above input */
+      align-items: center;
+      margin-top: 10px;
     }
     textarea {
-      flex-grow: 1; /* Take available space */
+      flex-grow: 1;
       padding: 10px 15px;
       font-size: 16px;
       resize: none;
       box-sizing: border-box;
-      background: #fff; /* White background */
+      background: #fff;
       border: 1px solid #ccc;
-      border-radius: 20px; /* Pill shape */
+      border-radius: 20px;
       outline: none;
-      min-height: 42px; /* Ensure minimum height */
-      max-height: 150px; /* Limit excessive growth */
-      overflow-y: auto; /* Scroll if needed */
+      min-height: 42px;
+      max-height: 150px;
+      overflow-y: auto;
     }
-    button#sendButton { /* Target send button specifically */
+    button#sendButton {
       background-color: #007bff;
       color: #fff;
       font-size: 16px;
       border: none;
       padding: 10px 16px;
-      border-radius: 20px; /* Pill shape */
+      border-radius: 20px;
       cursor: pointer;
       transition: background-color 0.3s;
-      flex-shrink: 0; /* Prevent button shrinking */
+      flex-shrink: 0;
     }
     button#sendButton:hover:not(:disabled) {
       background-color: #0056b3;
     }
     button#sendButton:disabled {
-      background-color: #a0c7e4; /* Lighter blue when disabled */
+      background-color: #a0c7e4;
       cursor: not-allowed;
     }
 
@@ -452,54 +458,19 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        height: 42px; /* Match button height */
-        margin-left: 10px; /* Space from input/button */
+        height: 42px;
+        margin-left: 10px;
     }
     .spinner {
       border: 3px solid rgba(0,0,0,0.1);
       width: 20px;
       height: 20px;
       border-radius: 50%;
-      border-left-color: #007bff; /* Match button color */
+      border-left-color: #007bff;
       animation: spin 1s linear infinite;
-      /* margin: 10px auto; */ /* Removed margin */
     }
     @keyframes spin {
       to { transform: rotate(360deg); }
-    }
-
-    /* Toggle button for analysis panel */
-    .toggle-analysis-container {
-        text-align: right; /* Position button to the right */
-        margin-bottom: 10px;
-    }
-   .toggle-analysis {
-  background-color: #6c757d;
-  border: none;
-  color: #fff;
-  font-size: 12px;
-  padding: 6px 10px;
-  border-radius: 15px;
-  cursor: pointer;
-  display: none; /* Hidden by default, shown when analysis exists */
-  transition: background-color 0.2s;
-}
-
-/* Show toggle only on mobile */
-@media (max-width: 992px) {
-  .toggle-analysis {
-    display: inline-block;
-  }
-}
-
-/* Hide toggle on desktop */
-@media (min-width: 993px) {
-  .toggle-analysis {
-    display: none !important;
-  }
-}
-    .toggle-analysis:hover {
-        background-color: #5a6268;
     }
 
     /* Info sections at the bottom */
@@ -509,6 +480,7 @@
       border-top: 1px solid #eee;
       line-height: 1.5;
       color: #555;
+      clear: both;
     }
     .info-section h2 {
       margin-top: 0;
@@ -534,48 +506,68 @@
         text-decoration: underline;
     }
 
+    /* DESKTOP: Always show analysis panel, hide button */
+    @media (min-width: 993px) {
+      .analysis-column {
+        display: block;
+      }
+      .toggle-analysis {
+        display: none !important;
+      }
+      .toggle-analysis-container {
+        display: none;
+      }
+    }
 
-    /* Responsive layout adjustments */
-    @media (max-width: 992px) { /* Adjust breakpoint */
-  .interaction-area {
-    flex-direction: column;
-  }
-  .analysis-column {
-    width: 100%; /* Full width on smaller screens */
-    margin-top: 20px;
-    height: auto; /* Auto height */
-    max-height: 600px; /* Optional max height */
-    display: none; /* Hidden by default on mobile */
-  }
-   .analysis-panel {
-       height: auto; /* Auto height for panel */
-       max-height: 600px; /* Optional max height */
-   }
-}
+    /* MOBILE: Hide analysis panel by default, show button */
+    @media (max-width: 992px) {
+      .interaction-area {
+        flex-direction: column;
+      }
+      .main-column {
+        max-width: 100%;
+      }
+      .analysis-column {
+        width: 100%;
+        margin-top: 20px;
+        display: none;
+      }
+       .analysis-panel {
+           height: auto;
+           max-height: 600px;
+       }
+       .toggle-analysis {
+         display: inline-block;
+       }
+       .toggle-analysis-container {
+         display: block;
+       }
+    }
+    
      @media (max-width: 768px) {
          .metric-box {
-             flex-basis: calc(50% - 10px); /* Ensure two per row on medium */
+             flex-basis: calc(50% - 10px);
          }
          .perspective-panel {
-             flex-basis: 100%; /* One perspective per row on small */
+             flex-basis: 100%;
          }
      }
       @media (max-width: 480px) {
          .message {
-             max-width: 90%; /* Wider messages on very small screens */
+             max-width: 90%;
          }
          .input-area {
              flex-direction: column;
-             align-items: stretch; /* Stretch items */
+             align-items: stretch;
          }
          button#sendButton {
-             width: 100%; /* Full width button */
+             width: 100%;
          }
          .spinner-container {
-             margin: 5px auto; /* Center spinner below input */
+             margin: 5px auto;
          }
          .metric-box {
-             flex-basis: 100%; /* One metric box per row */
+             flex-basis: 100%;
          }
       }
   </style>
@@ -609,7 +601,7 @@
         </div>
       </div>
 
-      <!-- Analysis panel - hidden by default -->
+      <!-- Analysis panel -->
       <div class="analysis-column" id="analysisColumn">
         <div class="analysis-panel">
           <div class="tabs">
@@ -621,13 +613,12 @@
           <div id="criticalThinkingTab" class="tab-content">
             <h3>Claim Analysis</h3>
             <div id="claimsAnalysis">
-              <div class="placeholder">No claims analyzed yet.</div>
+              <div class="placeholder">Share a belief to see critical thinking analysis.</div>
             </div>
           </div>
 
           <div id="perspectivesTab" class="tab-content" style="display: none;">
             <h3>Multiple Perspectives</h3>
-            <!-- <p class="tab-description">View how different reasoning approaches assess this claim:</p> -->
             <div id="perspectivesContent">
               <div class="placeholder">Share a belief to see alternative perspectives.</div>
             </div>
@@ -635,11 +626,10 @@
 
           <div id="metricsTab" class="tab-content" style="display: none;">
             <h3>Advanced Metrics</h3>
-            <!-- <p class="tab-description">Detailed critical thinking metrics based on our formalization:</p> -->
 
             <!-- Metrics overview boxes -->
             <div class="metrics-overview" id="metricsOverview">
-                 <div class="placeholder">No metrics available yet.</div>
+                 <div class="placeholder">Share a belief to see detailed metrics.</div>
             </div>
 
             <!-- Radar chart for visualizing metrics -->
@@ -703,9 +693,6 @@
     // ## IMPORTANT: REPLACE WITH YOUR ACTUAL N8N PRODUCTION WEBHOOK URL ##
     // ########################################################################
     const API_URL = 'https://gpu.haielab.org/webhook/belief-explorer';
-    // Example: const API_URL = 'https://my-n8n.example.com/webhook/6d437c73-8849-4dba-9d88-634c930fc2b3';
-    // ########################################################################
-
 
     const chatContainer = document.getElementById('chatContainer');
     const userInput = document.getElementById('userInput');
@@ -731,7 +718,7 @@
       { role: 'assistant', content: 'What belief or idea would you like to explore together?' }
     ];
 
-    let lastAnalysisData = null; // Store the last valid analysis data
+    let lastAnalysisData = null;
 
     // --- Event Listeners ---
 
@@ -746,14 +733,13 @@
       });
     });
 
-toggleAnalysis.addEventListener('click', () => {
-  if (window.innerWidth <= 992) {
-    // Only toggle on mobile
-    const isHidden = analysisColumn.style.display === 'none' || !analysisColumn.style.display;
-    analysisColumn.style.display = isHidden ? 'block' : 'none';
-    toggleAnalysis.textContent = isHidden ? 'Hide Analysis' : 'Show Analysis';
-  }
-});
+    toggleAnalysis.addEventListener('click', () => {
+      if (window.innerWidth <= 992) {
+        const isHidden = analysisColumn.style.display === 'none' || !analysisColumn.style.display;
+        analysisColumn.style.display = isHidden ? 'block' : 'none';
+        toggleAnalysis.textContent = isHidden ? 'Hide Analysis' : 'Show Analysis';
+      }
+    });
 
     sendButton.addEventListener('click', handleSend);
 
@@ -764,25 +750,21 @@ toggleAnalysis.addEventListener('click', () => {
       }
     });
 
-     // Auto-resize textarea
      userInput.addEventListener('input', () => {
-        userInput.style.height = 'auto'; // Reset height
-        userInput.style.height = (userInput.scrollHeight) + 'px'; // Set to scroll height
+        userInput.style.height = 'auto';
+        userInput.style.height = (userInput.scrollHeight) + 'px';
      });
-
 
     // --- Rendering Functions ---
 
     function renderConversation() {
-      chatContainer.innerHTML = ''; // Clear existing messages
+      chatContainer.innerHTML = '';
       conversationHistory.forEach(turn => {
         const div = document.createElement('div');
         div.className = 'message ' + (turn.role === 'assistant' ? 'assistant-message' : 'user-message');
-        // Basic sanitization (replace potential HTML tags)
-        div.textContent = turn.content; // Use textContent for safety
+        div.textContent = turn.content;
         chatContainer.appendChild(div);
       });
-      // Scroll to the bottom
       chatContainer.scrollTop = chatContainer.scrollHeight;
     }
 
@@ -792,19 +774,17 @@ toggleAnalysis.addEventListener('click', () => {
             return;
         }
 
-        claimsAnalysis.innerHTML = ''; // Clear previous
+        claimsAnalysis.innerHTML = '';
 
         analysisData.forEach((item, index) => {
             const claimDiv = document.createElement('div');
             claimDiv.className = 'claim-box';
 
-            // Claim text
             const claimText = document.createElement('div');
             claimText.className = 'claim-text';
             claimText.textContent = `Claim ${index + 1}: ${item.claim || 'N/A'}`;
             claimDiv.appendChild(claimText);
 
-            // Assumption tag
             if (item.assumptions) {
             const assumptionTag = document.createElement('div');
             assumptionTag.className = 'assumption-tag';
@@ -812,19 +792,15 @@ toggleAnalysis.addEventListener('click', () => {
             claimDiv.appendChild(assumptionTag);
             }
 
-            // Scores (only if verifactScore exists)
             if (item.verifactScore && item.verifactScore.components) {
                 const components = item.verifactScore.components;
                 const overallScore = item.verifactScore.overallScore;
 
-                // Display Overall Score First (if available)
                 if (overallScore != null) {
                     appendScoreBar(claimDiv, 'Verifact Score', overallScore);
                 }
 
-                // Display Component Scores
                 for (const [key, value] of Object.entries(components)) {
-                    // Format key: empiricalVerifiability -> Empirical Verifiability
                     const formattedKey = key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
                     appendScoreBar(claimDiv, formattedKey, value);
                 }
@@ -842,7 +818,7 @@ toggleAnalysis.addEventListener('click', () => {
 
     function appendScoreBar(parentDiv, label, value) {
         const numericValue = parseFloat(value);
-        if (isNaN(numericValue)) return; // Don't render if value is not a number
+        if (isNaN(numericValue)) return;
 
         const scoreName = document.createElement('div');
         scoreName.className = 'score-name';
@@ -853,7 +829,6 @@ toggleAnalysis.addEventListener('click', () => {
         scoreBar.className = 'score-bar';
         const scoreFill = document.createElement('div');
         scoreFill.className = 'fill';
-        // Use setTimeout to trigger animation after element is added to DOM
         setTimeout(() => {
              scoreFill.style.width = (numericValue * 100) + '%';
         }, 50);
@@ -861,34 +836,28 @@ toggleAnalysis.addEventListener('click', () => {
         parentDiv.appendChild(scoreBar);
     }
 
-
     function renderPerspectives(analysisData) {
-        // Check if the first claim has perspectives
         if (!analysisData || !Array.isArray(analysisData) || analysisData.length === 0 || !analysisData[0].perspectives || analysisData[0].perspectives.length === 0) {
             perspectivesContent.innerHTML = '<div class="placeholder">No alternative perspectives were generated for the primary claim.</div>';
             return;
         }
 
-        perspectivesContent.innerHTML = ''; // Clear previous
+        perspectivesContent.innerHTML = '';
 
-        // Get the first claim's perspectives (workflow focuses analysis on the first claim)
         const item = analysisData[0];
 
-        // Create the perspectives container
         const perspectivesContainer = document.createElement('div');
         perspectivesContainer.className = 'perspectives-container';
 
-        // Add each perspective
         item.perspectives.forEach(perspective => {
             if (!perspective || !perspective.name || !perspective.description || !perspective.assessment) {
                 console.warn("Skipping invalid perspective:", perspective);
-                return; // Skip malformed perspectives
+                return;
             }
 
             const perspDiv = document.createElement('div');
             perspDiv.className = 'perspective-panel';
 
-            // Perspective title and score
             const titleDiv = document.createElement('div');
             titleDiv.className = 'perspective-title';
 
@@ -896,7 +865,6 @@ toggleAnalysis.addEventListener('click', () => {
             titleSpan.textContent = perspective.name;
             titleDiv.appendChild(titleSpan);
 
-            // Add score only if it exists and is a number
             const scoreValue = parseFloat(perspective.score);
             if (!isNaN(scoreValue)) {
                 const scoreSpan = document.createElement('span');
@@ -907,13 +875,11 @@ toggleAnalysis.addEventListener('click', () => {
 
             perspDiv.appendChild(titleDiv);
 
-            // Perspective description
             const descDiv = document.createElement('div');
             descDiv.className = 'perspective-description';
             descDiv.textContent = perspective.description;
             perspDiv.appendChild(descDiv);
 
-            // Perspective assessment
             const assessDiv = document.createElement('div');
             assessDiv.className = 'perspective-assessment';
             assessDiv.textContent = perspective.assessment;
@@ -929,35 +895,30 @@ toggleAnalysis.addEventListener('click', () => {
         if (!analysisData || !Array.isArray(analysisData) || analysisData.length === 0 || !analysisData[0].verifactScore || !analysisData[0].verifactScore.components) {
             metricsOverview.innerHTML = '<div class="placeholder">No metrics available yet.</div>';
             metricsExplanation.innerHTML = '';
-            // Clear existing chart if present
              if (radarChart) {
                 radarChart.destroy();
                 radarChart = null;
              }
-            radarChartCanvas.style.display = 'none'; // Hide canvas
+            radarChartCanvas.style.display = 'none';
             return;
         }
 
-        // Get the first claim's metrics (workflow focuses analysis on the first claim)
         const item = analysisData[0];
         const components = item.verifactScore.components;
         const overallScore = parseFloat(item.verifactScore.overallScore || 0);
 
-        // Define the metrics we want to display and their keys in the data
         const metricsToShow = {
-            'Verifact Score': overallScore, // Use overall score here
+            'Verifact Score': overallScore,
             'Empirical Verifiability': parseFloat(components.empiricalVerifiability || 0),
             'Logical Consistency': parseFloat(components.logicalConsistency || 0),
             'Falsifiability': parseFloat(components.falsifiability || 0),
             'Model Diversity': parseFloat(components.modelDiversity || 0),
             'Contextual Sensitivity': parseFloat(components.contextualSensitivity || 0),
-            'Reflective Index': parseFloat(components.reflectiveIndex || 0) // Use the actual key
+            'Reflective Index': parseFloat(components.reflectiveIndex || 0)
         };
 
-        // Create metric boxes
-        metricsOverview.innerHTML = ''; // Clear previous
+        metricsOverview.innerHTML = '';
         Object.entries(metricsToShow).forEach(([title, value]) => {
-             // Skip Verifact Score for the boxes, show components
              if (title === 'Verifact Score') return;
 
              const metricBox = document.createElement('div');
@@ -969,8 +930,7 @@ toggleAnalysis.addEventListener('click', () => {
              metricsOverview.appendChild(metricBox);
         });
 
-
-        // --- Create Radar Chart ---
+        // Create Radar Chart
         const radarLabels = [
             'Empirical', 'Logical', 'Falsifiable',
             'Diversity', 'Contextual', 'Reflective'
@@ -986,22 +946,18 @@ toggleAnalysis.addEventListener('click', () => {
 
         const ctx = radarChartCanvas.getContext('2d');
 
-        // Destroy existing chart if it exists
         if (radarChart) {
             radarChart.destroy();
         }
 
-        // Determine chart colors based on theme
         const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
         const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.1)';
         const tickColor = isDarkMode ? '#ccc' : '#666';
-        const pointColor = isDarkMode ? '#82cfff' : '#0d6efd'; // Lighter blue for dark mode points
+        const pointColor = isDarkMode ? '#82cfff' : '#0d6efd';
         const lineColor = isDarkMode ? '#82cfff' : '#0d6efd';
         const backgroundColor = isDarkMode ? 'rgba(130, 207, 255, 0.2)' : 'rgba(13, 110, 253, 0.1)';
 
-
-        // Create new chart
-        radarChartCanvas.style.display = 'block'; // Ensure canvas is visible
+        radarChartCanvas.style.display = 'block';
         radarChart = new Chart(ctx, {
             type: 'radar',
             data: {
@@ -1015,46 +971,46 @@ toggleAnalysis.addEventListener('click', () => {
                 pointBorderColor: '#fff',
                 pointHoverBackgroundColor: '#fff',
                 pointHoverBorderColor: pointColor,
-                borderWidth: 2, // Thinner line
-                pointRadius: 4, // Slightly larger points
+                borderWidth: 2,
+                pointRadius: 4,
                 pointHoverRadius: 6
             }]
             },
             options: {
                 responsive: true,
-                maintainAspectRatio: true, // Let container control aspect ratio
+                maintainAspectRatio: true,
                 elements: {
                     line: {
-                        borderWidth: 2 // Consistent line width
+                        borderWidth: 2
                     }
                 },
                 scales: {
                     r: {
                         angleLines: {
                             display: true,
-                            color: gridColor // Grid line color
+                            color: gridColor
                         },
                         suggestedMin: 0,
                         suggestedMax: 100,
                         grid: {
-                            color: gridColor // Radial line color
+                            color: gridColor
                         },
                         pointLabels: {
                             font: {
-                                size: 10 // Smaller labels
+                                size: 10
                             },
-                            color: tickColor // Label text color
+                            color: tickColor
                         },
                         ticks: {
-                            color: tickColor, // Tick text color
-                            backdropColor: 'transparent', // No backdrop behind ticks
+                            color: tickColor,
+                            backdropColor: 'transparent',
                             stepSize: 20
                         }
                     }
                 },
                 plugins: {
                     legend: {
-                        display: false // Hide legend if only one dataset
+                        display: false
                     },
                     tooltip: {
                         callbacks: {
@@ -1074,7 +1030,6 @@ toggleAnalysis.addEventListener('click', () => {
             }
         });
 
-        // Create metrics explanation
         metricsExplanation.innerHTML = `
             <h4>Metric Descriptions</h4>
             <p><strong>Empirical:</strong> Based on observable evidence.</p>
@@ -1093,15 +1048,13 @@ toggleAnalysis.addEventListener('click', () => {
     function renderAnalysis(analysisData) {
     if (!analysisData || !Array.isArray(analysisData)) {
          console.warn("Invalid analysis data received for rendering:", analysisData);
-         // Optionally clear all analysis panels or show a general error
          renderClaimsAnalysis(null);
          renderPerspectives(null);
          renderAdvancedMetrics(null);
          return;
     }
-    lastAnalysisData = analysisData; // Store valid data
+    lastAnalysisData = analysisData;
 
-    // Add conversation context indicator
     if (analysisData[0]?.conversationContext) {
         const contextInfo = analysisData[0].conversationContext;
         let contextHtml = '<div id="conversation-context" style="padding: 8px; background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 6px; margin-bottom: 15px; font-size: 12px;">';
@@ -1116,13 +1069,11 @@ toggleAnalysis.addEventListener('click', () => {
         }
         contextHtml += '</div>';
         
-        // Remove existing context if present
         const existingContext = document.getElementById('conversation-context');
         if (existingContext) {
             existingContext.remove();
         }
         
-        // Insert at the top of the analysis panel
         const analysisPanel = document.querySelector('.analysis-panel');
         if (analysisPanel) {
             const tabs = analysisPanel.querySelector('.tabs');
@@ -1132,22 +1083,10 @@ toggleAnalysis.addEventListener('click', () => {
         }
     }
 
-    // Render all three views
     renderClaimsAnalysis(analysisData);
     renderPerspectives(analysisData);
     renderAdvancedMetrics(analysisData);
-
- // Show the toggle button only on mobile when analysis exists
-    if (window.innerWidth <= 992) {
-      toggleAnalysis.style.display = 'block';
-    } else {
-      toggleAnalysis.style.display = 'none';
-    }
-    
-    // Always show analysis panel on desktop when data exists
-    if (window.innerWidth > 992) {
-      analysisColumn.style.display = 'block';
-    }
+}
 
     // --- API Call Logic ---
 
@@ -1155,25 +1094,20 @@ toggleAnalysis.addEventListener('click', () => {
       const text = userInput.value.trim();
       if (!text) return;
 
-      // Add user message to history and render immediately
       conversationHistory.push({ role: 'user', content: text });
       renderConversation();
 
-      // Clear input and disable controls
       userInput.value = '';
-      userInput.style.height = 'auto'; // Reset height after clearing
+      userInput.style.height = 'auto';
       userInput.disabled = true;
       sendButton.disabled = true;
-      spinnerContainer.style.display = 'flex'; // Show spinner
-
-      // Prepare only the necessary history (e.g., last N turns) if needed
-      // const historyToSend = conversationHistory.slice(-10); // Example: last 10 turns
+      spinnerContainer.style.display = 'flex';
 
       try {
         console.log("Sending request to:", API_URL);
         const payload = {
-          statement: text, // Send the current statement separately
-          history: conversationHistory.slice(0, -1) // Send history *before* the current user message
+          statement: text,
+          history: conversationHistory.slice(0, -1)
         };
         console.log("Request payload:", JSON.stringify(payload));
 
@@ -1181,7 +1115,7 @@ toggleAnalysis.addEventListener('click', () => {
           method: 'POST',
           headers: {
               'Content-Type': 'application/json',
-              'Accept': 'application/json' // Explicitly accept JSON
+              'Accept': 'application/json'
             },
           body: JSON.stringify(payload)
         });
@@ -1191,19 +1125,16 @@ toggleAnalysis.addEventListener('click', () => {
         if (!response.ok) {
             let errorText = `Server error: ${response.status} ${response.statusText}`;
             try {
-                // Try to get more specific error from response body
                 const errorData = await response.json();
                 errorText = errorData.message || JSON.stringify(errorData);
             } catch (e) {
-                // If response body is not JSON or empty
                 errorText = await response.text() || errorText;
             }
              console.error("API Error Response:", errorText);
              throw new Error(errorText);
         }
 
-        // --- Process successful response ---
-        const responseText = await response.text(); // Get raw text first for debugging
+        const responseText = await response.text();
         console.log("Raw response:", responseText);
 
         let data;
@@ -1215,79 +1146,62 @@ toggleAnalysis.addEventListener('click', () => {
           throw new Error("Received invalid JSON response from server.");
         }
 
-        // Extract the assistant response (using the 'Response' key from n8n)
         const aiText = data.Response || "Sorry, I couldn't generate a response.";
         console.log("AI response text:", aiText);
 
         conversationHistory.push({ role: 'assistant', content: aiText });
-        renderConversation(); // Render the new assistant message
+        renderConversation();
 
-        // Extract and display analysis data (using 'AnalysisJSON' key from n8n)
         let analysisData = null;
         if (data.AnalysisJSON) {
           try {
             analysisData = JSON.parse(data.AnalysisJSON);
             console.log("Parsed Analysis data:", analysisData);
 
-            // Basic validation if it's an array
             if (Array.isArray(analysisData)) {
-                 renderAnalysis(analysisData); // Render the full analysis panel
+                 renderAnalysis(analysisData);
             } else {
                 console.warn("AnalysisJSON did not parse into an array:", analysisData);
-                renderAnalysis(null); // Clear analysis panels if data is invalid
+                renderAnalysis(null);
             }
           } catch (e) {
             console.error("Error parsing analysis JSON:", e, "AnalysisJSON was:", data.AnalysisJSON);
-            renderAnalysis(null); // Clear analysis panels on parse error
+            renderAnalysis(null);
           }
         } else {
              console.log("No AnalysisJSON found in response.");
-             renderAnalysis(null); // Clear analysis panels if no analysis provided
+             renderAnalysis(null);
         }
 
       } catch (err) {
         console.error("Error during fetch or processing:", err);
-        // Add error message to chat
         conversationHistory.push({ role: 'assistant', content: 'Sorry, an error occurred: ' + err.message + '. Please check the console for details or try again.' });
         renderConversation();
-        // Optionally clear analysis panel on error
         renderAnalysis(null);
 
       } finally {
-        // Re-enable controls regardless of success or failure
-        spinnerContainer.style.display = 'none'; // Hide spinner
+        spinnerContainer.style.display = 'none';
         userInput.disabled = false;
         sendButton.disabled = false;
-        userInput.focus(); // Set focus back to input
+        userInput.focus();
       }
     }
 
-    // --- Initial Render ---
-    renderConversation(); // Render the initial assistant message
+    // --- Initialization ---
+    renderConversation();
     
-    // Initial setup for analysis panel visibility
+    // Initialize with placeholder content
+    renderClaimsAnalysis(null);
+    renderPerspectives(null);
+    renderAdvancedMetrics(null);
+    
+    // Set up initial visibility based on screen size
     if (window.innerWidth > 992) {
       analysisColumn.style.display = 'block';
-      toggleAnalysis.style.display = 'none';
     } else {
       analysisColumn.style.display = 'none';
-      toggleAnalysis.style.display = 'none'; // Hide until there's analysis
     }
-    
-    // Handle window resize to adjust analysis panel visibility
-    window.addEventListener('resize', () => {
-      if (lastAnalysisData) {
-        if (window.innerWidth > 992) {
-          // Desktop: always show analysis
-          analysisColumn.style.display = 'block';
-          toggleAnalysis.style.display = 'none';
-        } else {
-          // Mobile: show toggle button
-          toggleAnalysis.style.display = 'block';
-          // Keep current state of analysis panel
-        }
-      }
-    });
+
   </script>
 </body>
 </html>
