@@ -1,0 +1,105 @@
+# FPGA Build Artifacts
+fpga/scripts/vivado_project/
+fpga/scripts/output/*.log
+fpga/scripts/output/*.jou
+*.bit.bin
+*.ltx
+*.mmi
+
+# Vivado
+.Xil/
+*.jou
+*.log
+*.str
+*.zip
+*.tmp
+*.cache
+*.hw
+*.ip_user_files
+*.runs/
+*.sim/
+*.xpr
+vivado*.backup*
+webtalk*
+*.wdb
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environment
+venv/
+ENV/
+env/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+*.cover
+
+# Logs
+*.log
+logs/
+/var/log/
+
+# Documentation Build
+docs/_build/
+docs/_static/
+docs/_templates/
+
+# Simulation
+*.vcd
+*.vpd
+*.fsdb
+
+# Temporary Files
+*.tmp
+*.temp
+tmp/
+temp/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Configuration (if containing secrets)
+# config/*.secret.json
+# config/*.key
+
+# Hardware files (keep .bit and .hwh but ignore large temp files)
+*.rpt
+*.dcp
+*.edf
+*.ngc

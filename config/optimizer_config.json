@@ -1,0 +1,98 @@
+{
+  "fpga": {
+    "board": "pynq-z2",
+    "part": "xc7z020clg400-1",
+    "clock_freq_mhz": 100,
+    "base_address": "0x40000000",
+    "address_range": "64K",
+    "bitstream_path": "fpga/scripts/output/multi_base_optimizer.bit",
+    "hwh_path": "fpga/scripts/output/multi_base_optimizer.hwh"
+  },
+  "optimizer": {
+    "default_base_select": "auto",
+    "enable_base12": true,
+    "enable_base10": true,
+    "enable_base2": true,
+    "pipeline_stages": 4,
+    "num_execution_units": 4,
+    "precision_bits": 64,
+    "fractional_bits": 32
+  },
+  "trading": {
+    "default_strategy": "market_making",
+    "strategies": {
+      "market_making": {
+        "id": 0,
+        "min_spread_bps": 5.0,
+        "max_position": 10000,
+        "skew_factor": 0.5
+      },
+      "mean_reversion": {
+        "id": 1,
+        "lookback_periods": 20,
+        "entry_z_score": 2.0,
+        "exit_z_score": 0.5
+      },
+      "momentum": {
+        "id": 2,
+        "fast_period": 8,
+        "slow_period": 16,
+        "rsi_period": 14,
+        "rsi_overbought": 70,
+        "rsi_oversold": 30
+      },
+      "arbitrage": {
+        "id": 3,
+        "correlation_threshold": 0.8,
+        "spread_z_threshold": 2.0,
+        "lookback_periods": 100
+      }
+    },
+    "risk_management": {
+      "default_risk_limit": 100000,
+      "max_position_size": 50000,
+      "stop_loss_multiplier": 3.0,
+      "take_profit_multiplier": 1.5,
+      "max_drawdown_pct": 10.0
+    }
+  },
+  "performance": {
+    "target_latency_ns": 100,
+    "latency_budget_ns": 1000,
+    "max_optimization_cycles": 50,
+    "enable_monitoring": true,
+    "log_performance_stats": true
+  },
+  "base_selection": {
+    "auto_mode": {
+      "enabled": true,
+      "base12_threshold": {
+        "divisibility_factors": [2, 3, 4, 6, 12],
+        "min_factor_count": 2
+      },
+      "base2_threshold": {
+        "power_of_2_check": true,
+        "byte_aligned_check": true
+      },
+      "base10_fallback": true
+    },
+    "performance_tracking": {
+      "track_cycle_savings": true,
+      "track_base_usage": true,
+      "report_interval_ops": 1000
+    }
+  },
+  "simulation": {
+    "enabled": true,
+    "fallback_on_error": true,
+    "use_random_data": false,
+    "latency_simulation_us": 1.25
+  },
+  "logging": {
+    "level": "INFO",
+    "log_file": "/var/log/multi_base_optimizer.log",
+    "log_trades": true,
+    "log_performance": true,
+    "log_base_selection": true
+  }
+}
