@@ -960,114 +960,121 @@ function renderClaimsAnalysis(analysisData) {
     }
 
 function renderAdvancedMetrics(analysisData) {
-    if (!analysisData || !Array.isArray(analysisData) || analysisData.length === 0 || !analysisData[0].verifactScore || !analysisData[0].verifactScore.components) {
-        metricsOverview.innerHTML = '<div class="placeholder">No metrics available yet.</div>';
-        metricsExplanation.innerHTML = '';
-        if (radarChart) {
-            radarChart.destroy();
-            radarChart = null;
-        }
-        radarChartCanvas.style.display = 'none';
-        return;
-    }
+  const item = Array.isArray(analysisData) ? analysisData[0] : null;
 
-    const item = analysisData[0];
-    const components = item.verifactScore.components;
+  // Prefer conversation-level aggregate if present, otherwise fall back to per-claim metrics
+  const scoreObj =
+    (item && item.conversationAggregate && item.conversationAggregate.verifactScore)
+      ? item.conversationAggregate.verifactScore
+      : (item && item.verifactScore ? item.verifactScore : null);
 
-    const overallScore = parseFloat(item.verifactScore.overallScore || 0);
-    const empirical = parseFloat(components.empiricalVerifiability || 0);
-    const logical = parseFloat(components.logicalConsistency || 0);
-    const falsifiable = parseFloat(components.falsifiability || 0);
-
-    const metricsToShow = {
-        'Empirical Verifiability': empirical,
-        'Logical Consistency': logical,
-        'Falsifiability': falsifiable
-    };
-
-    metricsOverview.innerHTML = '';
-    Object.entries(metricsToShow).forEach(([title, value]) => {
-        const metricBox = document.createElement('div');
-        metricBox.className = 'metric-box';
-        metricBox.innerHTML = `
-            <div class="metric-title">${title}</div>
-            <div class="metric-value">${(value * 100).toFixed(0)}%</div>
-        `;
-        metricsOverview.appendChild(metricBox);
-    });
-
-    // Radar Chart with 3 axes
-    const radarLabels = ['Empirical', 'Logical', 'Falsifiable'];
-    const radarData = [empirical * 100, logical * 100, falsifiable * 100];
-
-    const ctx = radarChartCanvas.getContext('2d');
-
+  if (!scoreObj || !scoreObj.components) {
+    metricsOverview.innerHTML = '<div class="placeholder">No metrics available yet.</div>';
+    metricsExplanation.innerHTML = '';
     if (radarChart) {
-        radarChart.destroy();
+      radarChart.destroy();
+      radarChart = null;
     }
+    radarChartCanvas.style.display = 'none';
+    return;
+  }
 
-    const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.1)';
-    const tickColor = isDarkMode ? '#ccc' : '#666';
-    const pointColor = isDarkMode ? '#82cfff' : '#0d6efd';
-    const lineColor = isDarkMode ? '#82cfff' : '#0d6efd';
-    const backgroundColor = isDarkMode ? 'rgba(130, 207, 255, 0.2)' : 'rgba(13, 110, 253, 0.1)';
+  const components = scoreObj.components;
 
-    radarChartCanvas.style.display = 'block';
-    radarChart = new Chart(ctx, {
-        type: 'radar',
-        data: {
-            labels: radarLabels,
-            datasets: [{
-                label: 'Arbiter Metrics (%)',
-                data: radarData,
-                backgroundColor: backgroundColor,
-                borderColor: lineColor,
-                pointBackgroundColor: pointColor,
-                pointBorderColor: '#fff',
-                pointHoverBackgroundColor: '#fff',
-                pointHoverBorderColor: pointColor,
-                borderWidth: 2,
-                pointRadius: 4,
-                pointHoverRadius: 6
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: true,
-            scales: {
-                r: {
-                    angleLines: { display: true, color: gridColor },
-                    suggestedMin: 0,
-                    suggestedMax: 100,
-                    grid: { color: gridColor },
-                    pointLabels: {
-                        font: { size: 10 },
-                        color: tickColor
-                    },
-                    ticks: {
-                        color: tickColor,
-                        backdropColor: 'transparent',
-                        stepSize: 20
-                    }
-                }
-            },
-            plugins: {
-                legend: { display: false }
-            }
-        }
-    });
+  const overallScore = parseFloat(scoreObj.overallScore || 0);
+  const empirical = parseFloat(components.empiricalVerifiability || 0);
+  const logical = parseFloat(components.logicalConsistency || 0);
+  const falsifiable = parseFloat(components.falsifiability || 0);
 
-    metricsExplanation.innerHTML = `
-        <h4>Metric Descriptions</h4>
-        <p><strong>Empirical verifiability:</strong> The claim is stated in a way that can be checked against observations or measurements.</p>
-        <p><strong>Logical consistency:</strong> The claim is internally coherent and supported by explicit reasoning structure.</p>
-        <p><strong>Falsifiability:</strong> The claim implies discriminating tests or observations that would count against it.</p>
-        <p><strong>Verifact Score:</strong> Normalised sum of the three scores: ${(overallScore * 100).toFixed(0)}%.</p>
+  const metricsToShow = {
+    'Empirical Verifiability': empirical,
+    'Logical Consistency': logical,
+    'Falsifiability': falsifiable
+  };
+
+  metricsOverview.innerHTML = '';
+  Object.entries(metricsToShow).forEach(([title, value]) => {
+    const metricBox = document.createElement('div');
+    metricBox.className = 'metric-box';
+    metricBox.innerHTML = `
+      <div class="metric-title">${title}</div>
+      <div class="metric-value">${(value * 100).toFixed(0)}%</div>
     `;
-    metricsExplanation.style.fontSize = '12px';
-    metricsExplanation.style.color = isDarkMode ? '#aaa' : '#555';
-    metricsExplanation.querySelectorAll('strong').forEach(el => el.style.color = isDarkMode ? '#ccc' : '#333');
+    metricsOverview.appendChild(metricBox);
+  });
+
+  // Radar Chart with 3 axes
+  const radarLabels = ['Empirical', 'Logical', 'Falsifiable'];
+  const radarData = [empirical * 100, logical * 100, falsifiable * 100];
+
+  const ctx = radarChartCanvas.getContext('2d');
+
+  if (radarChart) {
+    radarChart.destroy();
+  }
+
+  const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.1)';
+  const tickColor = isDarkMode ? '#ccc' : '#666';
+  const pointColor = isDarkMode ? '#82cfff' : '#0d6efd';
+  const lineColor = isDarkMode ? '#82cfff' : '#0d6efd';
+  const backgroundColor = isDarkMode ? 'rgba(130, 207, 255, 0.2)' : 'rgba(13, 110, 253, 0.1)';
+
+  radarChartCanvas.style.display = 'block';
+  radarChart = new Chart(ctx, {
+    type: 'radar',
+    data: {
+      labels: radarLabels,
+      datasets: [{
+        label: 'Arbiter Metrics (%)',
+        data: radarData,
+        backgroundColor: backgroundColor,
+        borderColor: lineColor,
+        pointBackgroundColor: pointColor,
+        pointBorderColor: '#fff',
+        pointHoverBackgroundColor: '#fff',
+        pointHoverBorderColor: pointColor,
+        borderWidth: 2,
+        pointRadius: 4,
+        pointHoverRadius: 6
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      scales: {
+        r: {
+          angleLines: { display: true, color: gridColor },
+          suggestedMin: 0,
+          suggestedMax: 100,
+          grid: { color: gridColor },
+          pointLabels: {
+            font: { size: 10 },
+            color: tickColor
+          },
+          ticks: {
+            color: tickColor,
+            backdropColor: 'transparent',
+            stepSize: 20
+          }
+        }
+      },
+      plugins: {
+        legend: { display: false }
+      }
+    }
+  });
+
+  metricsExplanation.innerHTML = `
+    <h4>Metric Descriptions</h4>
+    <p><strong>Empirical verifiability:</strong> The claim is stated in a way that can be checked against observations or measurements.</p>
+    <p><strong>Logical consistency:</strong> The claim is internally coherent and supported by explicit reasoning structure.</p>
+    <p><strong>Falsifiability:</strong> The claim implies discriminating tests or observations that would count against it.</p>
+    <p><strong>Verifact Score:</strong> Normalised sum of the three scores: ${(overallScore * 100).toFixed(0)}%.</p>
+  `;
+  metricsExplanation.style.fontSize = '12px';
+  metricsExplanation.style.color = isDarkMode ? '#aaa' : '#555';
+  metricsExplanation.querySelectorAll('strong').forEach(el => el.style.color = isDarkMode ? '#ccc' : '#333');
 }
 
 
