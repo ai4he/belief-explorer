@@ -779,58 +779,106 @@
       chatContainer.scrollTop = chatContainer.scrollHeight;
     }
 
-    function renderClaimsAnalysis(analysisData) {
-        if (!analysisData || !Array.isArray(analysisData) || analysisData.length === 0) {
-            claimsAnalysis.innerHTML = '<div class="placeholder">No specific claims were identified for analysis in the last statement.</div>';
-            return;
-        }
+function renderClaimsAnalysis(analysisData) {
+  if (!analysisData || !Array.isArray(analysisData) || analysisData.length === 0) {
+    claimsAnalysis.innerHTML = '<div class="placeholder">No specific claims were identified for analysis in the last statement.</div>';
+    return;
+  }
 
-        analysisData.forEach(item => {
-          globalClaimCounter += 1;
-          accumulatedAnalysis.push({ ...item, globalClaimNumber: globalClaimCounter });
-        });
+  // --- Dedupe repeated claim cards (same text repeated across turns) ---
+  const norm = (s) => (s ?? '').toString().replace(/\s+/g, ' ').trim();
+  const keyOf = (s) => norm(s).toLowerCase();
 
-        claimsAnalysis.innerHTML = '';
+  const seen = new Map();
+  const deduped = [];
 
-        accumulatedAnalysis.forEach((item) => {
-            const claimDiv = document.createElement('div');
-            claimDiv.className = 'claim-box';
+  // Keep first-seen order, but accumulate a mention count.
+  for (let i = 0; i < analysisData.length; i++) {
+    const item = analysisData[i] || {};
+    const claimText = norm(item.claim);
 
-            const claimText = document.createElement('div');
-            claimText.className = 'claim-text';
-            claimText.textContent = `Claim ${item.globalClaimNumber}: ${item.claim || 'N/A'}`;
-            claimDiv.appendChild(claimText);
+    if (!claimText) continue;
 
-            if (item.assumptions) {
-              const assumptionTag = document.createElement('div');
-              assumptionTag.className = 'assumption-tag';
-              assumptionTag.textContent = item.assumptions;
-              claimDiv.appendChild(assumptionTag);
-            }
+    const k = keyOf(claimText);
 
-            if (item.verifactScore && item.verifactScore.components) {
-                const components = item.verifactScore.components;
-                const overallScore = item.verifactScore.overallScore;
-
-                if (overallScore != null) {
-                    appendScoreBar(claimDiv, 'Verifact Score', overallScore);
-                }
-
-                for (const [key, value] of Object.entries(components)) {
-                    const formattedKey = key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
-                    appendScoreBar(claimDiv, formattedKey, value);
-                }
-            } else {
-                 const noScore = document.createElement('div');
-                 noScore.textContent = 'Detailed scores not available for this claim.';
-                 noScore.style.fontSize = '12px';
-                 noScore.style.color = '#888';
-                 claimDiv.appendChild(noScore);
-            }
-
-            claimsAnalysis.appendChild(claimDiv);
-        });
+    if (!seen.has(k)) {
+      const copy = { ...item, _uiMentionCount: 1, _uiFirstIndex: i };
+      seen.set(k, copy);
+      deduped.push(copy);
+      continue;
     }
+
+    const existing = seen.get(k);
+    existing._uiMentionCount += 1;
+
+    // Prefer the richer item if duplicates exist (more fields populated).
+    const richness = (x) =>
+      (x?.assumptions ? 1 : 0) +
+      (x?.context ? 1 : 0) +
+      (x?.verifactScore?.overallScore != null ? 1 : 0) +
+      (x?.verifactScore?.components ? 1 : 0);
+
+    if (richness(item) > richness(existing)) {
+      const keepCount = existing._uiMentionCount;
+      const keepFirst = existing._uiFirstIndex;
+      Object.assign(existing, item);
+      existing._uiMentionCount = keepCount;
+      existing._uiFirstIndex = keepFirst;
+    }
+  }
+
+  if (deduped.length === 0) {
+    claimsAnalysis.innerHTML = '<div class="placeholder">No specific claims were identified for analysis in the last statement.</div>';
+    return;
+  }
+
+  claimsAnalysis.innerHTML = '';
+
+  deduped.forEach((item, index) => {
+    const claimDiv = document.createElement('div');
+    claimDiv.className = 'claim-box';
+
+    const claimText = document.createElement('div');
+    claimText.className = 'claim-text';
+
+    const mentions = item._uiMentionCount && item._uiMentionCount > 1
+      ? ` (mentioned ${item._uiMentionCount}x)`
+      : '';
+
+    claimText.textContent = `Claim ${index + 1}: ${item.claim || 'N/A'}${mentions}`;
+    claimDiv.appendChild(claimText);
+
+    if (item.assumptions) {
+      const assumptionTag = document.createElement('div');
+      assumptionTag.className = 'assumption-tag';
+      assumptionTag.textContent = item.assumptions;
+      claimDiv.appendChild(assumptionTag);
+    }
+
+    if (item.verifactScore && item.verifactScore.components) {
+      const components = item.verifactScore.components;
+      const overallScore = item.verifactScore.overallScore;
+
+      if (overallScore != null) {
+        appendScoreBar(claimDiv, 'Verifact Score', overallScore);
+      }
+
+      for (const [key, value] of Object.entries(components)) {
+        const formattedKey = key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
+        appendScoreBar(claimDiv, formattedKey, value);
+      }
+    } else {
+      const noScore = document.createElement('div');
+      noScore.textContent = 'Detailed scores not available for this claim.';
+      noScore.style.fontSize = '12px';
+      noScore.style.color = '#888';
+      claimDiv.appendChild(noScore);
+    }
+
+    claimsAnalysis.appendChild(claimDiv);
+  });
+}
+
 
     function appendScoreBar(parentDiv, label, value) {
         const numericValue = parseFloat(value);
