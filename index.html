@@ -907,79 +907,67 @@
         perspectivesContent.appendChild(perspectivesContainer);
     }
 
-    function renderAdvancedMetrics(analysisData) {
-        if (!analysisData || !Array.isArray(analysisData) || analysisData.length === 0 || !analysisData[0].verifactScore || !analysisData[0].verifactScore.components) {
-            metricsOverview.innerHTML = '<div class="placeholder">No metrics available yet.</div>';
-            metricsExplanation.innerHTML = '';
-             if (radarChart) {
-                radarChart.destroy();
-                radarChart = null;
-             }
-            radarChartCanvas.style.display = 'none';
-            return;
-        }
-
-        const item = analysisData[0];
-        const components = item.verifactScore.components;
-        const overallScore = parseFloat(item.verifactScore.overallScore || 0);
-
-        const metricsToShow = {
-            'Verifact Score': overallScore,
-            'Empirical Verifiability': parseFloat(components.empiricalVerifiability || 0),
-            'Logical Consistency': parseFloat(components.logicalConsistency || 0),
-            'Falsifiability': parseFloat(components.falsifiability || 0),
-            'Model Diversity': parseFloat(components.modelDiversity || 0),
-            'Contextual Sensitivity': parseFloat(components.contextualSensitivity || 0),
-            'Reflective Index': parseFloat(components.reflectiveIndex || 0)
-        };
-
-        metricsOverview.innerHTML = '';
-        Object.entries(metricsToShow).forEach(([title, value]) => {
-             if (title === 'Verifact Score') return;
-
-             const metricBox = document.createElement('div');
-             metricBox.className = 'metric-box';
-             metricBox.innerHTML = `
-                <div class="metric-title">${title}</div>
-                <div class="metric-value">${(value * 100).toFixed(0)}%</div>
-             `;
-             metricsOverview.appendChild(metricBox);
-        });
-
-        // Create Radar Chart
-        const radarLabels = [
-            'Empirical', 'Logical', 'Falsifiable',
-            'Diversity', 'Contextual', 'Reflective'
-        ];
-        const radarData = [
-            metricsToShow['Empirical Verifiability'] * 100,
-            metricsToShow['Logical Consistency'] * 100,
-            metricsToShow['Falsifiability'] * 100,
-            metricsToShow['Model Diversity'] * 100,
-            metricsToShow['Contextual Sensitivity'] * 100,
-            metricsToShow['Reflective Index'] * 100
-        ];
-
-        const ctx = radarChartCanvas.getContext('2d');
-
+function renderAdvancedMetrics(analysisData) {
+    if (!analysisData || !Array.isArray(analysisData) || analysisData.length === 0 || !analysisData[0].verifactScore || !analysisData[0].verifactScore.components) {
+        metricsOverview.innerHTML = '<div class="placeholder">No metrics available yet.</div>';
+        metricsExplanation.innerHTML = '';
         if (radarChart) {
             radarChart.destroy();
+            radarChart = null;
         }
+        radarChartCanvas.style.display = 'none';
+        return;
+    }
 
-        const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-        const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.1)';
-        const tickColor = isDarkMode ? '#ccc' : '#666';
-        const pointColor = isDarkMode ? '#82cfff' : '#0d6efd';
-        const lineColor = isDarkMode ? '#82cfff' : '#0d6efd';
-        const backgroundColor = isDarkMode ? 'rgba(130, 207, 255, 0.2)' : 'rgba(13, 110, 253, 0.1)';
+    const item = analysisData[0];
+    const components = item.verifactScore.components;
 
-        radarChartCanvas.style.display = 'block';
-        radarChart = new Chart(ctx, {
-            type: 'radar',
-            data: {
+    const overallScore = parseFloat(item.verifactScore.overallScore || 0);
+    const empirical = parseFloat(components.empiricalVerifiability || 0);
+    const logical = parseFloat(components.logicalConsistency || 0);
+    const falsifiable = parseFloat(components.falsifiability || 0);
+
+    const metricsToShow = {
+        'Empirical Verifiability': empirical,
+        'Logical Consistency': logical,
+        'Falsifiability': falsifiable
+    };
+
+    metricsOverview.innerHTML = '';
+    Object.entries(metricsToShow).forEach(([title, value]) => {
+        const metricBox = document.createElement('div');
+        metricBox.className = 'metric-box';
+        metricBox.innerHTML = `
+            <div class="metric-title">${title}</div>
+            <div class="metric-value">${(value * 100).toFixed(0)}%</div>
+        `;
+        metricsOverview.appendChild(metricBox);
+    });
+
+    // Radar Chart with 3 axes
+    const radarLabels = ['Empirical', 'Logical', 'Falsifiable'];
+    const radarData = [empirical * 100, logical * 100, falsifiable * 100];
+
+    const ctx = radarChartCanvas.getContext('2d');
+
+    if (radarChart) {
+        radarChart.destroy();
+    }
+
+    const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.1)';
+    const tickColor = isDarkMode ? '#ccc' : '#666';
+    const pointColor = isDarkMode ? '#82cfff' : '#0d6efd';
+    const lineColor = isDarkMode ? '#82cfff' : '#0d6efd';
+    const backgroundColor = isDarkMode ? 'rgba(130, 207, 255, 0.2)' : 'rgba(13, 110, 253, 0.1)';
+
+    radarChartCanvas.style.display = 'block';
+    radarChart = new Chart(ctx, {
+        type: 'radar',
+        data: {
             labels: radarLabels,
             datasets: [{
-                label: 'Critical Thinking Metrics (%)',
+                label: 'Arbiter Metrics (%)',
                 data: radarData,
                 backgroundColor: backgroundColor,
                 borderColor: lineColor,
@@ -991,75 +979,45 @@
                 pointRadius: 4,
                 pointHoverRadius: 6
             }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                elements: {
-                    line: {
-                        borderWidth: 2
-                    }
-                },
-                scales: {
-                    r: {
-                        angleLines: {
-                            display: true,
-                            color: gridColor
-                        },
-                        suggestedMin: 0,
-                        suggestedMax: 100,
-                        grid: {
-                            color: gridColor
-                        },
-                        pointLabels: {
-                            font: {
-                                size: 10
-                            },
-                            color: tickColor
-                        },
-                        ticks: {
-                            color: tickColor,
-                            backdropColor: 'transparent',
-                            stepSize: 20
-                        }
-                    }
-                },
-                plugins: {
-                    legend: {
-                        display: false
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            scales: {
+                r: {
+                    angleLines: { display: true, color: gridColor },
+                    suggestedMin: 0,
+                    suggestedMax: 100,
+                    grid: { color: gridColor },
+                    pointLabels: {
+                        font: { size: 10 },
+                        color: tickColor
                     },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                let label = context.dataset.label || '';
-                                if (label) {
-                                    label += ': ';
-                                }
-                                if (context.parsed.r !== null) {
-                                    label += context.parsed.r.toFixed(0) + '%';
-                                }
-                                return label;
-                            }
-                        }
+                    ticks: {
+                        color: tickColor,
+                        backdropColor: 'transparent',
+                        stepSize: 20
                     }
                 }
+            },
+            plugins: {
+                legend: { display: false }
             }
-        });
+        }
+    });
 
-        metricsExplanation.innerHTML = `
-            <h4>Metric Descriptions</h4>
-            <p><strong>Empirical:</strong> Based on observable evidence.</p>
-            <p><strong>Logical:</strong> Internally consistent reasoning.</p>
-            <p><strong>Falsifiable:</strong> Can potentially be proven wrong.</p>
-            <p><strong>Diversity:</strong> Considers multiple viewpoints.</p>
-            <p><strong>Contextual:</strong> Appropriate for the situation.</p>
-            <p><strong>Reflective:</strong> Aware of own assumptions/biases.</p>
-        `;
-        metricsExplanation.style.fontSize = '12px';
-        metricsExplanation.style.color = isDarkMode ? '#aaa' : '#555';
-        metricsExplanation.querySelectorAll('strong').forEach(el => el.style.color = isDarkMode ? '#ccc' : '#333');
+    metricsExplanation.innerHTML = `
+        <h4>Metric Descriptions</h4>
+        <p><strong>Empirical verifiability:</strong> The claim is stated in a way that can be checked against observations or measurements.</p>
+        <p><strong>Logical consistency:</strong> The claim is internally coherent and supported by explicit reasoning structure.</p>
+        <p><strong>Falsifiability:</strong> The claim implies discriminating tests or observations that would count against it.</p>
+        <p><strong>Verifact Score:</strong> Normalised sum of the three scores: ${(overallScore * 100).toFixed(0)}%.</p>
+    `;
+    metricsExplanation.style.fontSize = '12px';
+    metricsExplanation.style.color = isDarkMode ? '#aaa' : '#555';
+    metricsExplanation.querySelectorAll('strong').forEach(el => el.style.color = isDarkMode ? '#ccc' : '#333');
+}
 
-    }
 
     function renderAnalysis(analysisData) {
     if (!analysisData || !Array.isArray(analysisData)) {
