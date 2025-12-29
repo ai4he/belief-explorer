@@ -400,6 +400,7 @@
       word-wrap: break-word;
       margin: 0;
       line-height: 1.4;
+      white-space: pre-wrap; /* preserve newlines */
     }
     .assistant-message {
       background: #e9ecef;
@@ -544,7 +545,7 @@
          display: block;
        }
     }
-    
+
      @media (max-width: 768px) {
          .metric-box {
              flex-basis: calc(50% - 10px);
@@ -717,6 +718,17 @@
       { role: 'assistant', content: 'What belief or idea would you like to explore together?' }
     ];
 
+    // Session + counters
+    let sessionId = localStorage.getItem('be_session_id');
+    if (!sessionId) {
+      sessionId = (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + '-' + Math.random().toString(16).slice(2));
+      localStorage.setItem('be_session_id', sessionId);
+    }
+
+    let turnNumber = 0;
+    let globalClaimCounter = 0;
+    let accumulatedAnalysis = [];
+
     let lastAnalysisData = null;
 
     // --- Event Listeners ---
@@ -773,22 +785,27 @@
             return;
         }
 
+        analysisData.forEach(item => {
+          globalClaimCounter += 1;
+          accumulatedAnalysis.push({ ...item, globalClaimNumber: globalClaimCounter });
+        });
+
         claimsAnalysis.innerHTML = '';
 
-        analysisData.forEach((item, index) => {
+        accumulatedAnalysis.forEach((item) => {
             const claimDiv = document.createElement('div');
             claimDiv.className = 'claim-box';
 
             const claimText = document.createElement('div');
             claimText.className = 'claim-text';
-            claimText.textContent = `Claim ${index + 1}: ${item.claim || 'N/A'}`;
+            claimText.textContent = `Claim ${item.globalClaimNumber}: ${item.claim || 'N/A'}`;
             claimDiv.appendChild(claimText);
 
             if (item.assumptions) {
-            const assumptionTag = document.createElement('div');
-            assumptionTag.className = 'assumption-tag';
-            assumptionTag.textContent = item.assumptions;
-            claimDiv.appendChild(assumptionTag);
+              const assumptionTag = document.createElement('div');
+              assumptionTag.className = 'assumption-tag';
+              assumptionTag.textContent = item.assumptions;
+              claimDiv.appendChild(assumptionTag);
             }
 
             if (item.verifactScore && item.verifactScore.components) {
@@ -1058,21 +1075,21 @@
         const contextInfo = analysisData[0].conversationContext;
         let contextHtml = '<div id="conversation-context" style="padding: 8px; background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 6px; margin-bottom: 15px; font-size: 12px;">';
         contextHtml += `<strong>Conversation Turn:</strong> ${contextInfo.turnNumber || 1}`;
-        
+
         if (contextInfo.topThemes && contextInfo.topThemes.length > 0) {
             contextHtml += ' <span style="color: #6c757d;">| Themes: ' + contextInfo.topThemes.slice(0, 3).join(', ') + '</span>';
         }
-        
+
         if (analysisData[0].context?.isFollowUp) {
             contextHtml += ' <span style="color: #28a745;">• Follow-up detected</span>';
         }
         contextHtml += '</div>';
-        
+
         const existingContext = document.getElementById('conversation-context');
         if (existingContext) {
             existingContext.remove();
         }
-        
+
         const analysisPanel = document.querySelector('.analysis-panel');
         if (analysisPanel) {
             const tabs = analysisPanel.querySelector('.tabs');
@@ -1103,8 +1120,12 @@
       spinnerContainer.style.display = 'flex';
 
       try {
+        turnNumber += 1;
+
         console.log("Sending request to:", API_URL);
         const payload = {
+          session_id: sessionId,
+          turn_number: turnNumber,
           statement: text,
           history: conversationHistory.slice(0, -1)
         };
@@ -1188,12 +1209,12 @@
 
     // --- Initialization ---
     renderConversation();
-    
+
     // Initialize with placeholder content
     renderClaimsAnalysis(null);
     renderPerspectives(null);
     renderAdvancedMetrics(null);
-    
+
     // Set up initial visibility based on screen size
     if (window.innerWidth > 992) {
       analysisColumn.style.display = 'block';
